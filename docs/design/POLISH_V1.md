@@ -7,7 +7,7 @@ Acceptance: compare the unchanged public-source baseline 625d621 against
 design/jagau-polish-v1 at 1440×900, 768×1024 and 390×844 in light/dark.
 Homepage should show larger project previews with less introductory whitespace.
 The same sidebar, dock, composer, routes, case studies and Quick Look must work.
-Inspect actual PNGs; green CI alone is insufficient visual acceptance.
+Inspect actual rendered screenshots; green CI alone is insufficient visual acceptance.
 
 Targeted changes: remove the viewport-sized home intro spacer, retain the existing
 type scale while tightening spacing, expand the same three thumbnail links into
@@ -43,4 +43,5 @@ and licensing before replacement. Record app revision, fixture seed/version,
 viewport, timestamp and SHA-256 in a new manifest; retain current originals and
 rollback mapping. Publish replacements only in a separate reviewed PR.
 
-Status: implementation and CI visual review pending. Production remains unchanged.
+Status: VISUAL PASS; implementation ready for owner review in draft PR #1.
+Production remains unchanged. See POLISH_V1_REVIEW.md for checks, evidence and limits.
