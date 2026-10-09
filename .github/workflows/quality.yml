@@ -25,7 +25,9 @@ jobs:
         if: always()
         with:
           name: jagau-release-evidence
-          path: docs/release/
+          path: |
+            docs/release/
+            artifacts/owner-gallery-browser/
       - uses: actions/upload-artifact@v4
         with:
           name: jagau-static-export

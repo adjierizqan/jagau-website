@@ -161,6 +161,12 @@ try {
           await page.locator(".project-intro").waitFor();
           if (productionOnly || polish) await page.locator(".project-intro-answer").waitFor({ state: "visible" });
           await capture(`case-${slug}`);
+          if (polish && process.env.QA_STUDIO === "true" && ["suhulog", "bdrs"].includes(slug)) {
+            const media = page.locator(".study-media").last();
+            await media.evaluate(element => element.scrollIntoView({block:"end",behavior:"instant"}));
+            await media.locator("a").hover();
+            await capture(`case-${slug}-gallery-hover`);
+          }
           if (slug === "elab") {
             await page.locator("#study-evidence").scrollIntoViewIfNeeded();
             await capture("case-elab-evidence");
@@ -184,7 +190,7 @@ try {
     }
   }
   }
-  if (polish) assert.equal(rows.length, 132 + (process.env.QA_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_REFERENCE_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_STUDIO === "true" ? 18 : 0), "Before/after screenshot matrix incomplete");
+  if (polish) assert.equal(rows.length, 132 + (process.env.QA_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_REFERENCE_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_STUDIO === "true" ? 42 : 0), "Before/after screenshot matrix incomplete");
   if (productionOnly) {
     assert.equal(rows.length, 54, "Required production screenshot inventory incomplete");
     assert.equal(new Set(rows.map(row => row.file)).size, 54, "Production capture filenames are not unique");
