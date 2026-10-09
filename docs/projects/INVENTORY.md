@@ -22,7 +22,7 @@ document revisions and search. No hospital database was opened and no applicatio
 tests or seed commands were run against an existing database.
 
 Shared public knowledge is derived from data/workspace.ts through
-data/public-knowledge.ts (version 2026-10-09.2), including curated discovery and
+data/public-knowledge.ts (version 2026-10-09.1), including curated discovery and
 future model retrieval. No editable duplicate project catalog is introduced.
 The original three home previews remain unchanged; ELAB joins sidebar, project
 index, work navigation, direct route and sitemap. Its image-free record is honest.

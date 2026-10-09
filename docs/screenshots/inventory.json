@@ -1,0 +1,286 @@
+{
+  "version": 1,
+  "status": "ORIGINALS_RETAINED_RECAPTURE_BLOCKED",
+  "assets": [
+    {
+      "file": "public/projects/bdrs/cover-final.jpg",
+      "originalSha256": "6fa09b829c20431dccaf90b2507c93107f69c864973e6cf471c22be6218fb89d",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/cover-final.webp",
+      "originalSha256": "1ccf7a9f73b19084a91a1377471d82f88ba2c0397729dca63cae23562bbe981c",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/dashboard.webp",
+      "originalSha256": "83c43ff501719a239ed01c6e2f55eb857573232e5014661634f4f69e55056647",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/episode.webp",
+      "originalSha256": "3eb8c966bc8c3f0c9bd516605dc2813b730a952f74a4ddfe2b04797146a0d1c0",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/inventaris.webp",
+      "originalSha256": "928fa3353ea6c512d75da52c3228de7f12e44ed69fc93ff1c60c2007791e5410",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/laporan.webp",
+      "originalSha256": "867836e8635675037b240b9239f656a324d4d1cfccfcfe2f03ea8a863da6ac4f",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/mobile.webp",
+      "originalSha256": "1cad0842bcc6dc95d748e27b05c277194d309cd9c090170a90440afe0c477287",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/pengeluaran.webp",
+      "originalSha256": "5432dcb3419239a23a16a8d75752d35700d8920681b0e8490126684a45d60cf1",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/readiness.webp",
+      "originalSha256": "18242e6de4524d000f70c9b17c8752a371a167105733802bb9ce47f895a1fcd3",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/thumb.webp",
+      "originalSha256": "94464715a4183f0bff8e2eba82e7fd615bc340da28e886706d2035a321f90836",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/work.webp",
+      "originalSha256": "9fbaa49e99995e56ad42725b2849f0c285f1d4d2de213a2d99e1e8c652f47d75",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/bdrs/workstation.webp",
+      "originalSha256": "f71caffa7788c6d848724866c45ffcc5c9516a75110c00b63c86afeae2edd626",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/amprah-keluar.webp",
+      "originalSha256": "bfe41be49ea210b9d81ec5db61a05502c1d4bca0965e16aebaed302828caf346",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/amprah-mobile.webp",
+      "originalSha256": "4c39be3b47ddb1a6f596adde50f13e7c2ca3825ee65199861c4a5cd6c5b24582",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/amprah.webp",
+      "originalSha256": "836384fed8213b4e75c65efd7d3fe218cd6dc8c6c306c32c84932700c505a212",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/hari-ini.webp",
+      "originalSha256": "a9bfa36116f570290d2b56e621505ca9c9a89a6539713b0651923a1cca54a981",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/laporan.webp",
+      "originalSha256": "4bf267641e4f8865bc51ddfb3913e9168cd67ccdb5ba9f3680980b7188dba17f",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/phone-detail.webp",
+      "originalSha256": "53a4414856279e33d99aac876370545a5b251d3d8994534cec3a8e51929784d3",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/report-detail.webp",
+      "originalSha256": "c70c6f16121ac8c48ac3b0d4e966aa46b56440de55a6993a482ad676df3b934f",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/request-detail.webp",
+      "originalSha256": "71331c023a62eb126e39feda87f982355d515e2d822b28bdc36cd7a05612558b",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/stok.webp",
+      "originalSha256": "8b6cb0f8bf531a8b6be67c2ce5e13f9d39e1fc5189f660aec4f2a5add17c7629",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb-reset-a.jpg",
+      "originalSha256": "7ba744682b1822092f5e5bdbec95455bd5fed92a94d7871322aae77f2210d97f",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb-reset-a.webp",
+      "originalSha256": "c01961cd32b9006a3b0415880f3de75ded4e7bc1f96e66b0082fd62a202d9476",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb-reset-b.jpg",
+      "originalSha256": "29ddb4a273d0244d32fe2708aeae5ba2e7a977ebf128564fabc53df5bd027e8b",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb-reset-b.webp",
+      "originalSha256": "09e0b15d09772ebb801340f7118ab4d77f87cb2812d40ca88f11645f6fb45321",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb-reset-c.jpg",
+      "originalSha256": "0bd7a4ac98671c7efa4dc8c7cc33121645bb29fee7a0053ae446f12911c5a9d6",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb-reset-c.webp",
+      "originalSha256": "7b563108851bbc8dce941c70b7964bd44740b860c609b0366f729a416fa022c8",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb-v2.jpg",
+      "originalSha256": "b60d68a95148d4cc56102944bc8abcbcfa13d707921d066f7b63b07a21a8e6d8",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb-v2.webp",
+      "originalSha256": "9d088086a825654d04f6fb9765cd4540354dfd0821ee68958adcaa50c7e2aa14",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/thumb.webp",
+      "originalSha256": "d11243b9ce50891b204e0a681411272aff994591c2c578f3986a211fa93718ef",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/today-detail.webp",
+      "originalSha256": "f56d3e4c5b14fb04af64d0c47b19b3b7fb028c0469c5b30a6b4df825e58cc6e2",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/trace-report.webp",
+      "originalSha256": "746eb37f8e94d253aa53eecd6a4026c4c514657c798f9ab09a423de0630f8c1e",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/labstock/work.webp",
+      "originalSha256": "433b6c5dcf8fc07bf07c90745c28fab878c41064969793d26b244e5c155dc932",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/suhulog/cover-final.jpg",
+      "originalSha256": "c812339672bbc70b93f52af5efae3eea67fe3c34387b6e483cfa55ae99b91b07",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/suhulog/cover-final.webp",
+      "originalSha256": "c1590ddc1762babdef24adaec2ecefddcb4752d48ed16846fd0e5a3ac867c11a",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/suhulog/desktop-laporan.webp",
+      "originalSha256": "6c3b0a2f1d3ca79d71e36888540a75b113f7dfbcbe8a135b30f0148febf31808",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/suhulog/desktop-monitoring.webp",
+      "originalSha256": "3d94f5510b5e374df490402d97af87e40a50da5e6ea823372cff1d7dbfc7f42a",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/suhulog/device-story.webp",
+      "originalSha256": "2083cb8734fe38d352b2dc09c81b8aaee11402f3868a1596de9ea415d0e89285",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/suhulog/phone-catat-suhu.webp",
+      "originalSha256": "244579b774e309e64b6aa84ce659488b6ec91aadfc40418de5bfe46b41e8ed0e",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    },
+    {
+      "file": "public/projects/suhulog/thumb.webp",
+      "originalSha256": "2083cb8734fe38d352b2dc09c81b8aaee11402f3868a1596de9ea415d0e89285",
+      "provenance": "docs/release/current-assets-audit.json; content-provenance.md",
+      "decision": "KEEP current cleared original; REFRESH only after authentic isolated recapture and review",
+      "replacement": null
+    }
+  ]
+}

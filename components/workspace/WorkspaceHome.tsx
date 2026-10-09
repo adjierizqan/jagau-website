@@ -12,11 +12,13 @@ export function WorkspaceHome({
   composer,
   askQuestion,
   busy = false,
+  guideConfigured = false,
 }: {
   selectProject: (p: WorkspaceProject) => void;
   openAsk: () => void;
   composer: ReactNode;
   busy?: boolean;
+  guideConfigured?: boolean;
   askQuestion: (question: string) => void;
 }) {
   return (
@@ -28,7 +30,7 @@ export function WorkspaceHome({
         </div>
         <section className="home-start" aria-label="Explore JAGAU">
           <h2>What would you like to know?</h2>
-          <p className="home-positioning">Ask about the studio, or open founder work to see how it was built. Curated answers · no live AI.</p>
+          <p className="home-positioning">Ask about the studio, or open founder work to see how it was built. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
           {composer}
           <div className="home-starters" aria-label="Suggested questions">
             {[
