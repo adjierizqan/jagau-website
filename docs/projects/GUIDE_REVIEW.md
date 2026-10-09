@@ -30,9 +30,7 @@ Actions artifact. Earlier evidence is preserved.
 The transport is mocked for browser contracts. The AI-generated label tests an
 actual UI state with a fixture reply; it is not evidence that any deployed model
 answered. Endpoint defaults empty; Worker defaults disabled and Free-plan approval
-false. The real provider boundary remains untested. Missing prerequisites: approved
-provider/model terms, quota/account evidence, privacy wording, inference-only
-credentials and an authorized isolated endpoint. User explicitly prohibits deploy,
+false. The real provider boundary remains untested. Owner approved Cloudflare Workers AI, the proposed Llama 3.1 8B model, existing request limits and public-only grounding on 9 October. Remaining prerequisites: account/quota evidence, final provider privacy/terms review, inference-only credentials and an authorized isolated endpoint. No general Workers AI administration connector is available in this session. User explicitly prohibits deploy,
 so this PR does not publish one. No overall issue #2 PASS is inferred.
 See ../architecture/AI_GUIDE.md for architecture, limits and activation gates.
 Rollback: decline this draft; production configuration was never changed.
