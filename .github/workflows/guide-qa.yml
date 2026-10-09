@@ -1,0 +1,49 @@
+name: JAGAU optional Guide contracts
+on:
+  pull_request:
+    paths:
+      - 'cloudflare/**'
+      - 'lib/guide-*'
+      - 'lib/bounded-body.ts'
+      - 'tests/guide-worker.test.ts'
+      - 'tests/browser/guide.spec.ts'
+      - '.github/workflows/guide-qa.yml'
+permissions:
+  contents: read
+concurrency:
+  group: jagau-guide-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Bundle disabled Worker without deploying or logging in
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+        run: npx --yes wrangler@4.149.0 deploy --dry-run --config cloudflare/guide-worker/wrangler.jsonc --outdir artifacts/worker-bundle
+      - name: Build optional endpoint for browser contract fixtures
+        env:
+          NEXT_PUBLIC_JAGAU_GUIDE_ENDPOINT: https://guide-qa.example.test/ask
+        run: npm run build
+      - name: Test opt-in, reply labels, references, failure and stop
+        env:
+          QA_AI_CONFIGURED: 'true'
+        run: npx playwright test tests/browser/guide.spec.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jagau-guide-contract-evidence
+          path: |
+            artifacts/guide-browser/
+            artifacts/worker-bundle/
+            docs/release/workspace-browser-results.json
+            test-results/
+          if-no-files-found: error

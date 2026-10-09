@@ -65,3 +65,6 @@
 @media(max-width:760px) {
   :root #home-work, :root .study [id], :root .ls-study [id] { scroll-margin-top: 76px; }
 }
+
+.aw-guide-privacy { display:block; max-width:720px; margin:0 auto 1rem; color:var(--ui-muted); font-size:.8rem; line-height:1.6; }
+.aw-guide-privacy input { margin-right:.5rem; }
