@@ -1,44 +1,74 @@
-name: Paired workspace visual QA
+name: JAGAU production visual acceptance
 on:
   workflow_dispatch:
 permissions:
   contents: read
+  deployments: read
+  pages: read
+concurrency:
+  group: jagau-production-visual-qa
+  cancel-in-progress: false
 jobs:
   capture:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          path: jagau
-      - name: Read original portfolio at inspected commit
-        uses: actions/checkout@v4
-        with:
-          repository: adjierizqan/adjierizqan.github.io
-          ref: f1cc1210a579a928a49cc04de00d5c1990bc07b4
-          path: reference
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Build temporary reference checkout
-        working-directory: reference
-        run: |
-          npm ci
-          npm run build
-      - name: Install browser system dependencies
-        working-directory: jagau
-        run: |
-          npm ci
-          npx playwright install --with-deps chromium webkit
-      - name: Run actual paired QA without production changes
-        working-directory: jagau
+          cache: npm
+      - name: Record QA context and verify unchanged production deployment
         env:
-          PORTFOLIO_EXPORT: ${{ github.workspace }}/reference/out
-        run: node scripts/run-release-qa.mjs
-      - uses: actions/upload-artifact@v4
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p artifacts
+          gh api "repos/${GITHUB_REPOSITORY}/deployments?environment=production&per_page=1" > artifacts/production-deployments.json
+          gh api "repos/${GITHUB_REPOSITORY}/pages" > artifacts/production-pages.json
+          node --input-type=module - <<'JS'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import assert from 'node:assert/strict';
+          const deployedCommit = '625d62177ddce5f61679ec0d4d3b2e7d037fa945';
+          const deployments = JSON.parse(readFileSync('artifacts/production-deployments.json'));
+          const pages = JSON.parse(readFileSync('artifacts/production-pages.json'));
+          writeFileSync('artifacts/production-visual-run.json', JSON.stringify({
+            repository: process.env.GITHUB_REPOSITORY,
+            qaCommit: process.env.GITHUB_SHA,
+            runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+            productionURL: 'https://jagau.id',
+            expectedProductionCommit: deployedCommit,
+            observedDeploymentCommit: deployments[0]?.sha,
+            expectedScreenshots: 54,
+            viewportSizes: ['1440x900', '768x1024', '390x844'],
+            themes: ['light', 'dark'],
+            visualAcceptance: 'UNREVIEWED',
+          }, null, 2));
+          assert.equal(deployments[0]?.sha, deployedCommit, 'Production release changed; HOLD');
+          assert.equal(pages.cname, 'jagau.id');
+          assert.equal(pages.https_enforced, true);
+          assert.equal(pages.https_certificate?.state, 'approved');
+          assert.ok(['jagau.id', 'www.jagau.id'].every(host => pages.https_certificate.domains.includes(host)));
+          JS
+      - name: Install locked QA dependencies
+        run: npm ci
+      - name: Install Chromium and Ubuntu system dependencies
+        run: npx --no-install playwright install --with-deps chromium
+      - name: Validate capture script
+        run: |
+          node --check scripts/capture-workspace-parity.mjs
+          npx --no-install eslint scripts/capture-workspace-parity.mjs
+      - name: Capture the actual public website after DOM and animations settle
+        run: |
+          set -o pipefail
+          node scripts/capture-workspace-parity.mjs --production 2>&1 | tee artifacts/production-visual-capture.log
+      - name: Upload screenshot manifest, hashes, checks and logs even on failure
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: workspace-render-evidence
-          path: |
-            jagau/docs/release/
-            jagau/test-results/
+          name: jagau-production-visual-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 30
