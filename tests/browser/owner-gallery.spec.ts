@@ -1,0 +1,30 @@
+import {test,expect} from '@playwright/test';
+import {mkdtempSync,writeFileSync,readFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join,resolve} from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {createServer,type Server} from 'node:http';
+import {createRequire} from 'node:module';
+let server:Server,origin:string;
+test.beforeAll(async()=>{
+ const dir=mkdtempSync(join(tmpdir(),'jagau-review-browser-')),manifest=join(dir,'input.json'),out=join(dir,'gallery');
+ const image=resolve('public/projects/labstock/stok.webp');
+ writeFileSync(manifest,JSON.stringify({description:'QA fixture — only existing cleared image; never local-only replacements',entries:[{id:'case',title:'Gallery QA',phase:'QA',viewport:'1440x900',theme:'light',description:'Actual cleared asset for dashboard interaction testing',comparable:true,before:{path:image,label:'Before'},after:{path:image,label:'After'}},{id:'new',title:'New page QA',phase:'QA',viewport:'390x844',theme:'dark',description:'No equivalent before',comparable:false,reason:'New page fixture',after:{path:image,label:'After'}}]}));
+ const result=spawnSync(process.execPath,['scripts/build-owner-gallery.mjs',manifest,out],{encoding:'utf8'});expect(result.status,result.stderr).toBe(0);
+ server=createServer((req,res)=>{const path=resolve(out,'.'+(req.url==='/'?'/index.html':req.url?.split('?')[0]||''));if(!path.startsWith(out+'/')){res.writeHead(403).end();return;}try{res.setHeader('Content-Type',path.endsWith('.html')?'text/html':path.endsWith('.webp')?'image/webp':'application/json');res.end(readFileSync(path));}catch{res.writeHead(404).end();}});
+ await new Promise<void>(ready=>server.listen(0,'127.0.0.1',ready));origin='http://127.0.0.1:'+(server.address() as {port:number}).port;
+});
+test.afterAll(async()=>{if(server)await new Promise<void>(done=>server.close(()=>done()));});
+for(const width of [1440,768,390])test(`offline review, keyboard zoom and durable decisions ${width}`,async({page})=>{
+ await page.setViewportSize({width,height:900});await page.goto(origin);await expect(page.locator('.card')).toHaveCount(2);
+ const trigger=page.getByRole('button',{name:'Zoom Gallery QA before',exact:true});await trigger.focus();await page.keyboard.press('Enter');await expect(page.getByRole('dialog')).toBeVisible();await page.getByRole('button',{name:'Actual pixels / fit'}).click();await page.keyboard.press('Escape');await expect(trigger).toBeFocused();
+ await page.locator('[data-decision="case"]').selectOption('changes');await page.locator('[data-notes="case"]').fill('Review spacing');await page.locator('[data-notes="case"]').press('Tab');await page.reload();await expect(page.locator('[data-notes="case"]')).toHaveValue('Review spacing');
+ await page.locator('#status').selectOption('changes');await expect(page.locator('.card')).toHaveCount(1);await page.locator('#status').selectOption('');
+ const download=page.waitForEvent('download');await page.getByRole('button',{name:'Export owner decisions'}).click();const exported=await download;expect(exported.suggestedFilename()).toBe('jagau-owner-decisions.json');
+ await page.locator('#import').setInputFiles({name:'wrong.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({fingerprint:'wrong',decisions:{}}))});await expect(page.locator('#progress')).toContainText('Import rejected');
+ const saved=await page.evaluate(()=>{const d=JSON.parse(document.getElementById('data')!.textContent!);return {fingerprint:d.fingerprint,decisions:{case:{status:'approved',notes:'Owner test fixture'}}};});
+ await page.locator('#import').setInputFiles({name:'correct.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(saved))});await expect(page.locator('#progress')).toContainText('1 / 2 approved');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ await page.addScriptTag({content:readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'),'utf8')});
+ const violations=await page.evaluate(async()=>{const w=window as unknown as {axe:{run(o:object):Promise<{violations:{id:string;nodes:{target:string[]}[]}[]}>}};return (await w.axe.run({runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}})).violations.map(v=>({id:v.id,targets:v.nodes.map(n=>n.target)}));});expect(violations).toEqual([]);
+});

@@ -7,7 +7,7 @@ import Link from "next/link";
 import dimensions from "@/data/media-dimensions.json";
 import dynamic from "next/dynamic";
 import { ProjectOpener, requestProjectIntro, markProjectHistoryNavigation } from "@/components/workspace/ProjectOpener";
-import { WorkspaceHome, StudioAbout } from "@/components/workspace/WorkspaceHome";
+import { WorkspaceHome, StudioAbout, StudioPresentation } from "@/components/workspace/WorkspaceHome";
 const LabStockCaseStudy = dynamic(() => import("@/components/labstock/LabStockCaseStudy").then(m => m.LabStockCaseStudy));
 const SuhuLogStudy = dynamic(() => import("@/components/studies/SuhuLogStudy"));
 const BdrsStudy = dynamic(() => import("@/components/studies/BdrsStudy"));
@@ -315,10 +315,11 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
   );
 }
 
-function StudioWorkspace() {
+function StudioWorkspace({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
   return <main className="aw-center workspace-home workspace-studio aw-enter">
     <WorkspaceHeader eyebrow="JAGAU Workspace" title={tk("Studio")} copy={L("Independent software studio · Indonesia", "Studio perangkat lunak independen · Indonesia")} />
     <StudioAbout />
+    <StudioPresentation selectProject={selectProject} />
   </main>;
 }
 
@@ -919,7 +920,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
               <button type="button" className="aw-mobile-theme" onClick={() => { playUISound("tap"); setTheme(theme === "dark" ? "light" : "dark"); }} aria-pressed={theme === "dark"} aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}><Glyph name={theme === "dark" ? "sun" : "moon"} /></button>
             </header>
             {view === "home" ? <WorkspaceHome guideConfigured={Boolean(guideEndpoint)} selectProject={selectProject} openAsk={() => setView("ask")} busy={askStatus === "sending" || askStatus === "streaming"} askQuestion={(question) => void runAsk(question, null)} composer={<Composer suggestions={false} query={query} setQuery={setQuery} submit={() => void runAsk(query, null)} busy={askStatus === "sending" || askStatus === "streaming"} stop={stopAsk} />} />
-              : view === "studio" ? <StudioWorkspace />
+              : view === "studio" ? <StudioWorkspace selectProject={selectProject} />
               : view === "work" ? <WorkWorkspace selectProject={selectProject} />
                 : view === "projects" ? <ProjectDirectory projects={allProjects()} title={tk("Projects")} copy={tk("A single workspace index for featured systems and focused experiments.")} selectProject={selectProject} />
                   : view === "labs" ? <ProjectDirectory projects={labProjects()} title={tk("Labs")} copy={tk("Additional studio experiments will appear here when public evidence is ready.")} selectProject={selectProject} />

@@ -1,7 +1,7 @@
 "use client";
 import type { ReactNode } from "react";
 import Image from "next/image";
-import { featuredWork, type WorkspaceProject } from "@/data/workspace";
+import { featuredWork, allWorkspaceProjects, type WorkspaceProject } from "@/data/workspace";
 import { identity, education } from "@/data/profile";
 import { site } from "@/data/site";
 import "./home.css";
@@ -131,4 +131,25 @@ export function StudioAbout() {
         </dl>
       </section>
   );
+}
+
+export function StudioPresentation({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
+  return <>
+    <section className="studio-approach" aria-labelledby="studio-approach-title">
+      <h2 id="studio-approach-title">How the work is built</h2>
+      <ol>
+        <li><span>01 / Understand</span><h3>Start with the workflow.</h3><p>Understand the actual process and what each record means before choosing an interface.</p></li>
+        <li><span>02 / Preserve</span><h3>Keep the source inspectable.</h3><p>Make permissions, corrections and revision history explicit. Keep reports connected to their records.</p></li>
+        <li><span>03 / Verify</span><h3>Check the output people use.</h3><p>Verify the workflow and its outputs, and plan recovery before release. Case studies separate implementation evidence from release status.</p></li>
+      </ol>
+    </section>
+    <section className="studio-systems" aria-labelledby="studio-systems-title">
+      <h2 id="studio-systems-title">See the approach in the work</h2>
+      <p>Founder projects, with their current status and public evidence.</p>
+      <div>{allWorkspaceProjects.map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { event.preventDefault(); selectProject(project); }}>
+        <div><h3>{project.title}<span aria-hidden="true">↗</span></h3><p>{project.summary}</p></div>
+        <small>{project.status}</small>
+      </a>)}</div>
+    </section>
+  </>;
 }

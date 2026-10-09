@@ -1,0 +1,21 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync,writeFileSync,readFileSync,existsSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join,resolve} from 'node:path';
+import {spawnSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+test('offline gallery preserves actual images and refuses changed payloads or overwritten evidence',()=>{
+ const dir=mkdtempSync(join(tmpdir(),'jagau-gallery-')),image=resolve('public/projects/labstock/stok.webp');
+ const hash=createHash('sha256').update(readFileSync(image)).digest('hex');
+ const manifest=join(dir,'input.json'),out=join(dir,'review');
+ const data={description:'QA fixture using an existing cleared asset',entries:[{id:'one',title:'Existing evidence',phase:'QA',viewport:'source',theme:'product',description:'Test fixture, not a new product capture',comparable:false,reason:'No before fixture',after:{path:image,label:'Cleared fixture',sha256:hash}}]};
+ writeFileSync(manifest,JSON.stringify(data));
+ const run=()=>spawnSync(process.execPath,['scripts/build-owner-gallery.mjs',manifest,out],{encoding:'utf8'});
+ assert.equal(run().status,0);const generated=JSON.parse(readFileSync(join(out,'manifest.json'),'utf8'));
+ assert.equal(createHash('sha256').update(readFileSync(join(out,generated.entries[0].after.path))).digest('hex'),hash);
+ assert.match(readFileSync(join(out,'index.html'),'utf8'),/NEW \/ NO BEFORE/);
+ assert.notEqual(run().status,0);data.entries[0].after.sha256='invalid';writeFileSync(manifest,JSON.stringify(data));
+ const rejected=spawnSync(process.execPath,['scripts/build-owner-gallery.mjs',manifest,join(dir,'rejected')],{encoding:'utf8'});
+ assert.notEqual(rejected.status,0);assert.equal(existsSync(join(dir,'rejected')),false);
+});
