@@ -98,6 +98,13 @@ export function WorkspaceHome({
           Explore ↗
         </button>
       </section>
+      <StudioAbout />
+    </main>
+  );
+}
+
+export function StudioAbout() {
+  return (
       <section className="home-about">
         <div>
           <h2>Engineering, with context.</h2>
@@ -121,6 +128,5 @@ export function WorkspaceHome({
           ))}
         </dl>
       </section>
-    </main>
   );
 }
