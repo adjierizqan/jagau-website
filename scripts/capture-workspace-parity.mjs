@@ -160,6 +160,7 @@ try {
               await page.getByRole("dialog", { name: "Project image viewer" }).waitFor();
               await capture("quick-look");
               await page.getByRole("button", {name:"Close image viewer", exact:true}).click();
+              await page.waitForFunction(() => document.activeElement === document.querySelector('main a[aria-label^="Quick Look:"]'));
               assert.ok(await trigger.evaluate(element => element === document.activeElement), "Quick Look must restore trigger focus");
             }
           }
