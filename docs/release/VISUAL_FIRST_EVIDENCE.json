@@ -1,0 +1,71 @@
+{
+  "status": "TECHNICAL_VISUAL_PASS_OWNER_ACCEPTANCE_PENDING",
+  "milestone": "visual-first; real AI deferred",
+  "foundation": "11114aec6243652532d5605816f5a7c8b714c506",
+  "testedCommit": "005a7571208a0439df993388100ed13ac7d060c7",
+  "reviewedRenderCommit": "5205a1d3cace5bf801b4628693dd89670344ca5c",
+  "runnerMergeSha": "78db820c48d6904a3be0de0a86e238456548e9ae",
+  "runs": {
+    "gates": 37970798516,
+    "navigation": 37970798526,
+    "inspectedVisual": 37969877749,
+    "latestUninspectedVisual": 37970798778
+  },
+  "tests": {
+    "unitPassed": 41,
+    "browserPassed": 64,
+    "optionalProviderFixtureSkipped": 16,
+    "staticGroupsPassed": 12,
+    "clearedOriginalImagesUnchanged": 40
+  },
+  "capture": {
+    "pngs": 198,
+    "jpegReviewCopies": 198,
+    "openedNewRenderCopies": 76,
+    "previouslyInspectedIdenticalCopies": 122,
+    "viewports": [
+      "1440x900",
+      "768x1024",
+      "390x844"
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "fontsImagesAnimations": "PASS"
+  },
+  "dashboard": {
+    "path": "artifacts/owner-visual-review-final/index.html",
+    "manifest": "artifacts/owner-visual-review-final/manifest.json",
+    "entries": 266,
+    "uniqueImages": 287,
+    "selectedLocalOnlyImages": 14,
+    "ownerApproval": "PENDING",
+    "fingerprint": "2bbd9845acfd9cffc466425224e7bbbae04b747dba7336f2879dc5c14985a6c2"
+  },
+  "publicationGate": "BLOCKED_PRIOR_EXACT_PAYLOAD_UPLOAD_DENIAL",
+  "ai": "DEFERRED_CURATED_GUIDE_ONLY",
+  "merged": false,
+  "deployed": false,
+  "dnsEmailChanged": false,
+  "artifacts": [
+    {
+      "id": 11634833374,
+      "run": 37969877749,
+      "name": "inspected-original-PNGs-and-review-copies",
+      "sha256": "a8becbd6ee689e78a4ce068bee451660a57988da1c112eabdac0030ff724a416"
+    },
+    {
+      "id": 11634704902,
+      "run": 37970798516,
+      "name": "release-evidence-and-dashboard-fixtures",
+      "sha256": "bc5f60c12d320348341bd50399a5c1ae1d45da431fe34bdc48e0e2d8adf4a0cf"
+    },
+    {
+      "id": 11635727134,
+      "run": 37970798526,
+      "name": "navigation-review",
+      "sha256": "9eb8bd05f7ea5f6ba2c6368c89626ec426ab9e54b674f91bef284bb7ac158e4e"
+    }
+  ]
+}

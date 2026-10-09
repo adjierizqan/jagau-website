@@ -1,3 +1,5 @@
+> Historical PR #11 integration checkpoint. The updated owner visual-first decision supersedes its overall RC B blocking classification: real AI is DEFERRED and replacement-image publication is not a UI-only release gate. Current milestone: ../design/OWNER_VISUAL_REVIEW.md. Evidence below remains preserved.
+
 # Integrated JAGAU acceptance — 10 October 2026
 
 Review-only draft: https://github.com/adjierizqan/jagau-website/pull/11
