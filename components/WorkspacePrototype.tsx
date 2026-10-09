@@ -1,5 +1,6 @@
 "use client";
 import { ElabStudy } from "@/components/studies/ElabStudy";
+import { requestGuide, guideEndpoint } from "@/lib/guide-client";
 
 import Image from "next/image";
 import dimensions from "@/data/media-dimensions.json";
@@ -411,11 +412,11 @@ function AskContextBar({ context, setContext, busy }: { context: string | null; 
 
 type AskRow = AskTurn & { live?: boolean };
 
-function AskWorkspace({ query, setQuery, turns, current, answer, status, error, context, setContext, submit, stop, choose, openProjects }: {
+function AskWorkspace({ query, setQuery, turns, current, answer, status, error, context, setContext, submit, stop, choose, openProjects, guideConsent, setGuideConsent }: {
   query: string;
   setQuery: (value: string) => void;
   turns: AskTurn[];
-  current: { projectId: string | null; question: string } | null;
+  current: { projectId: string | null; question: string; mode?: "ai" | "curated"; projectIds?: string[] } | null;
   answer: string | null;
   status: AskStatus;
   error: string | null;
@@ -425,6 +426,8 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
   stop: () => void;
   choose: (value: string) => void;
   openProjects: () => void;
+  guideConsent:boolean;
+  setGuideConsent:(value:boolean)=>void;
 }) {
   const active = status === "sending" || status === "streaming";
   const hasConversation = turns.length > 0 || current !== null || error !== null;
@@ -432,11 +435,12 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
   const groups = groupTurns(rows);
   return (
     <main className={`aw-center aw-ask aw-enter ${hasConversation ? "is-conversation" : "is-empty"}`}>
+      {guideEndpoint && <label className="aw-guide-privacy"><input type="checkbox" checked={guideConsent} onChange={event=>setGuideConsent(event.target.checked)}/> {L("Send this question to Cloudflare for an AI-generated answer using public project records. Do not include personal or patient information. JAGAU does not log raw questions; provider processing applies. Leave unchecked for local curated answers.","Kirim pertanyaan ini ke Cloudflare untuk jawaban AI berdasarkan catatan proyek publik. Jangan sertakan informasi pribadi atau pasien. JAGAU tidak mencatat pertanyaan mentah; pemrosesan penyedia berlaku. Biarkan tidak dicentang untuk jawaban terkurasi lokal.")}</label>}
       {!hasConversation ? (
         <section className="aw-ask-empty">
           <span>{t("Ask JAGAU Workspace")}</span>
           <h1>{t("What would you like to understand?")}</h1>
-          <p>{t("Curated answers · no live AI. Questions stay in your browser.")}</p>
+          <p>{guideEndpoint ? L("AI answers are labeled per reply and may be wrong. Sources and curated fallback remain available.","Setiap jawaban AI diberi label dan bisa salah. Sumber dan jawaban terkurasi tetap tersedia.") : t("Curated answers · no live AI. Questions stay in your browser.")}</p>
           <AskContextBar context={context} setContext={setContext} busy={active} />
           <Composer query={query} setQuery={setQuery} submit={submit} stop={stop} busy={active} />
           <div>{prompts.map((prompt) => <button type="button" key={prompt.label} onClick={() => choose(t(prompt.query))}>{t(prompt.label)}<Glyph name="arrow" /></button>)}</div>
@@ -451,13 +455,14 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
                 <div className="aw-ask-turn" key={index} data-project={turn.projectId ?? "general"}>
                   <div className="aw-message is-user"><span>{t("You")}</span><p>{turn.question}</p></div>
                   {turn.live
-                    ? (answer !== null || active || error) && <div className="aw-message"><span>{t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
-                    : <div className="aw-message"><span>{t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
-                  <div className="aw-guided-evidence">{explore(turn.question).projectIds.map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
+                    ? (answer !== null || active || error) && <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
+                    : <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
+                  <div className="aw-guided-evidence">{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
                 </div>
               ))}
             </div>
           ))}
+          {error && <p role="status" className="aw-guide-privacy">{error}</p>}
           {error && <div className="aw-result-list"><button type="button" onClick={openProjects}><span><strong>{t("Explore projects")}</strong><small>{t("Browse without AI")}</small></span><Glyph name="arrow" /></button><a href={site.cv} target="_blank" rel="noopener noreferrer"><span><strong>{t("Founder")}</strong><small>{t("Founder portfolio")}</small></span><Glyph name="arrow" /></a><a href={"mailto:" + site.email}><span><strong>{t("Contact")}</strong><small>{t("Email Adjie")}</small></span><Glyph name="arrow" /></a></div>}
           <AskContextBar context={context} setContext={setContext} busy={active} />
           <Composer query={query} setQuery={setQuery} submit={submit} stop={stop} busy={active} />
@@ -649,7 +654,8 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
   }, []);
   const [query, setQuery] = useState("");
   const [askTurns, setAskTurns] = useState<AskTurn[]>([]);
-  const [currentTurn, setCurrentTurn] = useState<{ projectId: string | null; question: string } | null>(null);
+  const [currentTurn, setCurrentTurn] = useState<{ projectId: string | null; question: string; mode?: "ai" | "curated"; projectIds?: string[] } | null>(null);
+  const [guideConsent,setGuideConsent]=useState(false);
   const [askContext, setAskContext] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
   const [askStatus, setAskStatus] = useState<AskStatus>("idle");
@@ -779,9 +785,11 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
 
   function stopAsk() {
     askAbortRef.current?.abort();
+    setAskStatus("complete");
+    setAnswer(L("Response stopped. No AI answer generated.","Respons dihentikan. Tidak ada jawaban AI yang dihasilkan."));
   }
 
-  // Reviewed guided replies use the portfolio conversation UI without live inference.
+  // Optional server-mediated inference; without consent/config it stays local and curated.
   async function runAsk(value: string, projectId: string | null) {
     const clean = value.trim();
     if (!clean || clean.length > MAX_QUESTION_LENGTH) return;
@@ -790,10 +798,20 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
     setAskContext(projectId);
     setCurrentTurn({ projectId, question: clean });
     setQuery("");
-    setAnswer(explore(clean).answer);
+    askAbortRef.current?.abort();
+    const controller=new AbortController();askAbortRef.current=controller;
+    setAnswer(null);
     setAskError(null);
-    setAskStatus("complete");
+    setAskStatus("sending");
     setView("ask");
+    try {
+      const reply=await requestGuide(clean,projectId,controller.signal,guideConsent ? guideEndpoint : "");
+      if(askAbortRef.current!==controller||controller.signal.aborted)return;
+      setAnswer(reply.answer);
+      setCurrentTurn({projectId,question:clean,mode:reply.mode,projectIds:reply.projectIds});
+      setAskError(reply.reason && reply.reason!=="offline" ? L("AI unavailable or outside public scope; showing a local curated answer.","AI tidak tersedia atau pertanyaan di luar cakupan publik; menampilkan jawaban terkurasi lokal.") : null);
+      setAskStatus("complete");
+    } catch { if(!controller.signal.aborted){setAskError("Response unavailable. Try again or browse the case studies.");setAskStatus("error");} }
   }
 
   function onPointerDown(event: ReactPointerEvent<HTMLElement>) {
@@ -895,13 +913,13 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
               <AudioControls />
               <button type="button" className="aw-mobile-theme" onClick={() => { playUISound("tap"); setTheme(theme === "dark" ? "light" : "dark"); }} aria-pressed={theme === "dark"} aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}><Glyph name={theme === "dark" ? "sun" : "moon"} /></button>
             </header>
-            {view === "home" ? <WorkspaceHome selectProject={selectProject} openAsk={() => setView("ask")} busy={askStatus === "sending" || askStatus === "streaming"} askQuestion={(question) => void runAsk(question, null)} composer={<Composer suggestions={false} query={query} setQuery={setQuery} submit={() => void runAsk(query, null)} busy={askStatus === "sending" || askStatus === "streaming"} stop={stopAsk} />} />
+            {view === "home" ? <WorkspaceHome guideConfigured={Boolean(guideEndpoint)} selectProject={selectProject} openAsk={() => setView("ask")} busy={askStatus === "sending" || askStatus === "streaming"} askQuestion={(question) => void runAsk(question, null)} composer={<Composer suggestions={false} query={query} setQuery={setQuery} submit={() => void runAsk(query, null)} busy={askStatus === "sending" || askStatus === "streaming"} stop={stopAsk} />} />
               : view === "work" ? <WorkWorkspace selectProject={selectProject} />
                 : view === "projects" ? <ProjectDirectory projects={allProjects()} title={tk("Projects")} copy={tk("A single workspace index for featured systems and focused experiments.")} selectProject={selectProject} />
                   : view === "labs" ? <ProjectDirectory projects={labProjects()} title={tk("Labs")} copy={tk("Additional studio experiments will appear here when public evidence is ready.")} selectProject={selectProject} />
                     : view === "knowledge" ? <KnowledgeWorkspace selectProject={selectProject} />
                       : view === "project" ? <ProjectWorkspace key={selected.slug + "-" + projectRevision} project={selected} query={query} setQuery={setQuery} ask={(question) => void runAsk(question ?? query, selected.slug)} back={() => setView("work")} openImage={openQuickLook} />
-                        : <AskWorkspace query={query} setQuery={setQuery} turns={askTurns} current={currentTurn} answer={answer} status={askStatus} error={askError} context={askContext} setContext={setAskContext} submit={() => void runAsk(query, askContext)} stop={stopAsk} choose={(question) => void runAsk(question, askContext)} openProjects={() => setView("projects")} />}
+                        : <AskWorkspace guideConsent={guideConsent} setGuideConsent={setGuideConsent} query={query} setQuery={setQuery} turns={askTurns} current={currentTurn} answer={answer} status={askStatus} error={askError} context={askContext} setContext={setAskContext} submit={() => void runAsk(query, askContext)} stop={stopAsk} choose={(question) => void runAsk(question, askContext)} openProjects={() => setView("projects")} />}
           </section>
         </div>
       </div>
