@@ -13,7 +13,7 @@ export const studio = {
 // Derived from reviewed workspace records; retrieval and case studies share the same facts.
 export const projects = publicKnowledge.map(project => ({
   ...project, title: project.name,
-  decision: project.decisions.map(item => item.detail).join(" "),
+  decision: [...project.decisions.map(item => item.detail), ...project.howItWorks].join(" "),
 }));
 export type ProjectId = (typeof projects)[number]["id"];
 
