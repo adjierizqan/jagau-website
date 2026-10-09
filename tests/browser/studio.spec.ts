@@ -131,7 +131,7 @@ test("WCAG automated checks on home and public cases", async ({page}) => {
   const require = createRequire(import.meta.url);
   const axe = await readFile(require.resolve("axe-core/axe.min.js"), "utf8");
   const findings = [];
-  for (const path of ["/", ...slugs.map(slug => `/projects/${slug}/`)]) {
+  for (const path of ["/", ...slugs.map(slug => `/projects/${slug}/`), "/projects/elab/"]) {
     await page.goto(path);
     await page.locator("main").waitFor();
     // Audit settled text, after fonts and finite entrance animations finish.
