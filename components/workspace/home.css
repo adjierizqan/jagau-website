@@ -264,3 +264,7 @@
 }
 
 #home-work { scroll-margin-top: 24px; }
+
+/* Studio reuses company content without the home section's separation gap. */
+.workspace-studio .home-about { margin-top: 24px; padding-top: 0; border-top: 0; }
+.workspace-studio .aw-page-header p { color: var(--home-muted); }

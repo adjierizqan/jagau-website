@@ -314,7 +314,7 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
 }
 
 function StudioWorkspace() {
-  return <main className="aw-center workspace-home aw-enter">
+  return <main className="aw-center workspace-home workspace-studio aw-enter">
     <WorkspaceHeader eyebrow="JAGAU Workspace" title={tk("Studio")} copy={L("Independent software studio · Indonesia", "Studio perangkat lunak independen · Indonesia")} />
     <StudioAbout />
   </main>;
@@ -715,7 +715,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "n") {
         event.preventDefault();
         askAbortRef.current?.abort();
-        setView("home");
+        setView("ask");
         setQuery("");
         setAskTurns([]);
         setCurrentTurn(null);
