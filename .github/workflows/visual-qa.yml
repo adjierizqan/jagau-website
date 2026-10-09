@@ -1,0 +1,44 @@
+name: Paired workspace visual QA
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: jagau
+      - name: Read original portfolio at inspected commit
+        uses: actions/checkout@v4
+        with:
+          repository: adjierizqan/adjierizqan.github.io
+          ref: f1cc1210a579a928a49cc04de00d5c1990bc07b4
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build temporary reference checkout
+        working-directory: reference
+        run: |
+          npm ci
+          npm run build
+      - name: Install browser system dependencies
+        working-directory: jagau
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium webkit
+      - name: Run actual paired QA without production changes
+        working-directory: jagau
+        env:
+          PORTFOLIO_EXPORT: ${{ github.workspace }}/reference/out
+        run: node scripts/run-release-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workspace-render-evidence
+          path: |
+            jagau/docs/release/
+            jagau/test-results/

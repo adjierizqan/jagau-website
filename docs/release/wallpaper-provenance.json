@@ -1,0 +1,12 @@
+{
+  "asset": "public/wallpaper_mac.jpg",
+  "created": "2026-10-09",
+  "method": "Built-in image_gen tool; original image generated for this project at owner request",
+  "origin": "Generated fictional alpine landscape; not an official Apple/macOS photograph",
+  "toolOutput": "exec-6492d1f7-43b9-49ea-a8d3-0505b2c9b02f.png",
+  "prompt": "Create one original photographic desktop wallpaper for a macOS-inspired web workspace. Landscape 16:10 wide composition, high resolution. Quiet alpine lake at dusk, forested mountain silhouettes rising along right edge, distant mountains left, soft peach and lavender twilight sky over slate-blue calm water, subtle reflected evening light, realistic fine detail with restrained low-contrast color. Most central area smooth and calm behind a large desktop application window; richly composed corners and edges visible around that window. No houses, people, text, logo, devices or UI. A fresh invented natural landscape, not a reproduction of any official Apple wallpaper or known photograph. Image asset only.",
+  "conversion": "sips JPEG quality 85, native 1586x992; no resize/upscale",
+  "sha256": "5c0da0cda12721a4f0b243b35cb4a085b1483b07521cef0ba367d2d5e85b8738",
+  "review": "Generated output and converted JPEG visually inspected; actual browser workspace with new background pending",
+  "scope": "Only background bytes replaced; inherited UI CSS/layout unchanged"
+}

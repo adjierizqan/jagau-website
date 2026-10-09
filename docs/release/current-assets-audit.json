@@ -1,0 +1,236 @@
+{
+  "reviewedAt": "2026-10-09",
+  "sourceBeforeAudit": "e31bd4073dfdd0cbbf5146695f8d9386055b47e5",
+  "scope": "Current public assets only. 40 project image files inspected, plus brand assets and generated wallpaper; fonts/audio checked against documented provenance. Does not clear historical media or certify medical systems.",
+  "publicationBoundary": "Clean current-source publication only; retain complete original Git history and old parity captures privately.",
+  "assets": {
+    "public/.nojekyll": {
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "review": "Original JAGAU icon/social composition inspected; no confidential data"
+    },
+    "public/audio/ambient-wilfredor-cc0.m4a": {
+      "sha256": "485445d8a53ba9ba848162d491f106ad34f65c66de31658429a2703d2b6ac927",
+      "review": "Portfolio Wilfredor ambient recording; documented CC0 source, off by default"
+    },
+    "public/fonts/4fa387ec64143e14-s.2tuy5pz7dlieh.woff2": {
+      "sha256": "75b3bedbebc35f347c0ae3b416aa871941555357e7b0f83767eb5987875589ed",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/53b9e256198e5412-s.390ncx5urfkfu.woff2": {
+      "sha256": "f689f638f29fff460a2d5749edb5d5c38d7bef0389f32032d871f23fc6ebb008",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/5ce348bf30bf5439-s.31988l_ccedte.woff2": {
+      "sha256": "e27f657e38d52887baa3b6b2f812bef93dfdd356f0810e40edd4ee284cc7e9f6",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/6306c77e7c8268e4-s.2dbetqa9o8jxf.woff2": {
+      "sha256": "d67e4a94ba498635f764ddca7d1ec4271f5642f032eb24b426764480f66f8497",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/7178b3e590c64307-s.21jp631_3pja2.woff2": {
+      "sha256": "58a6b173d5ca1dec92166ea3c6cb1a84a4144556d10928ac14e8e6b40e4787bd",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/797e433ab948586e-s.p.0r6juujl39pe6.woff2": {
+      "sha256": "5f3d6ad60f29d6cb708414ec6887163d63bf197377ef5417d2483ff31ace6c3b",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/7d817b4c03b0c5f1-s.1uyisp29ctx0d.woff2": {
+      "sha256": "16e1d48b6dd29eb240aec5db36184eb182933c082cd43de7f35af686d58087d2",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/8a480f0b521d4e75-s.1qq4vpdcun5oj.woff2": {
+      "sha256": "6129fc8571c3e0cb0a4c41f5160c974a843b055009dc4ad8858bd808e18a2d86",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/OFL.txt": {
+      "sha256": "2b2da563e79400b61818402ca9f26a73d52468268b7fc715e92143c1e799737e",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/bbc41e54d2fcbd21-s.1rgnod-3esatf.woff2": {
+      "sha256": "745994b5cd950ec201b66526375f057d540847cccfc70f4f24f5f571d26d3923",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/caa3a2e1cccd8315-s.p.0wgildi0cnwt9.woff2": {
+      "sha256": "9b6f5ff45b278c744b5f379a2c4ecbaf858a842b8eaf82ac8d21b699ca16c608",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/fonts/fef07dbb0973bf53-s.3p2_lha1f2xer.woff2": {
+      "sha256": "b7a545bbb08256bd809f11cfe66d88da3e22d169ea4407737b1ef0ec1ed3d791",
+      "review": "Unchanged portfolio Geist subsets with bundled official OFL"
+    },
+    "public/icon.svg": {
+      "sha256": "a960a8a452a62cca87a868d6cd0023e1d4efcb29a50e51d21cd9d4264342102e",
+      "review": "Original JAGAU icon/social composition inspected; no confidential data"
+    },
+    "public/projects/bdrs/cover-final.jpg": {
+      "sha256": "6fa09b829c20431dccaf90b2507c93107f69c864973e6cf471c22be6218fb89d",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/cover-final.webp": {
+      "sha256": "1ccf7a9f73b19084a91a1377471d82f88ba2c0397729dca63cae23562bbe981c",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/dashboard.webp": {
+      "sha256": "83c43ff501719a239ed01c6e2f55eb857573232e5014661634f4f69e55056647",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/episode.webp": {
+      "sha256": "3eb8c966bc8c3f0c9bd516605dc2813b730a952f74a4ddfe2b04797146a0d1c0",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/inventaris.webp": {
+      "sha256": "928fa3353ea6c512d75da52c3228de7f12e44ed69fc93ff1c60c2007791e5410",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/laporan.webp": {
+      "sha256": "867836e8635675037b240b9239f656a324d4d1cfccfcfe2f03ea8a863da6ac4f",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/mobile.webp": {
+      "sha256": "1cad0842bcc6dc95d748e27b05c277194d309cd9c090170a90440afe0c477287",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/pengeluaran.webp": {
+      "sha256": "5432dcb3419239a23a16a8d75752d35700d8920681b0e8490126684a45d60cf1",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/readiness.webp": {
+      "sha256": "18242e6de4524d000f70c9b17c8752a371a167105733802bb9ce47f895a1fcd3",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/thumb.webp": {
+      "sha256": "94464715a4183f0bff8e2eba82e7fd615bc340da28e886706d2035a321f90836",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/work.webp": {
+      "sha256": "9fbaa49e99995e56ad42725b2849f0c285f1d4d2de213a2d99e1e8c652f47d75",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/bdrs/workstation.webp": {
+      "sha256": "f71caffa7788c6d848724866c45ffcc5c9516a75110c00b63c86afeae2edd626",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/amprah-keluar.webp": {
+      "sha256": "bfe41be49ea210b9d81ec5db61a05502c1d4bca0965e16aebaed302828caf346",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/amprah-mobile.webp": {
+      "sha256": "4c39be3b47ddb1a6f596adde50f13e7c2ca3825ee65199861c4a5cd6c5b24582",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/amprah.webp": {
+      "sha256": "836384fed8213b4e75c65efd7d3fe218cd6dc8c6c306c32c84932700c505a212",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/hari-ini.webp": {
+      "sha256": "a9bfa36116f570290d2b56e621505ca9c9a89a6539713b0651923a1cca54a981",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/laporan.webp": {
+      "sha256": "4bf267641e4f8865bc51ddfb3913e9168cd67ccdb5ba9f3680980b7188dba17f",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/phone-detail.webp": {
+      "sha256": "53a4414856279e33d99aac876370545a5b251d3d8994534cec3a8e51929784d3",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/report-detail.webp": {
+      "sha256": "c70c6f16121ac8c48ac3b0d4e966aa46b56440de55a6993a482ad676df3b934f",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/request-detail.webp": {
+      "sha256": "71331c023a62eb126e39feda87f982355d515e2d822b28bdc36cd7a05612558b",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/stok.webp": {
+      "sha256": "8b6cb0f8bf531a8b6be67c2ce5e13f9d39e1fc5189f660aec4f2a5add17c7629",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb-reset-a.jpg": {
+      "sha256": "7ba744682b1822092f5e5bdbec95455bd5fed92a94d7871322aae77f2210d97f",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb-reset-a.webp": {
+      "sha256": "c01961cd32b9006a3b0415880f3de75ded4e7bc1f96e66b0082fd62a202d9476",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb-reset-b.jpg": {
+      "sha256": "29ddb4a273d0244d32fe2708aeae5ba2e7a977ebf128564fabc53df5bd027e8b",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb-reset-b.webp": {
+      "sha256": "09e0b15d09772ebb801340f7118ab4d77f87cb2812d40ca88f11645f6fb45321",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb-reset-c.jpg": {
+      "sha256": "0bd7a4ac98671c7efa4dc8c7cc33121645bb29fee7a0053ae446f12911c5a9d6",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb-reset-c.webp": {
+      "sha256": "7b563108851bbc8dce941c70b7964bd44740b860c609b0366f729a416fa022c8",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb-v2.jpg": {
+      "sha256": "b60d68a95148d4cc56102944bc8abcbcfa13d707921d066f7b63b07a21a8e6d8",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb-v2.webp": {
+      "sha256": "9d088086a825654d04f6fb9765cd4540354dfd0821ee68958adcaa50c7e2aa14",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/thumb.webp": {
+      "sha256": "d11243b9ce50891b204e0a681411272aff994591c2c578f3986a211fa93718ef",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/today-detail.webp": {
+      "sha256": "f56d3e4c5b14fb04af64d0c47b19b3b7fb028c0469c5b30a6b4df825e58cc6e2",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/trace-report.webp": {
+      "sha256": "746eb37f8e94d253aa53eecd6a4026c4c514657c798f9ab09a423de0630f8c1e",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/labstock/work.webp": {
+      "sha256": "433b6c5dcf8fc07bf07c90745c28fab878c41064969793d26b244e5c155dc932",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/suhulog/cover-final.jpg": {
+      "sha256": "c812339672bbc70b93f52af5efae3eea67fe3c34387b6e483cfa55ae99b91b07",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/suhulog/cover-final.webp": {
+      "sha256": "c1590ddc1762babdef24adaec2ecefddcb4752d48ed16846fd0e5a3ac867c11a",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/suhulog/desktop-laporan.webp": {
+      "sha256": "6c3b0a2f1d3ca79d71e36888540a75b113f7dfbcbe8a135b30f0148febf31808",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/suhulog/desktop-monitoring.webp": {
+      "sha256": "3d94f5510b5e374df490402d97af87e40a50da5e6ea823372cff1d7dbfc7f42a",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/suhulog/device-story.webp": {
+      "sha256": "2083cb8734fe38d352b2dc09c81b8aaee11402f3868a1596de9ea415d0e89285",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/suhulog/phone-catat-suhu.webp": {
+      "sha256": "244579b774e309e64b6aa84ce659488b6ec91aadfc40418de5bfe46b41e8ed0e",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/projects/suhulog/thumb.webp": {
+      "sha256": "2083cb8734fe38d352b2dc09c81b8aaee11402f3868a1596de9ea415d0e89285",
+      "review": "Actual image inspected: demo/synthetic data and generic inventory/temperature records; no identifying real patient data or private URLs observed"
+    },
+    "public/social.png": {
+      "sha256": "b2e88c482692fb1e63a76c250972e10e426d0c4168736b47e95ba0167fccb67c",
+      "review": "Original JAGAU icon/social composition inspected; no confidential data"
+    },
+    "public/wallpaper_mac.jpg": {
+      "sha256": "5c0da0cda12721a4f0b243b35cb4a085b1483b07521cef0ba367d2d5e85b8738",
+      "review": "Original generated fictional landscape; image/JPEG inspected, browser render pending"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+name: Deploy verified JAGAU export
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: jagau-pages
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run verify
+      - name: Bind custom domain in artifact
+        run: echo 'jagau.id' > out/CNAME
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: release-evidence
+          path: docs/release/
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: production
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - id: pages
+        uses: actions/deploy-pages@v4

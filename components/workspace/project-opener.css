@@ -1,0 +1,41 @@
+/* The existing study lives inside one AI answer. The gutter connects the
+   identity, opening sentence and full-width product story without a chat card. */
+.project-intro { color: var(--chat-ink, #252a2b); margin: 18px 0 0; }
+.project-question { max-width: 820px; margin: 0 0 18px auto; }
+.project-intro-controls { display: flex; justify-content: flex-end; margin-top: 3px; color: var(--chat-muted, #747c79); }
+.project-intro-controls button { min-height: 30px; font-size: 11px; }
+.project-intro-controls button:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.intro-skip { display: none; }
+.project-intro[data-playing="true"] .intro-skip { display: inline; }
+.project-intro[data-playing="true"] .intro-replay { display: none; }
+.project-intro .project-intro-prompt { width: fit-content; max-width: 85%; margin: 0 0 0 auto; padding: 14px 18px; background: var(--chat-bubble, #eff0f2); border-radius: 18px 18px 4px 18px; font-size: .96rem; font-weight: 400; line-height: 1.6; letter-spacing: -.01em; }
+.intro-word { display: inline-block; white-space: pre; }
+.project-intro-answer { padding-left: 35px; }
+.project-ai-identity { display: flex; align-items: center; gap: 10px; margin: 0 0 10px -35px; font-size: .8125rem; }
+.project-ai-identity > span { width: 25px; height: 25px; border-radius: 50%; background: var(--chat-ink, #252a2b); color: var(--chat-paper, #fff); display: grid; place-items: center; font-size: .7rem; }
+.project-ai-identity strong { font-weight: 550; }
+.project-intro-answer > .project-answer-lead { font-size: .9375rem; line-height: 1.75; max-width: 740px; margin-bottom: 18px; }
+.project-story { margin: 0; }
+.project-story > article > header { padding-top: 0; }
+.project-story > article > header .study-label { margin-bottom: 12px; }
+.project-story .suhu-opener { align-items: start; }
+:root[data-theme="dark"] .project-intro { --chat-ink: #e2e6e5; --chat-muted: #a5afac; --chat-bubble: #272d2b; --chat-paper: #171a19; }
+/* No pre-hydration hiding: the complete answer is inspectable with or without JS. */
+@media(max-width:760px) {
+ .project-intro { margin-top: 14px; }
+ .project-question { margin-bottom: 14px; }
+ .project-intro .project-intro-prompt { max-width: 94%; font-size: .9375rem; padding: 12px 16px; }
+ .project-intro-answer { padding-left: 0; }
+ .project-ai-identity { margin-left: 0; }
+ .project-intro-answer > .project-answer-lead { font-size: .9375rem; margin-bottom: 14px; }
+}
+@media(prefers-reduced-motion:reduce), (scripting:none) { .project-intro-controls { display:none; } }
+.aw-title-actions > .aw-audio-trigger { width: 30px; height: 30px; padding: 5px; background: transparent; border-color: transparent; }
+.aw-audio-trigger svg { width: 18px; height: 18px; }
+.aw-audio-panel { position: fixed; inset: auto; margin: 0; width: 224px; padding: 10px 14px; border: 1px solid #d9ddda; border-radius: 10px; background: #fff; color: #252a2b; box-shadow: 0 8px 28px #0002; }
+.aw-audio-panel > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; font-size: .78rem; }
+.aw-audio-panel button { display: grid; place-items: center; width: 32px; min-height: 32px; border-radius: 5px; }
+.aw-audio-panel button svg { width: 17px; height: 17px; }
+.aw-audio-panel .aw-ui-sound span { display: none; }
+.aw-audio-panel button:focus-visible { outline: 2px solid currentColor; }
+:root[data-theme="dark"] .aw-audio-panel { background: #202422; color: #e2e6e5; border-color: #414944; }

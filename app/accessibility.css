@@ -1,0 +1,24 @@
+/* Confirmed axe failures from the normal Mac QA run, 2026-10-09.
+   Preserve the inherited workspace geometry and dark palette. */
+:root[data-theme="light"] .aw-desktop .aw-title-actions > span:first-child,
+:root[data-theme="light"] .aw-desktop .aw-profile small,
+:root[data-theme="light"] .aw-desktop .aw-new-session > kbd,
+:root[data-theme="light"] .aw-desktop .aw-project-shortcuts > header > span,
+:root[data-theme="light"] .aw-desktop .aw-search-trigger > span,
+:root[data-theme="light"] .aw-desktop .aw-search-trigger > kbd,
+:root[data-theme="light"] .aw-desktop .aw-owner small,
+:root[data-theme="light"] .aw-desktop .aw-composer-submit > span,
+:root[data-theme="light"] .aw-desktop .aw-project-back,
+:root[data-theme="light"] .aw-desktop .intro-replay {
+  color: #5c626d;
+}
+
+/* Evidence links are descriptions within the definition list, with the same
+   three-column desktop and stacked mobile placement as the original links. */
+.ls-evidence dd.ls-evidence-link { color: inherit; }
+@container (max-width: 700px) {
+  .ls-evidence .ls-evidence-link { grid-column: 2; }
+}
+@media (max-width: 760px) {
+  .ls-evidence .ls-evidence-link { grid-column: 1; }
+}
