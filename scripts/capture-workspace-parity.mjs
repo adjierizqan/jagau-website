@@ -104,7 +104,14 @@ try {
           }
           return result;
         });
-        rows.push({ site: site.name, size, theme, screen, file, url: page.url(), pngSize, stability, geometry, sha256: createHash("sha256").update(bytes).digest("hex") });
+        let review = null;
+        if (polish && process.env.QA_LOG_REVIEW === "true") {
+          const reviewFile = file.replace(/\.png$/, ".jpg");
+          const jpeg = await page.screenshot({type:"jpeg", quality:92});
+          await writeFile(`${directory}/${reviewFile}`, jpeg);
+          review = {file:reviewFile, sha256:createHash("sha256").update(jpeg).digest("hex")};
+        }
+        rows.push({ review, site: site.name, size, theme, screen, file, url: page.url(), pngSize, stability, geometry, sha256: createHash("sha256").update(bytes).digest("hex") });
       }
       async function home() {
         const response = await page.goto(site.origin + "/");
@@ -148,7 +155,7 @@ try {
             await page.locator("#ls-evidence").scrollIntoViewIfNeeded();
             await capture("case-labstock-evidence");
             if (polish) {
-              const trigger = page.locator('#ls-evidence a[aria-label^="Quick Look:"]').first();
+              const trigger = page.locator('main a[aria-label^="Quick Look:"]').first();
               await trigger.click();
               await page.getByRole("dialog", { name: "Project image viewer" }).waitFor();
               await capture("quick-look");
@@ -174,6 +181,7 @@ try {
   report.status = "CAPTURED_REQUIRES_VISUAL_REVIEW";
 } catch (error) {
   report.error = String(error);
+  console.error(report.error);
   process.exitCode = 1;
 } finally {
   await browser?.close();
@@ -204,5 +212,15 @@ try {
     }).join("")+"</div></section>";
   }).join("")+"</html>";
   await writeFile(`${directory}/comparison-${label}.html`,html);
+  // Supported connector-readable copies when native artifact downloads are unavailable.
+  // Public screenshots only; no credentials, browser state or production data export.
+  if (polish && process.env.QA_LOG_REVIEW === "true") {
+    for (const file of [...rows.map(row => row.review?.file).filter(Boolean), `capture-results-${label}.json`, `comparison-${label}.html`]) {
+      const bytes = await readFile(`${directory}/${file}`);
+      const encoded = bytes.toString("base64");
+      console.log(`REVIEW_FILE ${file} ${createHash("sha256").update(bytes).digest("hex")} ${bytes.length}`);
+      for (let i=0; i<encoded.length; i+=4096) console.log(`REVIEW_PART ${file} ${i/4096} ${encoded.slice(i,i+4096)}`);
+    }
+  }
   if (productionOnly || polish) console.log(`${report.status}\nEvidence: ${directory}\n${rows.length} public screenshots; visual acceptance remains UNREVIEWED.`);
 }

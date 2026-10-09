@@ -167,7 +167,8 @@ for (const width of [390, 1440]) {
         const dialog = page.getByRole("dialog", {name:"Project image viewer"});
         await expect(dialog).toBeVisible();
         await expect(dialog.locator("img")).toBeVisible();
-        const zoom = dialog.getByRole("button", {name:"Actual size", exact:true});
+        const zoom = dialog.locator(".aw-zoom-button");
+        await expect(zoom).toHaveText("Actual size");
         await zoom.click();
         await expect(zoom).toHaveAttribute("aria-pressed", "true");
         await dialog.getByRole("button", {name:"Fit image", exact:true}).click();

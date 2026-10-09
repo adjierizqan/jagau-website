@@ -37,6 +37,7 @@ jobs:
       - name: Capture real before and after renders
         working-directory: after
         env:
+          QA_LOG_REVIEW: "true"
           GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
