@@ -42,7 +42,7 @@ export function Media({
           style={{ width: "100%", height: "auto" }}
           preload={priority || undefined}
         />
-        <span aria-hidden="true">↗</span>
+        <span aria-hidden="true">Quick Look ↗</span>
       </a>
       <figcaption>{item.caption}</figcaption>
     </figure>

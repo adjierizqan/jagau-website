@@ -39,7 +39,7 @@ export function WorkspaceHome({
           </div>
           <nav className="home-proof" aria-label="Open a project">
             {featuredWork.slice(0,3).map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { event.preventDefault(); selectProject(project); }}>
-              <Image src={project.thumb!} alt={project.title + " product preview"} width={160} height={100} sizes="100px" />
+              <Image src={project.thumb!} alt={project.title + " product preview"} width={1600} height={1000} sizes="(max-width:760px) 30vw, 230px" />
               <span>{project.title}<small>{project.eyebrow}</small></span>
             </a>)}
           </nav>

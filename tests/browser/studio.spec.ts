@@ -151,3 +151,31 @@ test("WCAG automated checks on home and public cases", async ({page}) => {
   }
   expect(findings, "automated WCAG violations on home and all public cases").toEqual([]);
 });
+
+for (const width of [390, 1440]) {
+  for (const theme of ["light", "dark"]) {
+    test(`Quick Look discoverability and keyboard return ${width} ${theme}`, async ({page}) => {
+      await page.setViewportSize({width, height: width === 390 ? 844 : 900});
+      await page.emulateMedia({colorScheme: theme as "light" | "dark", reducedMotion: "reduce"});
+      await page.addInitScript(value => localStorage.setItem("aw-theme", value), theme);
+      for (const slug of slugs) {
+        await page.goto(`/projects/${slug}/`);
+        const trigger = page.locator('main a[aria-label^="Quick Look:"]').first();
+        await expect(trigger).toContainText("Quick Look");
+        await trigger.focus();
+        await page.keyboard.press("Enter");
+        const dialog = page.getByRole("dialog", {name:"Project image viewer"});
+        await expect(dialog).toBeVisible();
+        await expect(dialog.locator("img")).toBeVisible();
+        const zoom = dialog.getByRole("button", {name:"Actual size", exact:true});
+        await zoom.click();
+        await expect(zoom).toHaveAttribute("aria-pressed", "true");
+        await dialog.getByRole("button", {name:"Fit image", exact:true}).click();
+        await page.keyboard.press("Escape");
+        await expect(dialog).toHaveCount(0);
+        await expect(trigger).toBeFocused();
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      }
+    });
+  }
+}
