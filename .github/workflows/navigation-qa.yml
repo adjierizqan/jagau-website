@@ -2,6 +2,7 @@ name: JAGAU four-destination navigation
 on:
   pull_request:
     paths:
+      - 'components/**'
       - 'tests/browser/navigation.spec.ts'
       - '.github/workflows/navigation-qa.yml'
 permissions:
