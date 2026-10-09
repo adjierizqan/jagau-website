@@ -1,0 +1,57 @@
+name: JAGAU polish before and after
+on:
+  pull_request:
+    paths:
+      - 'components/**'
+      - 'scripts/capture-workspace-parity.mjs'
+      - '.github/workflows/polish-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: after
+      - uses: actions/checkout@v4
+        with:
+          ref: 96ca98b00031ebd430eb2052fde7d329c4b8b4a0
+          path: before
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build unchanged baseline
+        working-directory: before
+        run: npm ci && npm run build
+      - name: Build proposed polish
+        working-directory: after
+        run: |
+          npm ci
+          npm run build
+          npx playwright install --with-deps chromium
+      - name: Capture real before and after renders
+        working-directory: after
+        env:
+          QA_LOG_REVIEW: "true"
+          QA_EXTRA_PROJECT: "elab"
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/polish-visual
+          STATIC_ROOT="$GITHUB_WORKSPACE/before/out" PORT=4186 node scripts/serve.mjs > artifacts/polish-visual/before-server.log 2>&1 &
+          before_pid=$!
+          PORT=4185 node scripts/serve.mjs > artifacts/polish-visual/after-server.log 2>&1 &
+          after_pid=$!
+          trap 'kill "$before_pid" "$after_pid" 2>/dev/null || true' EXIT
+          node --input-type=module -e 'for (const port of [4185,4186]) { let ready=false; for(let i=0;i<50;i++){try{ready=(await fetch(`http://127.0.0.1:${port}`)).ok;}catch{} if(ready)break;await new Promise(r=>setTimeout(r,100));}if(!ready)throw Error(`Server ${port} failed`);}'
+          node scripts/capture-workspace-parity.mjs --polish 2>&1 | tee artifacts/polish-visual/capture.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jagau-polish-before-after
+          path: after/artifacts/polish-visual/
+          if-no-files-found: error

@@ -1,10 +1,13 @@
 "use client";
+import { ElabStudy } from "@/components/studies/ElabStudy";
+import { requestGuide, guideEndpoint } from "@/lib/guide-client";
 
 import Image from "next/image";
+import Link from "next/link";
 import dimensions from "@/data/media-dimensions.json";
 import dynamic from "next/dynamic";
 import { ProjectOpener, requestProjectIntro, markProjectHistoryNavigation } from "@/components/workspace/ProjectOpener";
-import { WorkspaceHome } from "@/components/workspace/WorkspaceHome";
+import { WorkspaceHome, StudioAbout } from "@/components/workspace/WorkspaceHome";
 const LabStockCaseStudy = dynamic(() => import("@/components/labstock/LabStockCaseStudy").then(m => m.LabStockCaseStudy));
 const SuhuLogStudy = dynamic(() => import("@/components/studies/SuhuLogStudy"));
 const BdrsStudy = dynamic(() => import("@/components/studies/BdrsStudy"));
@@ -39,7 +42,7 @@ const allProjects = () => rawAll.map(localizeProject);
 const featuredProjects = () => rawFeatured.map(localizeProject);
 const labProjects = () => rawLabs.map(localizeProject);
 
-type WorkspaceView = "home" | "work" | "projects" | "labs" | "knowledge" | "ask" | "project";
+type WorkspaceView = "home" | "work" | "projects" | "labs" | "knowledge" | "ask" | "studio" | "project";
 type Point = { x: number; y: number };
 type WindowState = "open" | "minimized" | "closed";
 type QuickLookImage = { src: string; caption: string };
@@ -219,10 +222,8 @@ function Sidebar({ view, selected, setView, newSession, selectProject, openPalet
 }) {
   const nav: { label: string; view: WorkspaceView; icon: "home" | "work" | "projects" | "labs" | "book" | "ask" }[] = [
     { label: tk("Home"), view: "home", icon: "home" },
-    { label: tk("Work"), view: "work", icon: "work" },
     { label: tk("Projects"), view: "projects", icon: "projects" },
-    { label: tk("Labs"), view: "labs", icon: "labs" },
-    { label: tk("Knowledge"), view: "knowledge", icon: "book" },
+    { label: tk("Studio"), view: "studio", icon: "book" },
     { label: tk("Ask"), view: "ask", icon: "ask" },
   ];
 
@@ -237,9 +238,9 @@ function Sidebar({ view, selected, setView, newSession, selectProject, openPalet
             <button className="aw-mobile-close" type="button" onClick={close} aria-label={t("Close navigation")}><Glyph name="close" /></button>
           </header>
 
-          <button className="aw-new-session" type="button" onClick={() => { newSession(); close(); }}>
+          {view === "ask" && <button className="aw-new-session" type="button" onClick={() => { newSession(); close(); }}>
             <span><Glyph name="plus" /> {t("New Session")}</span><kbd>⌘ N</kbd>
-          </button>
+          </button>}
 
           <nav className="aw-primary-nav" aria-label={t("Workspace")}>
             {nav.map((item) => (
@@ -303,7 +304,7 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
   const media = {src: project.thumb ?? project.image ?? "", alt: project.title};
   return (
     <button type="button" className={"aw-work-case" + (lead ? " is-lead" : "")} onClick={() => selectProject(project)}>
-      <figure>{media && <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-cover object-top" priority={lead} />}</figure>
+      <figure>{media.src ? <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-cover object-top" priority={lead} /> : <figcaption>{project.title} · Source-reviewed record · screenshots pending</figcaption>}</figure>
       <section>
         <span>{project.eyebrow} · {project.year}{project.status ? " · " + project.status : ""}</span>
         <h2>{project.title}</h2>
@@ -312,6 +313,13 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
       </section>
     </button>
   );
+}
+
+function StudioWorkspace() {
+  return <main className="aw-center workspace-home workspace-studio aw-enter">
+    <WorkspaceHeader eyebrow="JAGAU Workspace" title={tk("Studio")} copy={L("Independent software studio · Indonesia", "Studio perangkat lunak independen · Indonesia")} />
+    <StudioAbout />
+  </main>;
 }
 
 function WorkWorkspace({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
@@ -343,9 +351,9 @@ type ProjectViewProps = {
 function ProjectWorkspace({project, openImage, back, ask}: ProjectViewProps) {
  const props = {project,openImage};
  return <main className={"aw-center aw-project-detail aw-labstock-v2 aw-enter"}>
-  <button type="button" className="aw-project-back" onClick={back}>← Work</button>
+  <button type="button" className="aw-project-back" onClick={back}>← Projects</button>
   <ProjectOpener project={project}>
-  {project.slug === "labstock" ? <LabStockCaseStudy {...props}/> : project.slug === "suhulog" ? <SuhuLogStudy {...props}/> : project.slug === "bdrs" ? <BdrsStudy {...props}/> : null}
+  {project.slug === "labstock" ? <LabStockCaseStudy {...props}/> : project.slug === "suhulog" ? <SuhuLogStudy {...props}/> : project.slug === "bdrs" ? <BdrsStudy {...props}/> : project.slug === "elab" ? <ElabStudy project={project}/> : null}
   <footer className="ls-ask"><span>Want to go deeper?</span><button type="button" onClick={()=>ask(project.askSuggestion)}>Explore {project.title} ↗</button></footer>
   </ProjectOpener>
  </main>;
@@ -410,11 +418,11 @@ function AskContextBar({ context, setContext, busy }: { context: string | null; 
 
 type AskRow = AskTurn & { live?: boolean };
 
-function AskWorkspace({ query, setQuery, turns, current, answer, status, error, context, setContext, submit, stop, choose, openProjects }: {
+function AskWorkspace({ query, setQuery, turns, current, answer, status, error, context, setContext, submit, stop, choose, openProjects, openStudio, guideConsent, setGuideConsent }: {
   query: string;
   setQuery: (value: string) => void;
   turns: AskTurn[];
-  current: { projectId: string | null; question: string } | null;
+  current: { projectId: string | null; question: string; mode?: "ai" | "curated"; projectIds?: string[]; studioReference?:boolean } | null;
   answer: string | null;
   status: AskStatus;
   error: string | null;
@@ -424,6 +432,9 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
   stop: () => void;
   choose: (value: string) => void;
   openProjects: () => void;
+  openStudio: () => void;
+  guideConsent:boolean;
+  setGuideConsent:(value:boolean)=>void;
 }) {
   const active = status === "sending" || status === "streaming";
   const hasConversation = turns.length > 0 || current !== null || error !== null;
@@ -431,11 +442,12 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
   const groups = groupTurns(rows);
   return (
     <main className={`aw-center aw-ask aw-enter ${hasConversation ? "is-conversation" : "is-empty"}`}>
+      {guideEndpoint && <label className="aw-guide-privacy"><input type="checkbox" checked={guideConsent} onChange={event=>setGuideConsent(event.target.checked)}/> {L("Send this question to Cloudflare for an AI-generated answer using public project records. Do not include personal or patient information. JAGAU does not log raw questions; provider processing applies. Leave unchecked for local curated answers.","Kirim pertanyaan ini ke Cloudflare untuk jawaban AI berdasarkan catatan proyek publik. Jangan sertakan informasi pribadi atau pasien. JAGAU tidak mencatat pertanyaan mentah; pemrosesan penyedia berlaku. Biarkan tidak dicentang untuk jawaban terkurasi lokal.")}</label>}
       {!hasConversation ? (
         <section className="aw-ask-empty">
           <span>{t("Ask JAGAU Workspace")}</span>
           <h1>{t("What would you like to understand?")}</h1>
-          <p>{t("Curated answers · no live AI. Questions stay in your browser.")}</p>
+          <p>{guideEndpoint ? L("AI answers are labeled per reply and may be wrong. Sources and curated fallback remain available.","Setiap jawaban AI diberi label dan bisa salah. Sumber dan jawaban terkurasi tetap tersedia.") : t("Curated answers · no live AI. Questions stay in your browser.")}</p>
           <AskContextBar context={context} setContext={setContext} busy={active} />
           <Composer query={query} setQuery={setQuery} submit={submit} stop={stop} busy={active} />
           <div>{prompts.map((prompt) => <button type="button" key={prompt.label} onClick={() => choose(t(prompt.query))}>{t(prompt.label)}<Glyph name="arrow" /></button>)}</div>
@@ -450,13 +462,14 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
                 <div className="aw-ask-turn" key={index} data-project={turn.projectId ?? "general"}>
                   <div className="aw-message is-user"><span>{t("You")}</span><p>{turn.question}</p></div>
                   {turn.live
-                    ? (answer !== null || active || error) && <div className="aw-message"><span>{t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
-                    : <div className="aw-message"><span>{t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
-                  <div className="aw-guided-evidence">{explore(turn.question).projectIds.map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
+                    ? (answer !== null || active || error) && <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
+                    : <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
+                  <div className="aw-guided-evidence">{turn.mode === "ai" && turn.studioReference && <Link href="/" onClick={openStudio}>{L("JAGAU · public studio record ↗","JAGAU · catatan studio publik ↗")}</Link>}{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
                 </div>
               ))}
             </div>
           ))}
+          {error && <p role="status" className="aw-guide-privacy">{error}</p>}
           {error && <div className="aw-result-list"><button type="button" onClick={openProjects}><span><strong>{t("Explore projects")}</strong><small>{t("Browse without AI")}</small></span><Glyph name="arrow" /></button><a href={site.cv} target="_blank" rel="noopener noreferrer"><span><strong>{t("Founder")}</strong><small>{t("Founder portfolio")}</small></span><Glyph name="arrow" /></a><a href={"mailto:" + site.email}><span><strong>{t("Contact")}</strong><small>{t("Email Adjie")}</small></span><Glyph name="arrow" /></a></div>}
           <AskContextBar context={context} setContext={setContext} busy={active} />
           <Composer query={query} setQuery={setQuery} submit={submit} stop={stop} busy={active} />
@@ -478,10 +491,8 @@ function CommandPalette({ open, close, setView, selectProject }: {
   const selectProjectStable = useCallback((project: WorkspaceProject) => selectProject(project), [selectProject]);
   const commands = useMemo(() => [
     { label: t("Go home"), run: () => setView("home") },
-    { label: t("Browse featured work"), run: () => setView("work") },
     { label: t("Open projects"), run: () => setView("projects") },
-    { label: t("Open Labs"), run: () => setView("labs") },
-    { label: t("Open Knowledge"), run: () => setView("knowledge") },
+    { label: t("Studio"), run: () => setView("studio") },
     { label: t("Ask about JAGAU"), run: () => setView("ask") },
     { label: t("Open résumé"), run: () => window.open(site.cv, "_blank", "noopener,noreferrer") },
     { label: t("Contact Adjie"), run: () => window.open("mailto:" + site.email, "_self") },
@@ -644,11 +655,12 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
     if (next === "project") return;
     playUISound("tap");
     writeProjectParam(null);
-    setBaseView(next);
+    setBaseView(["work", "labs", "knowledge"].includes(next) ? "projects" : next);
   }, []);
   const [query, setQuery] = useState("");
   const [askTurns, setAskTurns] = useState<AskTurn[]>([]);
-  const [currentTurn, setCurrentTurn] = useState<{ projectId: string | null; question: string } | null>(null);
+  const [currentTurn, setCurrentTurn] = useState<{ projectId: string | null; question: string; mode?: "ai" | "curated"; projectIds?: string[]; studioReference?:boolean } | null>(null);
+  const [guideConsent,setGuideConsent]=useState(false);
   const [askContext, setAskContext] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
   const [askStatus, setAskStatus] = useState<AskStatus>("idle");
@@ -681,7 +693,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
     document.title = title;
     document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
     const description = project?.summary ?? "Explore JAGAU and its founder’s operational software work in a guided workspace.";
-    for (const [selector, value] of [["meta[name='description']", description], ["meta[property='og:title']", title], ["meta[property='og:description']", description], ["meta[property='og:url']", url], ["meta[name='twitter:title']", title], ["meta[name='twitter:description']", description], ["meta[property='og:image']", `https://jagau.id${project?.socialImage ?? "/projects/labstock/thumb-reset-a.jpg"}`], ["meta[name='twitter:image']", `https://jagau.id${project?.socialImage ?? "/projects/labstock/thumb-reset-a.jpg"}`]]) document.querySelector(selector)?.setAttribute("content", value);
+    for (const [selector, value] of [["meta[name='description']", description], ["meta[property='og:title']", title], ["meta[property='og:description']", description], ["meta[property='og:url']", url], ["meta[name='twitter:title']", title], ["meta[name='twitter:description']", description], ["meta[property='og:image']", `https://jagau.id${project?.socialImage ?? "/social.png"}`], ["meta[name='twitter:image']", `https://jagau.id${project?.socialImage ?? "/social.png"}`]]) document.querySelector(selector)?.setAttribute("content", value);
   }, [urlProject]);
 
   const openPalette = useCallback(() => {
@@ -711,7 +723,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "n") {
         event.preventDefault();
         askAbortRef.current?.abort();
-        setView("home");
+        setView("ask");
         setQuery("");
         setAskTurns([]);
         setCurrentTurn(null);
@@ -766,7 +778,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
 
   function newSession() {
     askAbortRef.current?.abort();
-    setView("home");
+    setView("ask");
     setQuery("");
     setAskTurns([]);
     setCurrentTurn(null);
@@ -778,9 +790,11 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
 
   function stopAsk() {
     askAbortRef.current?.abort();
+    setAskStatus("complete");
+    setAnswer(L("Response stopped. No AI answer generated.","Respons dihentikan. Tidak ada jawaban AI yang dihasilkan."));
   }
 
-  // Reviewed guided replies use the portfolio conversation UI without live inference.
+  // Optional server-mediated inference; without consent/config it stays local and curated.
   async function runAsk(value: string, projectId: string | null) {
     const clean = value.trim();
     if (!clean || clean.length > MAX_QUESTION_LENGTH) return;
@@ -789,10 +803,20 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
     setAskContext(projectId);
     setCurrentTurn({ projectId, question: clean });
     setQuery("");
-    setAnswer(explore(clean).answer);
+    askAbortRef.current?.abort();
+    const controller=new AbortController();askAbortRef.current=controller;
+    setAnswer(null);
     setAskError(null);
-    setAskStatus("complete");
+    setAskStatus("sending");
     setView("ask");
+    try {
+      const reply=await requestGuide(clean,projectId,controller.signal,guideConsent ? guideEndpoint : "");
+      if(askAbortRef.current!==controller||controller.signal.aborted)return;
+      setAnswer(reply.answer);
+      setCurrentTurn({projectId,question:clean,mode:reply.mode,projectIds:reply.projectIds,studioReference:reply.studioReference});
+      setAskError(reply.reason && reply.reason!=="offline" ? L("AI unavailable or outside public scope; showing a local curated answer.","AI tidak tersedia atau pertanyaan di luar cakupan publik; menampilkan jawaban terkurasi lokal.") : null);
+      setAskStatus("complete");
+    } catch { if(!controller.signal.aborted){setAskError("Response unavailable. Try again or browse the case studies.");setAskStatus("error");} }
   }
 
   function onPointerDown(event: ReactPointerEvent<HTMLElement>) {
@@ -894,13 +918,14 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
               <AudioControls />
               <button type="button" className="aw-mobile-theme" onClick={() => { playUISound("tap"); setTheme(theme === "dark" ? "light" : "dark"); }} aria-pressed={theme === "dark"} aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}><Glyph name={theme === "dark" ? "sun" : "moon"} /></button>
             </header>
-            {view === "home" ? <WorkspaceHome selectProject={selectProject} openAsk={() => setView("ask")} busy={askStatus === "sending" || askStatus === "streaming"} askQuestion={(question) => void runAsk(question, null)} composer={<Composer suggestions={false} query={query} setQuery={setQuery} submit={() => void runAsk(query, null)} busy={askStatus === "sending" || askStatus === "streaming"} stop={stopAsk} />} />
+            {view === "home" ? <WorkspaceHome guideConfigured={Boolean(guideEndpoint)} selectProject={selectProject} openAsk={() => setView("ask")} busy={askStatus === "sending" || askStatus === "streaming"} askQuestion={(question) => void runAsk(question, null)} composer={<Composer suggestions={false} query={query} setQuery={setQuery} submit={() => void runAsk(query, null)} busy={askStatus === "sending" || askStatus === "streaming"} stop={stopAsk} />} />
+              : view === "studio" ? <StudioWorkspace />
               : view === "work" ? <WorkWorkspace selectProject={selectProject} />
                 : view === "projects" ? <ProjectDirectory projects={allProjects()} title={tk("Projects")} copy={tk("A single workspace index for featured systems and focused experiments.")} selectProject={selectProject} />
                   : view === "labs" ? <ProjectDirectory projects={labProjects()} title={tk("Labs")} copy={tk("Additional studio experiments will appear here when public evidence is ready.")} selectProject={selectProject} />
                     : view === "knowledge" ? <KnowledgeWorkspace selectProject={selectProject} />
-                      : view === "project" ? <ProjectWorkspace key={selected.slug + "-" + projectRevision} project={selected} query={query} setQuery={setQuery} ask={(question) => void runAsk(question ?? query, selected.slug)} back={() => setView("work")} openImage={openQuickLook} />
-                        : <AskWorkspace query={query} setQuery={setQuery} turns={askTurns} current={currentTurn} answer={answer} status={askStatus} error={askError} context={askContext} setContext={setAskContext} submit={() => void runAsk(query, askContext)} stop={stopAsk} choose={(question) => void runAsk(question, askContext)} openProjects={() => setView("projects")} />}
+                      : view === "project" ? <ProjectWorkspace key={selected.slug + "-" + projectRevision} project={selected} query={query} setQuery={setQuery} ask={(question) => void runAsk(question ?? query, selected.slug)} back={() => setView("projects")} openImage={openQuickLook} />
+                        : <AskWorkspace openStudio={()=>setView("studio")} guideConsent={guideConsent} setGuideConsent={setGuideConsent} query={query} setQuery={setQuery} turns={askTurns} current={currentTurn} answer={answer} status={askStatus} error={askError} context={askContext} setContext={setAskContext} submit={() => void runAsk(query, askContext)} stop={stopAsk} choose={(question) => void runAsk(question, askContext)} openProjects={() => setView("projects")} />}
           </section>
         </div>
       </div>
@@ -908,11 +933,10 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
       <nav className="aw-dock" aria-label={t("Workspace dock")}>
         {([
           { label: tk("Workspace"), icon: "home", view: undefined },
-          { label: tk("Work"), icon: "work", view: "work" },
           { label: tk("Projects"), icon: "projects", view: "projects" },
-          { label: tk("Labs"), icon: "labs", view: "labs" },
+          { label: tk("Studio"), icon: "book", view: "studio" },
           { label: tk("Ask"), icon: "ask", view: "ask" },
-        ] as { label: string; icon: "home" | "work" | "projects" | "labs" | "ask"; view?: WorkspaceView }[]).map((item) => {
+        ] as { label: string; icon: "home" | "work" | "projects" | "labs" | "ask" | "book"; view?: WorkspaceView }[]).map((item) => {
           const active = windowState === "open" && (item.view ? view === item.view : view === "home");
           const open = item.label === "Workspace" && windowState !== "closed";
           return <button type="button" className={(active ? "is-active " : "") + (open ? "is-open " : "") + (item.label === "Workspace" && windowState === "minimized" ? "is-minimized" : "")} key={item.label} onClick={() => openWorkspace(item.view)} aria-label={t(item.label)}><Glyph name={item.icon} /><span className="aw-dock-tooltip" role="tooltip">{t(item.label)}</span><i /></button>;

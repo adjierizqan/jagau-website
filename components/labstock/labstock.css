@@ -83,7 +83,7 @@
 .ls-product-note { max-width: 15rem; font-size: .8rem !important; }
 .ls-screen { display: block; position: relative; width: 100%; min-width: 0; border: 1px solid var(--ls-line); border-radius: .25rem; overflow: hidden; cursor: zoom-in !important; background: #f8f9fb; }
 .ls-screen img { display: block; width: 100%; height: auto; }
-.ls-expand { position: absolute; right: .65rem; bottom: .65rem; width: 1.8rem; height: 1.8rem; display: grid; place-items: center; color: #323c36; background: #ffffffed; border: 1px solid #c6ceca; border-radius: 50%; font-size: .85rem; }
+.ls-expand { position: absolute; right: .65rem; bottom: .65rem; display: grid; place-items: center; color: #323c36; background: #ffffffed; border: 1px solid #c6ceca; border-radius: .35rem; padding: .35rem .6rem; font-size: .75rem; }
 .ls-scene { margin-top: 3rem; }
 .ls-scene-number { display: block; color: var(--ls-muted); font-size: .65rem; margin-bottom: 1rem; }
 .ls-scene-copy h3, .ls-report-heading h3 { font-size: clamp(1.7rem, 3.5cqw, 2.6rem); letter-spacing: -.045em; font-weight: 550; line-height: 1.1; }
@@ -165,3 +165,9 @@
   .ls-takeaway { margin-top: 3rem; }.ls-ask { flex-direction: column; align-items: start; }
 }
 @media (prefers-reduced-motion: reduce) { .ls-trace-button { display: none; } }
+
+/* Keep image inspection visible for touch and keyboard users as well as hover. */
+.ls-hero-open { width: auto; height: auto; padding: .35rem .6rem; border-radius: .35rem; background: #ffffffed; color: #292e2d; font-size: .75rem; }
+.ls-screen, .ls-hero > a { transition: border-color 160ms ease, box-shadow 160ms ease; }
+.ls-screen:is(:hover, :focus-visible), .ls-hero > a:is(:hover, :focus-visible) { box-shadow: 0 4px 14px #00000010; }
+@media (prefers-reduced-motion: reduce) { .ls-screen, .ls-hero > a { transition: none; } }

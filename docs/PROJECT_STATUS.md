@@ -1,10 +1,10 @@
 PROJECT: JAGAU Workspace
 VERSION: 2.0.0
 STATUS: BLOCKED
-CURRENT MILESTONE: Local VERIFY accepted on 0037439; new owner-requested wallpaper render pending; GitHub/public HTTPS SHIP pending
-BLOCKER: GitHub CLI cannot reach api.github.com from this restricted session; reported invalid token is inconclusive. Connector lacks repository creation/Pages administration. New wallpaper render, Rumahweb full-zone backup and mailbox verification remain pending.
-NEXT ACTION: Run scripts/publish-release.mjs in normal Terminal to publish the audited dedicated source and collect GitHub browser QA evidence. No repeated login requested; stop at any actual authorization error.
-EXIT CRITERIA: Safe separate GitHub/Pages publication; full DNS backup/mail preservation; externally verified jagau.id/www HTTPS, correct workspace and actual email delivery
-EVIDENCE: docs/release/REPORT.md; VISUAL_REVIEW.md; operator-qa/2026-10-09T02-09-07-429Z (all steps PASS, browser 26/26, 68 captures accounted for)
-LAST DECISION: Correct portfolio workspace accepted on 0037439; guided-only scope retained; no deployment/DNS/email mutation
-LAST UPDATED: 2026-10-09
+CURRENT MILESTONE: RC A combined review readiness PASS; RC B mandatory gates BLOCKED.
+BLOCKER: Genuine Cloudflare account/quota/inference access unavailable; exact replacement screenshot publication denied by automatic approval.
+NEXT ACTION: Owner review draft #11. Resolve trusted image clearance and approved inference-only/free-account access for RC B. No merge/deploy authorized.
+EXIT CRITERIA: RC A reviewed; RC B genuine inference and exact-payload privacy gates pass, followed by actual combined boundary review.
+EVIDENCE: docs/projects/INTEGRATED_REVIEW.md; docs/release/INTEGRATION_EVIDENCE.json; docs/architecture/AI_ACTIVATION_CHECKLIST.md.
+LAST DECISION: Keep curated Guide and 40 cleared original images. Main 625d621 unchanged.
+LAST UPDATED: 2026-10-10

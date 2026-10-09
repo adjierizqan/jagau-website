@@ -1,0 +1,352 @@
+{
+  "status": {
+    "candidateA": "PASS_REVIEW_ONLY",
+    "candidateB": "BLOCKED",
+    "overall": "BLOCKED"
+  },
+  "testedCommit": "9985f0d448d105eed221a7484ecd501bc7cf13fa",
+  "pr": "https://github.com/adjierizqan/jagau-website/pull/11",
+  "runs": {
+    "navigation": 37961662973,
+    "visual": 37961662873,
+    "guide": 37961663138,
+    "gates": 37961663151
+  },
+  "tests": {
+    "unit": 40,
+    "defaultBrowser": 58,
+    "configuredContract": 16,
+    "navigationSubset": 12,
+    "staticGroups": 12
+  },
+  "captures": {
+    "comparison": 144,
+    "navigation": 36,
+    "guideFixture": 36,
+    "total": 216,
+    "comparisonHashIdenticalPreviouslyReviewed": 118,
+    "comparisonChangedOpened": 26
+  },
+  "privacy": {
+    "originalImages": 40,
+    "changedOriginals": 0,
+    "replacementImagesPublished": 0,
+    "selectedPrivateReplacements": 14
+  },
+  "liveInference": false,
+  "productionChanged": false,
+  "diff": [
+    {
+      "path": ".env.example",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 2
+    },
+    {
+      "path": ".github/workflows/guide-qa.yml",
+      "status": "added",
+      "additions": 49,
+      "deletions": 0
+    },
+    {
+      "path": ".github/workflows/navigation-qa.yml",
+      "status": "added",
+      "additions": 31,
+      "deletions": 0
+    },
+    {
+      "path": ".github/workflows/polish-qa.yml",
+      "status": "added",
+      "additions": 57,
+      "deletions": 0
+    },
+    {
+      "path": "app/layout.tsx",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 1
+    },
+    {
+      "path": "app/projects/[slug]/page.tsx",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "cloudflare/guide-worker/src/budget.ts",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0
+    },
+    {
+      "path": "cloudflare/guide-worker/src/index.ts",
+      "status": "added",
+      "additions": 60,
+      "deletions": 0
+    },
+    {
+      "path": "cloudflare/guide-worker/wrangler.jsonc",
+      "status": "added",
+      "additions": 11,
+      "deletions": 0
+    },
+    {
+      "path": "components/WorkspacePrototype.tsx",
+      "status": "modified",
+      "additions": 57,
+      "deletions": 33
+    },
+    {
+      "path": "components/labstock/LabStockCaseStudy.tsx",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2
+    },
+    {
+      "path": "components/labstock/labstock.css",
+      "status": "modified",
+      "additions": 7,
+      "deletions": 1
+    },
+    {
+      "path": "components/studies/ElabStudy.tsx",
+      "status": "added",
+      "additions": 12,
+      "deletions": 0
+    },
+    {
+      "path": "components/studies/StudyPrimitives.tsx",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "components/studies/studies.css",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 0
+    },
+    {
+      "path": "components/workspace/WorkspaceHome.tsx",
+      "status": "modified",
+      "additions": 11,
+      "deletions": 3
+    },
+    {
+      "path": "components/workspace/home.css",
+      "status": "modified",
+      "additions": 34,
+      "deletions": 14
+    },
+    {
+      "path": "components/workspace/interface.css",
+      "status": "modified",
+      "additions": 3,
+      "deletions": 0
+    },
+    {
+      "path": "data/public-knowledge.ts",
+      "status": "added",
+      "additions": 11,
+      "deletions": 0
+    },
+    {
+      "path": "data/studio.ts",
+      "status": "modified",
+      "additions": 6,
+      "deletions": 100
+    },
+    {
+      "path": "data/workspace.ts",
+      "status": "modified",
+      "additions": 18,
+      "deletions": 1
+    },
+    {
+      "path": "docs/PROJECT_STATUS.md",
+      "status": "modified",
+      "additions": 8,
+      "deletions": 8
+    },
+    {
+      "path": "docs/architecture/AI_ACTIVATION_CHECKLIST.md",
+      "status": "added",
+      "additions": 21,
+      "deletions": 0
+    },
+    {
+      "path": "docs/architecture/AI_GUIDE.md",
+      "status": "added",
+      "additions": 62,
+      "deletions": 0
+    },
+    {
+      "path": "docs/design/POLISH_V1.md",
+      "status": "added",
+      "additions": 47,
+      "deletions": 0
+    },
+    {
+      "path": "docs/design/POLISH_V1_REVIEW.md",
+      "status": "added",
+      "additions": 76,
+      "deletions": 0
+    },
+    {
+      "path": "docs/projects/ELAB_REVIEW.md",
+      "status": "added",
+      "additions": 38,
+      "deletions": 0
+    },
+    {
+      "path": "docs/projects/GUIDE_REVIEW.md",
+      "status": "added",
+      "additions": 36,
+      "deletions": 0
+    },
+    {
+      "path": "docs/projects/INTEGRATED_REVIEW.md",
+      "status": "added",
+      "additions": 13,
+      "deletions": 0
+    },
+    {
+      "path": "docs/projects/INVENTORY.md",
+      "status": "added",
+      "additions": 33,
+      "deletions": 0
+    },
+    {
+      "path": "docs/projects/ISSUE_2_REVIEW.md",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0
+    },
+    {
+      "path": "docs/projects/NAVIGATION_REVIEW.md",
+      "status": "added",
+      "additions": 15,
+      "deletions": 0
+    },
+    {
+      "path": "docs/screenshots/RECAPTURE.md",
+      "status": "added",
+      "additions": 20,
+      "deletions": 0
+    },
+    {
+      "path": "docs/screenshots/inventory.json",
+      "status": "added",
+      "additions": 286,
+      "deletions": 0
+    },
+    {
+      "path": "lib/ask-context.ts",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "lib/bounded-body.ts",
+      "status": "added",
+      "additions": 9,
+      "deletions": 0
+    },
+    {
+      "path": "lib/guide-client.ts",
+      "status": "added",
+      "additions": 23,
+      "deletions": 0
+    },
+    {
+      "path": "lib/guide-protocol.ts",
+      "status": "added",
+      "additions": 14,
+      "deletions": 0
+    },
+    {
+      "path": "package.json",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "scripts/capture-workspace-parity.mjs",
+      "status": "modified",
+      "additions": 124,
+      "deletions": 17
+    },
+    {
+      "path": "scripts/check-release-candidate.mjs",
+      "status": "added",
+      "additions": 22,
+      "deletions": 0
+    },
+    {
+      "path": "scripts/recapture/capture.mjs",
+      "status": "added",
+      "additions": 45,
+      "deletions": 0
+    },
+    {
+      "path": "scripts/recapture/fixtures.ts",
+      "status": "added",
+      "additions": 14,
+      "deletions": 0
+    },
+    {
+      "path": "scripts/recapture/guard.ts",
+      "status": "added",
+      "additions": 16,
+      "deletions": 0
+    },
+    {
+      "path": "scripts/static-check.mjs",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0
+    },
+    {
+      "path": "tests/browser/guide.spec.ts",
+      "status": "added",
+      "additions": 118,
+      "deletions": 0
+    },
+    {
+      "path": "tests/browser/navigation.spec.ts",
+      "status": "added",
+      "additions": 31,
+      "deletions": 0
+    },
+    {
+      "path": "tests/browser/studio.spec.ts",
+      "status": "modified",
+      "additions": 61,
+      "deletions": 1
+    },
+    {
+      "path": "tests/explorer.test.ts",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "tests/guide-worker.test.ts",
+      "status": "added",
+      "additions": 77,
+      "deletions": 0
+    },
+    {
+      "path": "tests/knowledge.test.ts",
+      "status": "added",
+      "additions": 31,
+      "deletions": 0
+    },
+    {
+      "path": "tests/recapture.test.ts",
+      "status": "added",
+      "additions": 15,
+      "deletions": 0
+    }
+  ]
+}

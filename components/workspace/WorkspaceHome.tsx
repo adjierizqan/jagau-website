@@ -12,11 +12,13 @@ export function WorkspaceHome({
   composer,
   askQuestion,
   busy = false,
+  guideConfigured = false,
 }: {
   selectProject: (p: WorkspaceProject) => void;
   openAsk: () => void;
   composer: ReactNode;
   busy?: boolean;
+  guideConfigured?: boolean;
   askQuestion: (question: string) => void;
 }) {
   return (
@@ -28,7 +30,7 @@ export function WorkspaceHome({
         </div>
         <section className="home-start" aria-label="Explore JAGAU">
           <h2>What would you like to know?</h2>
-          <p className="home-positioning">Ask about the studio, or open founder work to see how it was built. Curated answers · no live AI.</p>
+          <p className="home-positioning">Ask about the studio, or open founder work to see how it was built. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
           {composer}
           <div className="home-starters" aria-label="Suggested questions">
             {[
@@ -39,7 +41,7 @@ export function WorkspaceHome({
           </div>
           <nav className="home-proof" aria-label="Open a project">
             {featuredWork.slice(0,3).map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { event.preventDefault(); selectProject(project); }}>
-              <Image src={project.thumb!} alt={project.title + " product preview"} width={160} height={100} sizes="100px" />
+              <Image src={project.thumb!} alt={project.title + " product preview"} width={1600} height={1000} sizes="(max-width:760px) 30vw, 230px" />
               <span>{project.title}<small>{project.eyebrow}</small></span>
             </a>)}
           </nav>
@@ -98,6 +100,13 @@ export function WorkspaceHome({
           Explore ↗
         </button>
       </section>
+      <StudioAbout />
+    </main>
+  );
+}
+
+export function StudioAbout() {
+  return (
       <section className="home-about">
         <div>
           <h2>Engineering, with context.</h2>
@@ -121,6 +130,5 @@ export function WorkspaceHome({
           ))}
         </dl>
       </section>
-    </main>
   );
 }
