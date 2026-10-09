@@ -146,11 +146,27 @@ try {
           assert.ok((await page.locator(".aw-message:not(.is-user)").last().innerText()).includes("LabStock"));
           await capture("guided-response");
         }
-        for (const slug of ["labstock", "suhulog", "bdrs", ...(polish && site.name === "after" && process.env.QA_EXTRA_PROJECT === "elab" ? ["elab"] : [])]) {
+        if (polish && process.env.QA_STUDIO === "true") {
+          await home();
+          if (viewport.width < 760) await page.getByRole("button", {name:"Open navigation",exact:true}).click();
+          await page.locator(".aw-primary-nav").getByRole("button", {name:"Studio",exact:true}).click();
+          await capture("studio");
+          if (site.name === "after") {
+            await page.locator(".studio-systems").evaluate(element => element.scrollIntoView({block:"start",behavior:"instant"}));
+            await capture("studio-systems");
+          }
+        }
+        for (const slug of ["labstock", "suhulog", "bdrs", ...(polish && (site.name === "after" ? process.env.QA_EXTRA_PROJECT : process.env.QA_REFERENCE_EXTRA_PROJECT) === "elab" ? ["elab"] : [])]) {
           assert.equal((await page.goto(`${site.origin}/projects/${slug}/`))?.status(), 200);
           await page.locator(".project-intro").waitFor();
           if (productionOnly || polish) await page.locator(".project-intro-answer").waitFor({ state: "visible" });
           await capture(`case-${slug}`);
+          if (polish && process.env.QA_STUDIO === "true" && ["suhulog", "bdrs"].includes(slug)) {
+            const media = page.locator(".study-media").last();
+            await media.evaluate(element => element.scrollIntoView({block:"end",behavior:"instant"}));
+            await media.locator("a").hover();
+            await capture(`case-${slug}-gallery-hover`);
+          }
           if (slug === "elab") {
             await page.locator("#study-evidence").scrollIntoViewIfNeeded();
             await capture("case-elab-evidence");
@@ -174,7 +190,7 @@ try {
     }
   }
   }
-  if (polish) assert.equal(rows.length, process.env.QA_EXTRA_PROJECT === "elab" ? 144 : 132, "Before/after screenshot matrix incomplete");
+  if (polish) assert.equal(rows.length, 132 + (process.env.QA_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_REFERENCE_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_STUDIO === "true" ? 42 : 0), "Before/after screenshot matrix incomplete");
   if (productionOnly) {
     assert.equal(rows.length, 54, "Required production screenshot inventory incomplete");
     assert.equal(new Set(rows.map(row => row.file)).size, 54, "Production capture filenames are not unique");

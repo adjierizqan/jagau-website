@@ -18,7 +18,7 @@ jobs:
           path: after
       - uses: actions/checkout@v4
         with:
-          ref: 96ca98b00031ebd430eb2052fde7d329c4b8b4a0
+          ref: 11114aec6243652532d5605816f5a7c8b714c506
           path: before
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -38,6 +38,8 @@ jobs:
         env:
           QA_LOG_REVIEW: "true"
           QA_EXTRA_PROJECT: "elab"
+          QA_REFERENCE_EXTRA_PROJECT: "elab"
+          QA_STUDIO: "true"
           GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail
