@@ -5,7 +5,7 @@ import Image from "next/image";
 import dimensions from "@/data/media-dimensions.json";
 import dynamic from "next/dynamic";
 import { ProjectOpener, requestProjectIntro, markProjectHistoryNavigation } from "@/components/workspace/ProjectOpener";
-import { WorkspaceHome } from "@/components/workspace/WorkspaceHome";
+import { WorkspaceHome, StudioAbout } from "@/components/workspace/WorkspaceHome";
 const LabStockCaseStudy = dynamic(() => import("@/components/labstock/LabStockCaseStudy").then(m => m.LabStockCaseStudy));
 const SuhuLogStudy = dynamic(() => import("@/components/studies/SuhuLogStudy"));
 const BdrsStudy = dynamic(() => import("@/components/studies/BdrsStudy"));
@@ -40,7 +40,7 @@ const allProjects = () => rawAll.map(localizeProject);
 const featuredProjects = () => rawFeatured.map(localizeProject);
 const labProjects = () => rawLabs.map(localizeProject);
 
-type WorkspaceView = "home" | "work" | "projects" | "labs" | "knowledge" | "ask" | "project";
+type WorkspaceView = "home" | "work" | "projects" | "labs" | "knowledge" | "ask" | "studio" | "project";
 type Point = { x: number; y: number };
 type WindowState = "open" | "minimized" | "closed";
 type QuickLookImage = { src: string; caption: string };
@@ -220,10 +220,8 @@ function Sidebar({ view, selected, setView, newSession, selectProject, openPalet
 }) {
   const nav: { label: string; view: WorkspaceView; icon: "home" | "work" | "projects" | "labs" | "book" | "ask" }[] = [
     { label: tk("Home"), view: "home", icon: "home" },
-    { label: tk("Work"), view: "work", icon: "work" },
     { label: tk("Projects"), view: "projects", icon: "projects" },
-    { label: tk("Labs"), view: "labs", icon: "labs" },
-    { label: tk("Knowledge"), view: "knowledge", icon: "book" },
+    { label: tk("Studio"), view: "studio", icon: "book" },
     { label: tk("Ask"), view: "ask", icon: "ask" },
   ];
 
@@ -238,9 +236,9 @@ function Sidebar({ view, selected, setView, newSession, selectProject, openPalet
             <button className="aw-mobile-close" type="button" onClick={close} aria-label={t("Close navigation")}><Glyph name="close" /></button>
           </header>
 
-          <button className="aw-new-session" type="button" onClick={() => { newSession(); close(); }}>
+          {view === "ask" && <button className="aw-new-session" type="button" onClick={() => { newSession(); close(); }}>
             <span><Glyph name="plus" /> {t("New Session")}</span><kbd>⌘ N</kbd>
-          </button>
+          </button>}
 
           <nav className="aw-primary-nav" aria-label={t("Workspace")}>
             {nav.map((item) => (
@@ -315,6 +313,13 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
   );
 }
 
+function StudioWorkspace() {
+  return <main className="aw-center workspace-home aw-enter">
+    <WorkspaceHeader eyebrow="JAGAU Workspace" title={tk("Studio")} copy={L("Independent software studio · Indonesia", "Studio perangkat lunak independen · Indonesia")} />
+    <StudioAbout />
+  </main>;
+}
+
 function WorkWorkspace({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
   const [lead, ...rest] = featuredProjects();
   return (
@@ -344,7 +349,7 @@ type ProjectViewProps = {
 function ProjectWorkspace({project, openImage, back, ask}: ProjectViewProps) {
  const props = {project,openImage};
  return <main className={"aw-center aw-project-detail aw-labstock-v2 aw-enter"}>
-  <button type="button" className="aw-project-back" onClick={back}>← Work</button>
+  <button type="button" className="aw-project-back" onClick={back}>← Projects</button>
   <ProjectOpener project={project}>
   {project.slug === "labstock" ? <LabStockCaseStudy {...props}/> : project.slug === "suhulog" ? <SuhuLogStudy {...props}/> : project.slug === "bdrs" ? <BdrsStudy {...props}/> : project.slug === "elab" ? <ElabStudy project={project}/> : null}
   <footer className="ls-ask"><span>Want to go deeper?</span><button type="button" onClick={()=>ask(project.askSuggestion)}>Explore {project.title} ↗</button></footer>
@@ -479,10 +484,8 @@ function CommandPalette({ open, close, setView, selectProject }: {
   const selectProjectStable = useCallback((project: WorkspaceProject) => selectProject(project), [selectProject]);
   const commands = useMemo(() => [
     { label: t("Go home"), run: () => setView("home") },
-    { label: t("Browse featured work"), run: () => setView("work") },
     { label: t("Open projects"), run: () => setView("projects") },
-    { label: t("Open Labs"), run: () => setView("labs") },
-    { label: t("Open Knowledge"), run: () => setView("knowledge") },
+    { label: t("Studio"), run: () => setView("studio") },
     { label: t("Ask about JAGAU"), run: () => setView("ask") },
     { label: t("Open résumé"), run: () => window.open(site.cv, "_blank", "noopener,noreferrer") },
     { label: t("Contact Adjie"), run: () => window.open("mailto:" + site.email, "_self") },
@@ -645,7 +648,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
     if (next === "project") return;
     playUISound("tap");
     writeProjectParam(null);
-    setBaseView(next);
+    setBaseView(["work", "labs", "knowledge"].includes(next) ? "projects" : next);
   }, []);
   const [query, setQuery] = useState("");
   const [askTurns, setAskTurns] = useState<AskTurn[]>([]);
@@ -767,7 +770,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
 
   function newSession() {
     askAbortRef.current?.abort();
-    setView("home");
+    setView("ask");
     setQuery("");
     setAskTurns([]);
     setCurrentTurn(null);
@@ -896,11 +899,12 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
               <button type="button" className="aw-mobile-theme" onClick={() => { playUISound("tap"); setTheme(theme === "dark" ? "light" : "dark"); }} aria-pressed={theme === "dark"} aria-label={theme === "dark" ? t("Switch to light mode") : t("Switch to dark mode")}><Glyph name={theme === "dark" ? "sun" : "moon"} /></button>
             </header>
             {view === "home" ? <WorkspaceHome selectProject={selectProject} openAsk={() => setView("ask")} busy={askStatus === "sending" || askStatus === "streaming"} askQuestion={(question) => void runAsk(question, null)} composer={<Composer suggestions={false} query={query} setQuery={setQuery} submit={() => void runAsk(query, null)} busy={askStatus === "sending" || askStatus === "streaming"} stop={stopAsk} />} />
+              : view === "studio" ? <StudioWorkspace />
               : view === "work" ? <WorkWorkspace selectProject={selectProject} />
                 : view === "projects" ? <ProjectDirectory projects={allProjects()} title={tk("Projects")} copy={tk("A single workspace index for featured systems and focused experiments.")} selectProject={selectProject} />
                   : view === "labs" ? <ProjectDirectory projects={labProjects()} title={tk("Labs")} copy={tk("Additional studio experiments will appear here when public evidence is ready.")} selectProject={selectProject} />
                     : view === "knowledge" ? <KnowledgeWorkspace selectProject={selectProject} />
-                      : view === "project" ? <ProjectWorkspace key={selected.slug + "-" + projectRevision} project={selected} query={query} setQuery={setQuery} ask={(question) => void runAsk(question ?? query, selected.slug)} back={() => setView("work")} openImage={openQuickLook} />
+                      : view === "project" ? <ProjectWorkspace key={selected.slug + "-" + projectRevision} project={selected} query={query} setQuery={setQuery} ask={(question) => void runAsk(question ?? query, selected.slug)} back={() => setView("projects")} openImage={openQuickLook} />
                         : <AskWorkspace query={query} setQuery={setQuery} turns={askTurns} current={currentTurn} answer={answer} status={askStatus} error={askError} context={askContext} setContext={setAskContext} submit={() => void runAsk(query, askContext)} stop={stopAsk} choose={(question) => void runAsk(question, askContext)} openProjects={() => setView("projects")} />}
           </section>
         </div>
@@ -909,11 +913,10 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
       <nav className="aw-dock" aria-label={t("Workspace dock")}>
         {([
           { label: tk("Workspace"), icon: "home", view: undefined },
-          { label: tk("Work"), icon: "work", view: "work" },
           { label: tk("Projects"), icon: "projects", view: "projects" },
-          { label: tk("Labs"), icon: "labs", view: "labs" },
+          { label: tk("Studio"), icon: "book", view: "studio" },
           { label: tk("Ask"), icon: "ask", view: "ask" },
-        ] as { label: string; icon: "home" | "work" | "projects" | "labs" | "ask"; view?: WorkspaceView }[]).map((item) => {
+        ] as { label: string; icon: "home" | "work" | "projects" | "labs" | "ask" | "book"; view?: WorkspaceView }[]).map((item) => {
           const active = windowState === "open" && (item.view ? view === item.view : view === "home");
           const open = item.label === "Workspace" && windowState !== "closed";
           return <button type="button" className={(active ? "is-active " : "") + (open ? "is-open " : "") + (item.label === "Workspace" && windowState === "minimized" ? "is-minimized" : "")} key={item.label} onClick={() => openWorkspace(item.view)} aria-label={t(item.label)}><Glyph name={item.icon} /><span className="aw-dock-tooltip" role="tooltip">{t(item.label)}</span><i /></button>;
