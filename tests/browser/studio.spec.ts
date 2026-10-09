@@ -131,7 +131,7 @@ test("WCAG automated checks on home and public cases", async ({page}) => {
   const require = createRequire(import.meta.url);
   const axe = await readFile(require.resolve("axe-core/axe.min.js"), "utf8");
   const findings = [];
-  for (const path of ["/", ...slugs.map(slug => `/projects/${slug}/`)]) {
+  for (const path of ["/", ...slugs.map(slug => `/projects/${slug}/`), "/projects/elab/"]) {
     await page.goto(path);
     await page.locator("main").waitFor();
     // Audit settled text, after fonts and finite entrance animations finish.
@@ -203,7 +203,9 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
       if (width < 760) await page.getByRole("button",{name:"Open navigation",exact:true}).click();
       await page.locator(".aw-primary-nav").getByRole("button",{name:"Projects",exact:true}).click();
       await expect(page.locator(".aw-project-objects")).toContainText("ELAB");
-      await page.locator(".aw-project-objects button").filter({hasText:"ELAB"}).click();
+      const elabCard = page.locator(".aw-project-objects button").filter({has:page.getByText("ELAB",{exact:true})});
+      await expect(elabCard).toHaveCount(1);
+      await elabCard.click();
       await expect(page).toHaveURL(/projects\/elab/);
       await expect(page.getByRole("heading",{name:"ELAB",exact:true})).toBeVisible();
     });

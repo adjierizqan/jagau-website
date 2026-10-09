@@ -151,6 +151,10 @@ try {
           await page.locator(".project-intro").waitFor();
           if (productionOnly || polish) await page.locator(".project-intro-answer").waitFor({ state: "visible" });
           await capture(`case-${slug}`);
+          if (slug === "elab") {
+            await page.locator("#study-evidence").scrollIntoViewIfNeeded();
+            await capture("case-elab-evidence");
+          }
           if (slug === "labstock") {
             await page.locator("#ls-evidence").scrollIntoViewIfNeeded();
             await capture("case-labstock-evidence");
@@ -170,7 +174,7 @@ try {
     }
   }
   }
-  if (polish) assert.equal(rows.length, process.env.QA_EXTRA_PROJECT === "elab" ? 138 : 132, "Before/after screenshot matrix incomplete");
+  if (polish) assert.equal(rows.length, process.env.QA_EXTRA_PROJECT === "elab" ? 144 : 132, "Before/after screenshot matrix incomplete");
   if (productionOnly) {
     assert.equal(rows.length, 54, "Required production screenshot inventory incomplete");
     assert.equal(new Set(rows.map(row => row.file)).size, 54, "Production capture filenames are not unique");
