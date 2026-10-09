@@ -25,7 +25,7 @@ function publicGit(args, options) { return run("git", [`--git-dir=${publication}
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const allowed = path => /^(app|components|data|lib|public|scripts|tests|\.github)\//.test(path)
   || /^(\.env\.example|\.gitignore|README\.md|CHANGELOG\.md|package(-lock)?\.json|.*\.config\.(ts|mjs)|tsconfig\.json)$/.test(path)
-  || /^(docs\/(requirements\.md|decisions\/[^/]+\.md|deployment\/[^/]+\.md|operations\/[^/]+\.md|release\/(content-provenance\.md|wallpaper-provenance\.json|current-assets-audit\.json)))$/.test(path);
+  || /^(docs\/(PROJECT_STATUS\.md|requirements\.md|decisions\/[^/]+\.md|deployment\/[^/]+\.md|operations\/[^/]+\.md|release\/(REPORT\.md|content-provenance\.md|wallpaper-provenance\.json|current-assets-audit\.json)))$/.test(path);
 const secretPatterns = [/-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/, /github_pat_[A-Za-z0-9_]{30,}/, /gh[pousr]_[A-Za-z0-9]{30,}/, /AKIA[0-9A-Z]{16}/, /sk-(?:proj-)?[A-Za-z0-9_-]{32,}/];
 try {
   if (!existsSync(history)) throw new Error("Permanent source history missing; do not use stale /private/tmp metadata.");
