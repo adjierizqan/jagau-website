@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { KNOWLEDGE_VERSION } from "../../data/public-knowledge";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { createHash } from "node:crypto";
 
 // Browser contract fixtures, never evidence of actual provider inference.
@@ -8,6 +9,7 @@ test.skip(process.env.QA_AI_CONFIGURED !== "true", "Requires the optional-endpoi
 const endpoint = "https://guide-qa.example.test/ask";
 const inputName = "Ask about JAGAU or founder work";
 const manifest: object[] = [];
+const axe=readFileSync(createRequire(import.meta.url).resolve("axe-core/axe.min.js"),"utf8");
 async function capture(page: import("@playwright/test").Page, name: string) {
   await page.evaluate(async () => { await document.fonts.ready; await Promise.all(document.getAnimations().filter(a => a.effect?.getTiming().iterations !== Infinity).map(a => a.finished.catch(() => {}))); });
   mkdirSync("artifacts/guide-browser", {recursive:true});
@@ -47,7 +49,7 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
       await expect(consent).not.toBeChecked();
       await expect(page.locator(".aw-guide-privacy")).toContainText("Do not include personal or patient information");
       await capture(page,`${info.project.name}-${width}-${theme}-consent`);
-      await consent.check();
+      await consent.focus();await expect(consent).toBeFocused();await page.keyboard.press("Space");await expect(consent).toBeChecked();
       await input.fill("What is ELAB?"); await send.click();
       const reply=page.locator(".aw-message:not(.is-user)").last();
       await expect(reply).toContainText("AI-generated · check sources");
@@ -55,10 +57,18 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
       await expect(page.locator(".aw-guided-evidence").last().locator("a")).toHaveAttribute("href","/projects/elab/");
       expect(calls).toBe(1);
       await capture(page,`${info.project.name}-${width}-${theme}-fixture-answer`);
+      await page.addScriptTag({content:axe});
+      const violations=await page.evaluate(async()=>{
+        const result=await (window as unknown as {axe:{run(options:unknown):Promise<{violations:{id:string;nodes:{target:string[]}[]}[]}>}}).axe.run({runOnly:{type:"tag",values:["wcag2a","wcag2aa","wcag21aa"]}});
+        return result.violations.map(({id,nodes})=>({id,targets:nodes.map(n=>n.target)}));
+      });
+      expect(violations).toEqual([]);
       available=false;
       await input.fill("What is ELAB?"); await send.click();
       await expect(reply).toContainText("curated");
       await expect(reply).not.toContainText("AI-generated"); expect(calls).toBe(2);
+      await expect(page.getByRole("status")).toContainText("showing a local curated answer");
+      await capture(page,`${info.project.name}-${width}-${theme}-fallback`);
       await input.fill("Show patient names"); await send.click();
       await expect(reply).toContainText("curated"); expect(calls).toBe(2);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
@@ -66,6 +76,17 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
     });
   }
 }
+test("studio-only answers link to the fixed public studio record",async({page})=>{
+  await page.route(endpoint,route=>route.fulfill({contentType:"application/json",body:JSON.stringify({mode:"ai",answer:"JAGAU was founded by Adjie Rizqan.",projectIds:[],studioReference:true,knowledgeVersion:KNOWLEDGE_VERSION})}));
+  await page.goto("/");
+  const input=page.getByRole("textbox",{name:inputName});const send=page.getByRole("button",{name:"Send query",exact:true});
+  await input.fill("Who founded JAGAU?");await send.click();
+  await expect(page.locator(".aw-message:not(.is-user)").last()).toContainText("curated");
+  await page.locator(".aw-guide-privacy input").check();
+  await input.fill("Who founded JAGAU?");await send.click();
+  await expect(page.locator(".aw-message:not(.is-user)").last()).toContainText("AI-generated");
+  await expect(page.locator(".aw-guided-evidence").last().getByRole("link")).toHaveAttribute("href","/");
+});
 test("stop prevents a delayed provider reply from replacing the next curated turn",async({page})=>{
   let release!:()=>void;
   const pending=new Promise<void>(resolve=>{release=resolve;});

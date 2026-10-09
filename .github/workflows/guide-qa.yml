@@ -10,6 +10,9 @@ on:
       - '.github/workflows/guide-qa.yml'
 permissions:
   contents: read
+concurrency:
+  group: jagau-guide-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   contracts:
     runs-on: ubuntu-latest

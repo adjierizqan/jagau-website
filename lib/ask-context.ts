@@ -2,7 +2,7 @@ import type { PortfolioChatMessage } from "@/lib/portfolio-ai";
 
 // One continuous Ask conversation in which every turn keeps the project context it was asked in.
 // projectId null means General (the whole portfolio).
-export type AskTurn = { projectId: string | null; question: string; answer: string; mode?: "ai" | "curated"; projectIds?: string[] };
+export type AskTurn = { projectId: string | null; question: string; answer: string; mode?: "ai" | "curated"; projectIds?: string[]; studioReference?:boolean };
 export type AskGroup<T extends { projectId: string | null }> = { projectId: string | null; turns: T[] };
 
 // Consecutive turns with the same context form one group; a new group starts where the context changes.

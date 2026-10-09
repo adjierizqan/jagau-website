@@ -416,7 +416,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
   query: string;
   setQuery: (value: string) => void;
   turns: AskTurn[];
-  current: { projectId: string | null; question: string; mode?: "ai" | "curated"; projectIds?: string[] } | null;
+  current: { projectId: string | null; question: string; mode?: "ai" | "curated"; projectIds?: string[]; studioReference?:boolean } | null;
   answer: string | null;
   status: AskStatus;
   error: string | null;
@@ -457,7 +457,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
                   {turn.live
                     ? (answer !== null || active || error) && <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
                     : <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
-                  <div className="aw-guided-evidence">{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
+                  <div className="aw-guided-evidence">{turn.mode === "ai" && turn.studioReference && <a href="/">{L("JAGAU · public studio record ↗","JAGAU · catatan studio publik ↗")}</a>}{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
                 </div>
               ))}
             </div>
@@ -654,7 +654,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
   }, []);
   const [query, setQuery] = useState("");
   const [askTurns, setAskTurns] = useState<AskTurn[]>([]);
-  const [currentTurn, setCurrentTurn] = useState<{ projectId: string | null; question: string; mode?: "ai" | "curated"; projectIds?: string[] } | null>(null);
+  const [currentTurn, setCurrentTurn] = useState<{ projectId: string | null; question: string; mode?: "ai" | "curated"; projectIds?: string[]; studioReference?:boolean } | null>(null);
   const [guideConsent,setGuideConsent]=useState(false);
   const [askContext, setAskContext] = useState<string | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
@@ -808,7 +808,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
       const reply=await requestGuide(clean,projectId,controller.signal,guideConsent ? guideEndpoint : "");
       if(askAbortRef.current!==controller||controller.signal.aborted)return;
       setAnswer(reply.answer);
-      setCurrentTurn({projectId,question:clean,mode:reply.mode,projectIds:reply.projectIds});
+      setCurrentTurn({projectId,question:clean,mode:reply.mode,projectIds:reply.projectIds,studioReference:reply.studioReference});
       setAskError(reply.reason && reply.reason!=="offline" ? L("AI unavailable or outside public scope; showing a local curated answer.","AI tidak tersedia atau pertanyaan di luar cakupan publik; menampilkan jawaban terkurasi lokal.") : null);
       setAskStatus("complete");
     } catch { if(!controller.signal.aborted){setAskError("Response unavailable. Try again or browse the case studies.");setAskStatus("error");} }

@@ -44,6 +44,17 @@ test("provider output must be bounded and reference retrieved public records",as
   const reply=await r.json();assert.equal(reply.mode,"ai");assert.equal(reply.knowledgeVersion,KNOWLEDGE_VERSION);assert.deepEqual(reply.projectIds,["elab"]);assert.ok(!JSON.stringify(reply).includes("test-only-token"));
   for(const transport of [model("Safe but wrong reference",["labstock"]),model("Visit https://private.example"),model("<script>alert(1)</script>"),model("x".repeat(1601))])assert.equal((await handleRequest(request(),environment(),transport)).status,502);
 });
+test("studio questions use the actual public identity and a canonical studio reference",async()=>{
+  const transport:typeof fetch=async(_url,options)=>{
+    const body=JSON.parse(options!.body as string);
+    assert.match(body.messages[0].content,/Adjie Rizqan/);
+    return Response.json({success:true,result:{response:JSON.stringify({answer:"JAGAU is an independent software studio founded by Adjie Rizqan.",projectIds:[],studioReference:true})}});
+  };
+  const reply=await handleRequest(request("Who founded JAGAU?","https://jagau.id",null),environment(),transport);
+  assert.equal(reply.status,200);assert.equal((await reply.json()).studioReference,true);
+  const noSource:typeof fetch=async()=>Response.json({success:true,result:{response:JSON.stringify({answer:"Unreferenced answer",projectIds:[]})}});
+  assert.equal((await handleRequest(request(),environment(),noSource)).status,502);
+});
 test("client stays local without config/consent and labels unavailable inference curated",async()=>{
   let calls=0;const transport:typeof fetch=async()=>{calls++;throw Error("offline");};const signal=new AbortController().signal;
   assert.equal((await requestGuide("ELAB",null,signal,"",transport)).mode,"curated");assert.equal(calls,0);

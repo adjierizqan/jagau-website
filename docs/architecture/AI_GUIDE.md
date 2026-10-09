@@ -52,5 +52,11 @@ free account and isolated test endpoint; real non-mocked question/answer, refere
 quota exhaustion, timeout/abort, CORS, privacy and grounding evidence; browser tests
 of opt-in, model labels and fallback; explicit separate release authorization.
 Contract tests using mock transport do not satisfy real inference acceptance.
+Studio identity uses the existing public studio record with a fixed homepage
+reference; project answers reference only retrieved case records. Model-provided
+URLs are never used. Visitor consent is session-only, initially unchecked; keyboard
+and automated accessibility checks cover the optional interface in both themes.
+Model licence/terms review is part of provider approval, alongside privacy and
+remaining shared-account quota. Dry-run bundling does not publish a Worker.
 Current production remains curated and unchanged. Rollback removes endpoint from
 the frontend configuration and disables Worker inference, retaining local explorer.
