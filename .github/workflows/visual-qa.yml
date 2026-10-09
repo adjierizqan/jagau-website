@@ -1,5 +1,9 @@
 name: JAGAU production visual acceptance
 on:
+  # Execute once when the QA-only branch is updated, without touching main or deployment.
+  push:
+    branches:
+      - qa/production-visual-acceptance
   workflow_dispatch:
 permissions:
   contents: read
