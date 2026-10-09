@@ -3,6 +3,7 @@ import { ElabStudy } from "@/components/studies/ElabStudy";
 import { requestGuide, guideEndpoint } from "@/lib/guide-client";
 
 import Image from "next/image";
+import Link from "next/link";
 import dimensions from "@/data/media-dimensions.json";
 import dynamic from "next/dynamic";
 import { ProjectOpener, requestProjectIntro, markProjectHistoryNavigation } from "@/components/workspace/ProjectOpener";
@@ -412,7 +413,7 @@ function AskContextBar({ context, setContext, busy }: { context: string | null; 
 
 type AskRow = AskTurn & { live?: boolean };
 
-function AskWorkspace({ query, setQuery, turns, current, answer, status, error, context, setContext, submit, stop, choose, openProjects, guideConsent, setGuideConsent }: {
+function AskWorkspace({ query, setQuery, turns, current, answer, status, error, context, setContext, submit, stop, choose, openProjects, openStudio, guideConsent, setGuideConsent }: {
   query: string;
   setQuery: (value: string) => void;
   turns: AskTurn[];
@@ -426,6 +427,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
   stop: () => void;
   choose: (value: string) => void;
   openProjects: () => void;
+  openStudio: () => void;
   guideConsent:boolean;
   setGuideConsent:(value:boolean)=>void;
 }) {
@@ -457,7 +459,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
                   {turn.live
                     ? (answer !== null || active || error) && <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
                     : <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
-                  <div className="aw-guided-evidence">{turn.mode === "ai" && turn.studioReference && <a href="/">{L("JAGAU · public studio record ↗","JAGAU · catatan studio publik ↗")}</a>}{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
+                  <div className="aw-guided-evidence">{turn.mode === "ai" && turn.studioReference && <Link href="/" onClick={openStudio}>{L("JAGAU · public studio record ↗","JAGAU · catatan studio publik ↗")}</Link>}{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
                 </div>
               ))}
             </div>
@@ -919,7 +921,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
                   : view === "labs" ? <ProjectDirectory projects={labProjects()} title={tk("Labs")} copy={tk("Additional studio experiments will appear here when public evidence is ready.")} selectProject={selectProject} />
                     : view === "knowledge" ? <KnowledgeWorkspace selectProject={selectProject} />
                       : view === "project" ? <ProjectWorkspace key={selected.slug + "-" + projectRevision} project={selected} query={query} setQuery={setQuery} ask={(question) => void runAsk(question ?? query, selected.slug)} back={() => setView("work")} openImage={openQuickLook} />
-                        : <AskWorkspace guideConsent={guideConsent} setGuideConsent={setGuideConsent} query={query} setQuery={setQuery} turns={askTurns} current={currentTurn} answer={answer} status={askStatus} error={askError} context={askContext} setContext={setAskContext} submit={() => void runAsk(query, askContext)} stop={stopAsk} choose={(question) => void runAsk(question, askContext)} openProjects={() => setView("projects")} />}
+                        : <AskWorkspace openStudio={()=>setView("home")} guideConsent={guideConsent} setGuideConsent={setGuideConsent} query={query} setQuery={setQuery} turns={askTurns} current={currentTurn} answer={answer} status={askStatus} error={askError} context={askContext} setContext={setAskContext} submit={() => void runAsk(query, askContext)} stop={stopAsk} choose={(question) => void runAsk(question, askContext)} openProjects={() => setView("projects")} />}
           </section>
         </div>
       </div>

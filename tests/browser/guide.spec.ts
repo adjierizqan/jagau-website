@@ -86,6 +86,8 @@ test("studio-only answers link to the fixed public studio record",async({page})=
   await input.fill("Who founded JAGAU?");await send.click();
   await expect(page.locator(".aw-message:not(.is-user)").last()).toContainText("AI-generated");
   await expect(page.locator(".aw-guided-evidence").last().getByRole("link")).toHaveAttribute("href","/");
+  await page.locator(".aw-guided-evidence").last().getByRole("link").click();
+  await expect(page.locator(".workspace-home")).toBeVisible();
 });
 test("stop prevents a delayed provider reply from replacing the next curated turn",async({page})=>{
   let release!:()=>void;
