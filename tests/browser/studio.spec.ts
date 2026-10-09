@@ -160,6 +160,9 @@ for (const width of [390, 1440]) {
       await page.addInitScript(value => localStorage.setItem("aw-theme", value), theme);
       for (const slug of slugs) {
         await page.goto(`/projects/${slug}/`);
+        // Server HTML includes image links before their client viewer handlers hydrate.
+        // This application marker is set by the mounted opener, including reduced motion.
+        await expect(page.locator(".project-intro")).toHaveAttribute("data-playing", "false");
         const trigger = page.locator('main a[aria-label^="Quick Look:"]').first();
         await expect(trigger).toContainText("Quick Look");
         await trigger.focus();
