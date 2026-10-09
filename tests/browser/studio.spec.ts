@@ -203,7 +203,9 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
       if (width < 760) await page.getByRole("button",{name:"Open navigation",exact:true}).click();
       await page.locator(".aw-primary-nav").getByRole("button",{name:"Projects",exact:true}).click();
       await expect(page.locator(".aw-project-objects")).toContainText("ELAB");
-      await page.locator(".aw-project-objects button").filter({hasText:"ELAB"}).click();
+      const elabCard = page.locator(".aw-project-objects button").filter({has:page.getByText("ELAB",{exact:true})});
+      await expect(elabCard).toHaveCount(1);
+      await elabCard.click();
       await expect(page).toHaveURL(/projects\/elab/);
       await expect(page.getByRole("heading",{name:"ELAB",exact:true})).toBeVisible();
     });
