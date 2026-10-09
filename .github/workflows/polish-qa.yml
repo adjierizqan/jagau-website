@@ -1,7 +1,6 @@
 name: JAGAU polish before and after
 on:
   pull_request:
-    branches: [main]
     paths:
       - 'components/**'
       - 'scripts/capture-workspace-parity.mjs'
@@ -19,7 +18,7 @@ jobs:
           path: after
       - uses: actions/checkout@v4
         with:
-          ref: 625d62177ddce5f61679ec0d4d3b2e7d037fa945
+          ref: 96ca98b00031ebd430eb2052fde7d329c4b8b4a0
           path: before
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -38,6 +37,7 @@ jobs:
         working-directory: after
         env:
           QA_LOG_REVIEW: "true"
+          QA_EXTRA_PROJECT: "elab"
           GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -euo pipefail

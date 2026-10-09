@@ -1,4 +1,5 @@
 "use client";
+import { ElabStudy } from "@/components/studies/ElabStudy";
 
 import Image from "next/image";
 import dimensions from "@/data/media-dimensions.json";
@@ -303,7 +304,7 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
   const media = {src: project.thumb ?? project.image ?? "", alt: project.title};
   return (
     <button type="button" className={"aw-work-case" + (lead ? " is-lead" : "")} onClick={() => selectProject(project)}>
-      <figure>{media && <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-cover object-top" priority={lead} />}</figure>
+      <figure>{media.src ? <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-cover object-top" priority={lead} /> : <figcaption>{project.title} · Source-reviewed record · screenshots pending</figcaption>}</figure>
       <section>
         <span>{project.eyebrow} · {project.year}{project.status ? " · " + project.status : ""}</span>
         <h2>{project.title}</h2>
@@ -345,7 +346,7 @@ function ProjectWorkspace({project, openImage, back, ask}: ProjectViewProps) {
  return <main className={"aw-center aw-project-detail aw-labstock-v2 aw-enter"}>
   <button type="button" className="aw-project-back" onClick={back}>← Work</button>
   <ProjectOpener project={project}>
-  {project.slug === "labstock" ? <LabStockCaseStudy {...props}/> : project.slug === "suhulog" ? <SuhuLogStudy {...props}/> : project.slug === "bdrs" ? <BdrsStudy {...props}/> : null}
+  {project.slug === "labstock" ? <LabStockCaseStudy {...props}/> : project.slug === "suhulog" ? <SuhuLogStudy {...props}/> : project.slug === "bdrs" ? <BdrsStudy {...props}/> : project.slug === "elab" ? <ElabStudy project={project}/> : null}
   <footer className="ls-ask"><span>Want to go deeper?</span><button type="button" onClick={()=>ask(project.askSuggestion)}>Explore {project.title} ↗</button></footer>
   </ProjectOpener>
  </main>;
@@ -681,7 +682,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
     document.title = title;
     document.querySelector('link[rel="canonical"]')?.setAttribute("href", url);
     const description = project?.summary ?? "Explore JAGAU and its founder’s operational software work in a guided workspace.";
-    for (const [selector, value] of [["meta[name='description']", description], ["meta[property='og:title']", title], ["meta[property='og:description']", description], ["meta[property='og:url']", url], ["meta[name='twitter:title']", title], ["meta[name='twitter:description']", description], ["meta[property='og:image']", `https://jagau.id${project?.socialImage ?? "/projects/labstock/thumb-reset-a.jpg"}`], ["meta[name='twitter:image']", `https://jagau.id${project?.socialImage ?? "/projects/labstock/thumb-reset-a.jpg"}`]]) document.querySelector(selector)?.setAttribute("content", value);
+    for (const [selector, value] of [["meta[name='description']", description], ["meta[property='og:title']", title], ["meta[property='og:description']", description], ["meta[property='og:url']", url], ["meta[name='twitter:title']", title], ["meta[name='twitter:description']", description], ["meta[property='og:image']", `https://jagau.id${project?.socialImage ?? "/social.png"}`], ["meta[name='twitter:image']", `https://jagau.id${project?.socialImage ?? "/social.png"}`]]) document.querySelector(selector)?.setAttribute("content", value);
   }, [urlProject]);
 
   const openPalette = useCallback(() => {

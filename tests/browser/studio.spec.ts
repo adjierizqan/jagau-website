@@ -131,7 +131,7 @@ test("WCAG automated checks on home and public cases", async ({page}) => {
   const require = createRequire(import.meta.url);
   const axe = await readFile(require.resolve("axe-core/axe.min.js"), "utf8");
   const findings = [];
-  for (const path of ["/", ...slugs.map(slug => `/projects/${slug}/`)]) {
+  for (const path of ["/", ...slugs.map(slug => `/projects/${slug}/`), "/projects/elab/"]) {
     await page.goto(path);
     await page.locator("main").waitFor();
     // Audit settled text, after fonts and finite entrance animations finish.
@@ -183,6 +183,31 @@ for (const width of [390, 1440]) {
         await expect(trigger).toBeFocused();
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
       }
+    });
+  }
+}
+
+for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
+  for (const theme of ["light","dark"]) {
+    test(`ELAB source-reviewed navigation ${width} ${theme}`, async ({page}) => {
+      await page.setViewportSize({width,height});
+      await page.addInitScript(value=>localStorage.setItem("aw-theme",value),theme);
+      await page.goto("/projects/elab/");
+      await expect(page.locator(".project-intro")).toHaveAttribute("data-playing","false");
+      await expect(page.getByRole("heading",{name:"ELAB",exact:true})).toBeVisible();
+      await expect(page.locator(".study-header")).toContainText("In progress");
+      await expect(page.locator("main")).toContainText("not a production");
+      await expect(page.locator("main img")).toHaveCount(0);
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+      await page.goto("/");
+      if (width < 760) await page.getByRole("button",{name:"Open navigation",exact:true}).click();
+      await page.locator(".aw-primary-nav").getByRole("button",{name:"Projects",exact:true}).click();
+      await expect(page.locator(".aw-project-objects")).toContainText("ELAB");
+      const elabCard = page.locator(".aw-project-objects button").filter({has:page.getByText("ELAB",{exact:true})});
+      await expect(elabCard).toHaveCount(1);
+      await elabCard.click();
+      await expect(page).toHaveURL(/projects\/elab/);
+      await expect(page.getByRole("heading",{name:"ELAB",exact:true})).toBeVisible();
     });
   }
 }

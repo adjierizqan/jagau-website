@@ -8,6 +8,7 @@ const pages = [
   "projects/labstock/index.html",
   "projects/suhulog/index.html",
   "projects/bdrs/index.html",
+  "projects/elab/index.html",
   "404.html",
 ];
 for (const page of pages) {

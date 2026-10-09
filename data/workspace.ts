@@ -355,4 +355,21 @@ export const featuredWork: WorkspaceProject[] = [
   }
 ];
 export const labWork: WorkspaceProject[] = [];
-export const allWorkspaceProjects = featuredWork;
+// Source-reviewed additions stay outside the approved three-image home preview.
+export const elab: WorkspaceProject = {
+  slug: "elab", title: "ELAB", eyebrow: "Document & records management", year: "2026",
+  status: "In progress · release not verified",
+  summary: "Laboratory documents with separate view/download permissions, checksum-based duplicate detection and revision history.",
+  opener: { prompt: "How do you keep document access and revision history distinct?", response: "ELAB separates document semantics from binary storage. Its source implements distinct view and download capabilities, SHA-256 duplicate detection and controlled revisions. Public production acceptance has not been independently verified." },
+  problem: "A folder of files cannot by itself explain who may view a document, who may download its original, or which controlled revision is current.",
+  solution: "ELAB implements a document library, protected preview and upload workflow backed by metadata, permissions and revision records. Binary storage remains separate from document semantics.",
+  howItWorks: ["Store binaries separately from searchable document metadata.", "Authorize view and original-file download as distinct capabilities.", "Detect exact content duplicates with SHA-256 before creating another object.", "Preserve document revisions, relationships and audit history."],
+  role: "Founder work · software engineering",
+  stack: ["Next.js", "React", "TypeScript", "PostgreSQL", "Drizzle ORM"],
+  evidence: [{label:"Evidence level",value:"Local source and milestone records reviewed; runtime not retested"},{label:"Source revision",value:"a2f15ef"},{label:"Verified implementation",value:"Document access, storage commit, revisions and search"},{label:"Release boundary",value:"In progress; no independently verified public production release"}],
+  decisions: [{title:"Metadata is not a folder path.",detail:"Binary storage does not define the document library's information architecture."},{title:"View is not download.",detail:"Permission to inspect a document does not automatically authorize its original-file download."},{title:"A duplicate is not a revision.",detail:"Exact content duplicates are identified separately from controlled revision changes."}],
+  whyItMatters: "Document semantics and access controls remain explicit rather than being inferred from physical storage.",
+  publicLimitations: "This is a source-reviewed, in-progress project record, not a production or security certification. Private documents, infrastructure, credentials and institutional identity are withheld. Screenshots await an isolated synthetic recapture and image clearance.",
+  askSuggestion: "How does ELAB separate view permission from download?",
+};
+export const allWorkspaceProjects = [...featuredWork, elab];
