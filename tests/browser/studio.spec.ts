@@ -199,7 +199,9 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
       await expect(page.locator("main")).toContainText("not a production");
       await expect(page.locator("main img")).toHaveCount(0);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
-      await page.goto("/?view=projects");
+      await page.goto("/");
+      if (width < 760) await page.getByRole("button",{name:"Open navigation",exact:true}).click();
+      await page.locator(".aw-primary-nav").getByRole("button",{name:"Projects",exact:true}).click();
       await expect(page.locator(".aw-project-objects")).toContainText("ELAB");
       await page.locator(".aw-project-objects button").filter({hasText:"ELAB"}).click();
       await expect(page).toHaveURL(/projects\/elab/);
