@@ -39,7 +39,7 @@ export function LabStockCaseStudy({ project, openImage }: Props) {
   function screen(src: string, caption: string, index: number, className = "", width = 1440, height = 1024) {
     return <a href={index === 0 ? project.image : gallery[index - 1]?.src} className={`ls-screen ${className}`} onClick={event => { event.preventDefault(); openImage(index, event.currentTarget); }} aria-label={`Quick Look: ${caption}`}>
       <Image src={src} alt={caption} width={width} height={height} sizes="(max-width: 760px) 100vw, 1080px" />
-      <span className="ls-expand" aria-hidden="true">↗</span>
+      <span className="ls-expand" aria-hidden="true">Quick Look ↗</span>
     </a>;
   }
   const decisionHeads = [L("Keep the source attached.", "Pertahankan sumbernya."), L("Import twice. Post once.", "Impor dua kali. Catat sekali."), L("Correct without erasing.", "Koreksi tanpa menghapus.")];
@@ -51,7 +51,7 @@ export function LabStockCaseStudy({ project, openImage }: Props) {
       <figure className="ls-hero">
         <a href={today.src} onClick={event => { event.preventDefault(); openImage(1, event.currentTarget); }} aria-label={`Quick Look: ${today.caption}`}>
           <Image src={presentation.hero.src} alt={t(presentation.hero.caption)} width={1600} height={1000} sizes="(max-width: 760px) 100vw, 1120px" preload />
-          <span className="ls-hero-open" aria-hidden="true">↗</span>
+          <span className="ls-hero-open" aria-hidden="true">Quick Look ↗</span>
         </a>
         <figcaption><span>{L("Desktop overview. Mobile entry.", "Ringkasan desktop. Pencatatan mobile.")}</span><span>{L("Real product · Demo data", "Produk nyata · Data demo")}</span></figcaption>
       </figure>
