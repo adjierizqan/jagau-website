@@ -124,7 +124,7 @@ try {
         await home();
         await capture("home");
         if (polish) {
-          await page.locator("#home-work").scrollIntoViewIfNeeded();
+          await page.locator(".home-selected").evaluate(element => element.scrollIntoView({block:"start", behavior:"instant"}));
           await capture("selected-work");
           await home();
         }
