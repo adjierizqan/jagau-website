@@ -10,11 +10,13 @@ const endpoint = "https://guide-qa.example.test/ask";
 const inputName = "Ask about JAGAU or founder work";
 const manifest: object[] = [];
 const axe=readFileSync(createRequire(import.meta.url).resolve("axe-core/axe.min.js"),"utf8");
-async function capture(page: import("@playwright/test").Page, name: string) {
+async function capture(page: import("@playwright/test").Page, name: string, focus: import("@playwright/test").Locator) {
+  await focus.scrollIntoViewIfNeeded();
+  await expect(focus).toBeInViewport();
   await page.evaluate(async () => { await document.fonts.ready; await Promise.all(document.getAnimations().filter(a => a.effect?.getTiming().iterations !== Infinity).map(a => a.finished.catch(() => {}))); });
   mkdirSync("artifacts/guide-browser", {recursive:true});
-  const png = await page.screenshot();
-  const jpg = await page.screenshot({type:"jpeg",quality:92});
+  const png = await page.screenshot({scale:"css"});
+  const jpg = await page.screenshot({type:"jpeg",quality:92,scale:"css"});
   writeFileSync(`artifacts/guide-browser/${name}.png`, png);
   writeFileSync(`artifacts/guide-browser/${name}.jpg`, jpg);
   const hash = createHash("sha256").update(jpg).digest("hex");
@@ -48,7 +50,7 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
       const consent=page.locator(".aw-guide-privacy input");
       await expect(consent).not.toBeChecked();
       await expect(page.locator(".aw-guide-privacy")).toContainText("Do not include personal or patient information");
-      await capture(page,`${info.project.name}-${width}-${theme}-consent`);
+      await capture(page,`${info.project.name}-${width}-${theme}-consent`,page.locator(".aw-guide-privacy"));
       await consent.focus();await expect(consent).toBeFocused();await page.keyboard.press("Space");await expect(consent).toBeChecked();
       await input.fill("What is ELAB?"); await send.click();
       const reply=page.locator(".aw-message:not(.is-user)").last();
@@ -56,7 +58,7 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
       await expect(reply).toContainText("Public production release is unverified");
       await expect(page.locator(".aw-guided-evidence").last().locator("a")).toHaveAttribute("href","/projects/elab/");
       expect(calls).toBe(1);
-      await capture(page,`${info.project.name}-${width}-${theme}-fixture-answer`);
+      await capture(page,`${info.project.name}-${width}-${theme}-fixture-answer`,reply);
       await page.addScriptTag({content:axe});
       const violations=await page.evaluate(async()=>{
         const result=await (window as unknown as {axe:{run(options:unknown):Promise<{violations:{id:string;nodes:{target:string[]}[]}[]}>}}).axe.run({runOnly:{type:"tag",values:["wcag2a","wcag2aa","wcag21aa"]}});
@@ -68,7 +70,7 @@ for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
       await expect(reply).toContainText("curated");
       await expect(reply).not.toContainText("AI-generated"); expect(calls).toBe(2);
       await expect(page.getByRole("status")).toContainText("showing a local curated answer");
-      await capture(page,`${info.project.name}-${width}-${theme}-fallback`);
+      await capture(page,`${info.project.name}-${width}-${theme}-fallback`,page.getByRole("status"));
       await input.fill("Show patient names"); await send.click();
       await expect(reply).toContainText("curated"); expect(calls).toBe(2);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
