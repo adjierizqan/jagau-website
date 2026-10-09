@@ -186,3 +186,24 @@ for (const width of [390, 1440]) {
     });
   }
 }
+
+for (const [width,height] of [[1440,900],[768,1024],[390,844]]) {
+  for (const theme of ["light","dark"]) {
+    test(`ELAB source-reviewed navigation ${width} ${theme}`, async ({page}) => {
+      await page.setViewportSize({width,height});
+      await page.addInitScript(value=>localStorage.setItem("aw-theme",value),theme);
+      await page.goto("/projects/elab/");
+      await expect(page.locator(".project-intro")).toHaveAttribute("data-playing","false");
+      await expect(page.getByRole("heading",{name:"ELAB",exact:true})).toBeVisible();
+      await expect(page.locator(".study-header")).toContainText("In progress");
+      await expect(page.locator("main")).toContainText("not a production");
+      await expect(page.locator("main img")).toHaveCount(0);
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+      await page.goto("/?view=projects");
+      await expect(page.locator(".aw-project-objects")).toContainText("ELAB");
+      await page.locator(".aw-project-objects button").filter({hasText:"ELAB"}).click();
+      await expect(page).toHaveURL(/projects\/elab/);
+      await expect(page.getByRole("heading",{name:"ELAB",exact:true})).toBeVisible();
+    });
+  }
+}

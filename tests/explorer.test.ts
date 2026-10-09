@@ -52,7 +52,7 @@ test("invalid input and length limits fail to unknown", () => {
     assert.deepEqual(explore(q), unknown);
 });
 test("unknown project is not fabricated", () =>
-  assert.deepEqual(explore("Tell me about ELAB"), unknown));
+  assert.deepEqual(explore("Tell me about UnpublishedSystem"), unknown));
 test("gibberish produces explicit uncertainty", () =>
   assert.ok(explore("xyzabcd").answer.includes("I don’t know")));
 test("project references are canonical and never model supplied", () => {
