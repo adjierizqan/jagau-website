@@ -163,9 +163,12 @@ for (const width of [390, 1440]) {
         // Server HTML includes image links before their client viewer handlers hydrate.
         // This application marker is set by the mounted opener, including reduced motion.
         await expect(page.locator(".project-intro")).toHaveAttribute("data-playing", "false");
-        const trigger = page.locator('main a[aria-label^="Quick Look:"]').first();
+        // LabStock retains separate desktop/mobile figures; focus a rendered link.
+        const trigger = page.locator('main a[aria-label^="Quick Look:"]:visible').first();
+        await expect(trigger).toBeVisible();
         await expect(trigger).toContainText("Quick Look");
         await trigger.focus();
+        await expect(trigger).toBeFocused();
         await page.keyboard.press("Enter");
         const dialog = page.getByRole("dialog", {name:"Project image viewer"});
         await expect(dialog).toBeVisible();
