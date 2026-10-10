@@ -39,6 +39,14 @@ for (const viewport of [{width:1440,height:900},{width:768,height:1024},{width:3
     await p.waitForTimeout(1900);
     await p.locator('main img').evaluateAll(images=>Promise.all(images.filter(i=>i.getBoundingClientRect().top<innerHeight).map(i=>i.decode().catch(()=>{}))));
     await shot(p,`${prefix}-${name}`);
+    if(name!=='home') {
+     const hero=p.locator(name==='labstock'?'.ls-hero':name==='suhulog'?'.suhu-phone':viewport.width<761?'.bdrs-hero-mobile .study-media':'.bdrs-hero-desktop .study-media').first();
+     await hero.scrollIntoViewIfNeeded();
+     await p.waitForTimeout(120);
+     await shot(p,`${prefix}-${name}-moving`);
+     await p.waitForTimeout(1200);
+     await shot(p,`${prefix}-${name}-evidence`);
+    }
     assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Horizontal overflow');
     if(label==='after' && name==='home') {
      const metrics=await p.evaluate(()=>({...window.__motionMetrics,transfer:performance.getEntriesByType('resource').reduce((n,e)=>n+e.transferSize,0),animations:document.getAnimations().filter(a=>a.playState==='running').length}));

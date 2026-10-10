@@ -33,6 +33,7 @@ jobs:
           PORT=4185 node scripts/serve.mjs &
           sleep 2
           node scripts/capture-motion.mjs
+          node scripts/measure-motion.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
