@@ -13,7 +13,7 @@ for (const [width, height] of [[1440,900],[768,1024],[390,844]]) for (const them
       const composer=document.querySelector('.home-guide')!.getBoundingClientRect();
       return {previewWidth:preview.width,previewBottom:preview.bottom,composerTop:composer.top};
     });
-    expect(layout.previewWidth).toBeGreaterThan(width===390?320:width===1440?290:120);
+    expect(layout.previewWidth).toBeGreaterThan(width===390?320:width===1440?290:400);
     expect(layout.previewBottom).toBeLessThan(layout.composerTop);
     await expect(page.locator('.home-proof')).toContainText('Inventory · source to report');
     await expect(page.locator('.home-positioning')).toContainText('Curated answers · no live AI');

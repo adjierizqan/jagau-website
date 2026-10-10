@@ -668,3 +668,9 @@
 
 .study :is(h1,h2,h3) { text-wrap: balance; }
 .study-media > a > span { min-height: 32px; display: inline-flex; align-items: center; }
+
+/* Shared case CTA cannot rely on the lazily loaded LabStock stylesheet. */
+.aw-project-detail .ls-ask { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--ui-line); margin-top: 32px; padding-top: 16px; font-size: .875rem; }
+.aw-project-detail .ls-ask button { min-height: 44px; padding: 8px 0; border-bottom: 1px solid currentColor; }
+.study-media > a > span { max-width: calc(100% - 24px); text-align: center; }
+@media (max-width:760px) { .aw-project-detail .ls-ask { flex-direction: column; align-items: flex-start; gap: 8px; } }

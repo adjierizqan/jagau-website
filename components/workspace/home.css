@@ -318,3 +318,10 @@
  .home-starters button { min-height: 44px; }
 }
 @media (prefers-reduced-motion:reduce) { .home-project:is(:hover,:focus-visible) figure img { transform: none; } }
+
+@container (max-width:600px) {
+ .home-proof { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+ .home-proof a:first-child { grid-column: 1 / -1; }
+ .home-proof a { text-align: left; }
+ .home-proof small { display: block; font-size: .72rem; }
+}
