@@ -1,0 +1,26 @@
+name: JAGAU motion review
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  motion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci && npm run build && npx playwright install --with-deps chromium
+      - name: Record moving prototypes
+        run: |
+          PORT=4185 node scripts/serve.mjs &
+          sleep 2
+          node scripts/capture-motion.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jagau-motion-review
+          path: artifacts/motion-review/
