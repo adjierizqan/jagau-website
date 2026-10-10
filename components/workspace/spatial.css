@@ -1,0 +1,44 @@
+.motion-study { max-width: 1320px; margin: auto; padding: 40px; color: #202326; background: #f5f4f0; min-height: 100vh; font-family: system-ui, sans-serif; }
+.motion-study h1 { font-size: 32px; letter-spacing: -.03em; margin: 32px 0 12px; }
+.motion-study p { line-height: 1.6; max-width: 65ch; }
+.motion-study button { padding: 10px 18px; border: 1px solid #9b9d9c; border-radius: 7px; margin: 20px 0; cursor: pointer; }
+.motion-study-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.motion-study h2 { font-size: 17px; margin: 20px 0; }
+.motion-study-stage { padding: 24px; background: #e2e4df; border-radius: 12px; }
+.motion-study-screen { width: 100%; height: auto; box-shadow: 0 18px 30px -18px #18251e80; border-radius: 5px; }
+@media(max-width:760px) { .motion-study { padding: 20px; } .motion-study-grid { grid-template-columns: 1fr; gap: 16px; } }
+
+/* Desk lift: whole, authentic surfaces. No crop, pseudo-interface or endless loop. */
+.aw-stage { --spatial-ease: cubic-bezier(.22,.8,.22,1); }
+.aw-stage .home-proof a { overflow: visible; }
+.aw-stage .home-proof img { transform-origin: 50% 70%; box-shadow: 0 10px 18px -16px #14251f60; transition: transform 650ms var(--spatial-ease), box-shadow 650ms var(--spatial-ease); }
+.aw-stage .home-project figure { padding: 14px; background: var(--ui-hover, #eceeec); }
+.aw-stage .home-project figure img { border-radius: 4px; transition: transform 650ms var(--spatial-ease); }
+.aw-stage .study-media a, .aw-stage .ls-screen, .aw-stage .ls-hero > a { perspective: 1400px; }
+.aw-stage :is(.study-media,.ls-hero,.ls-screen) img { transform-origin: 50% 60%; transition: transform 650ms var(--spatial-ease); }
+.aw-stage .aw-work-case figure img { object-fit: contain; transition: transform 650ms var(--spatial-ease); }
+@media (hover: hover) and (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+ .aw-stage .home-proof a:hover img,
+ .aw-stage .home-project:hover figure img,
+ .aw-stage .aw-work-case:hover figure img,
+ .aw-stage .study-media a:hover img,
+ .aw-stage .ls-screen:hover img,
+ .aw-stage .ls-hero > a:hover img { transform: perspective(1400px) translateY(-5px) rotateX(3deg) rotateY(-3deg) scale(.975); }
+}
+@media (min-width: 761px) and (prefers-reduced-motion: no-preference) {
+ .aw-stage .home-proof a:focus-visible img,
+ .aw-stage .home-project:focus-visible figure img,
+ .aw-stage .aw-work-case:focus-visible figure img,
+ .aw-stage .study-media a:focus-visible img,
+ .aw-stage .ls-screen:focus-visible img,
+ .aw-stage .ls-hero > a:focus-visible img { transform: perspective(1400px) translateY(-5px) rotateX(3deg) rotateY(-3deg) scale(.975); }
+ .aw-stage .aw-enter { animation: spatial-arrive 420ms var(--spatial-ease) both; }
+}
+@keyframes spatial-arrive { from { opacity: .7; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.aw-stage .studio-approach li { position: relative; }
+.aw-stage .studio-approach li::before { content: ""; display: block; width: 28px; height: 2px; margin-bottom: 16px; background: currentColor; opacity: .35; transform-origin: left; transition: transform 450ms var(--spatial-ease); }
+
+@media (prefers-reduced-motion: reduce) {
+ .aw-stage :is(.home-proof,.home-project,.aw-work-case,.study-media,.ls-screen,.ls-hero) img { transform: none !important; transition: none !important; }
+ .aw-stage .studio-approach li::before { transition: none; transform: none; }
+}

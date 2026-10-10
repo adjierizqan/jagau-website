@@ -3,6 +3,7 @@ import { ElabStudy } from "@/components/studies/ElabStudy";
 import { requestGuide, guideEndpoint } from "@/lib/guide-client";
 
 import Image from "next/image";
+import { SpatialMotion } from "@/components/workspace/SpatialMotion";
 import Link from "next/link";
 import dimensions from "@/data/media-dimensions.json";
 import dynamic from "next/dynamic";
@@ -911,7 +912,8 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
         <div className="aw-body">
           <Sidebar view={view} selected={selected} setView={setView} newSession={newSession} selectProject={selectProject} openPalette={openPalette} open={sidebarOpen} close={() => setSidebarOpen(false)} />
 
-          <section className="aw-stage">
+          <section className="aw-stage" data-spatial-motion="true">
+            <SpatialMotion navigationKey={view + selected.slug + projectRevision} />
             <header className="aw-mobile-header">
               <button type="button" onClick={() => setSidebarOpen(true)} aria-label={t("Open navigation")}><Glyph name="menu" /></button>
               <strong>{t("JAGAU Workspace")}</strong>

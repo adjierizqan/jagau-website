@@ -1,0 +1,41 @@
+name: JAGAU motion review
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  motion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: after
+      - uses: actions/checkout@v4
+        with:
+          ref: 6e9eda4e1e525542df334e7d0cbb9c776458d5b1
+          path: before
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci && npm run build
+        working-directory: before
+      - run: npm ci && npm run build && npx playwright install --with-deps chromium
+        working-directory: after
+      - name: Record actual motion and baseline comparison
+        working-directory: after
+        env:
+          SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          STATIC_ROOT="$GITHUB_WORKSPACE/before/out" PORT=4186 node scripts/serve.mjs &
+          PORT=4185 node scripts/serve.mjs &
+          sleep 2
+          node scripts/capture-motion.mjs
+          node scripts/measure-motion.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jagau-motion-review
+          path: after/artifacts/motion-review/
