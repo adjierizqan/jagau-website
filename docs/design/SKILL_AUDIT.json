@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-10",
+  "policy": "Text-only project-local references. No installers, binaries, hooks, global directories or runtime dependencies executed/added.",
+  "sources": [
+    {
+      "repo": "openai/skills",
+      "revision": "49f948faa9258a0c61caceaf225e179651397431"
+    },
+    {
+      "repo": "pbakaus/impeccable",
+      "revision": "d631a8827f99414d2b6daba4ef08b7f8701751d7"
+    },
+    {
+      "repo": "vercel-labs/agent-skills",
+      "revision": "063bee94c3f4df8453406c830b0a7df0f2860278"
+    },
+    {
+      "repo": "rwcod/anti-ai-slop-ui",
+      "revision": "c0d1ecbc3833baa1fc8cae228925315ca1210ef1"
+    }
+  ],
+  "guidelinesRevision": "434b7f91364665f2f733b310ec54809bf8f37937",
+  "findings": [
+    "OpenAI frontend-skill absent from complete, nontruncated tree. No substitute installed under that name.",
+    "Impeccable 4.5.2 Apache-2.0: launcher downloads/executes engine and writes home cache; Codex manifest runs PostToolUse and Stop hooks. Both excluded. Manual text-only polish and craft-floor playbooks retained with license; no claim of detector execution.",
+    "Vercel web-design-guidelines 1.0.0: SKILL.md only, no skill executables/hooks. Repo README declares MIT; full license file absent. Source pinned; fresh external guideline also audited/pinned.",
+    "Optional anti-ai-slop-ui 1.0.0 MIT: installer defaults to all agents globally and removes existing destination trees. Not executed or installed; no material value over SOP and existing guidance.",
+    "Root .agents mkdir failed Operation not permitted. No escalation or security change attempted. Guidance stored in docs/design/skills, read manually this session, not automatically registered. Current Codex skills catalog does not advertise these new references; no reload/discovery success claimed."
+  ],
+  "invocation": "skill-installer read; Impeccable text-only polish/craft-floor and Vercel guidelines applied manually. Formal critique command/engine not run."
+}

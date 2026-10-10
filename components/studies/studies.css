@@ -15,7 +15,7 @@
 .study h2,
 .study h3 {
   line-height: 1.07;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.035em;
   font-weight: 600;
 }
 .study h1 {
@@ -53,7 +53,7 @@
   color: var(--study-muted);
 }
 .study-section {
-  margin-top: 100px;
+  margin-top: 72px;
 }
 .study-heading {
   margin-bottom: 32px;
@@ -89,7 +89,7 @@
   color: var(--study-ink);
   border: 1px solid var(--study-line);
   padding: 5px 11px;
-  border-radius: 30px;
+  border-radius: 5px;
   font-size: 12px;
 }
 .study-media figcaption,
@@ -119,7 +119,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px;
-  margin-top: 70px;
+  margin-top: 56px;
 }
 .study-brief h2 {
   margin-bottom: 22px;
@@ -162,7 +162,7 @@
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
   gap: 50px;
-  margin-top: 100px;
+  margin-top: 72px;
   padding-top: 30px;
   border-top: 1px solid var(--study-line);
 }
@@ -182,7 +182,7 @@
   gap: 50px;
   border-top: 1px solid var(--study-line);
   padding-top: 24px;
-  margin-top: 70px;
+  margin-top: 56px;
 }
 .study-boundary h2 {
   font-size: 1rem;
@@ -540,7 +540,7 @@
     gap: 35px;
   }
   .study-section {
-    margin-top: 70px;
+    margin-top: 56px;
   }
   .study-controls button {
     padding: 13px 10px;
@@ -665,3 +665,6 @@
 .study-media > a { transition: border-color 160ms ease, box-shadow 160ms ease; }
 .study-media > a:is(:hover, :focus-visible) { box-shadow: 0 4px 14px #00000010; }
 @media (prefers-reduced-motion: reduce) { .study-media > a { transition: none; } }
+
+.study :is(h1,h2,h3) { text-wrap: balance; }
+.study-media > a > span { min-height: 32px; display: inline-flex; align-items: center; }
