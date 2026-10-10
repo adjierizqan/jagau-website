@@ -1,4 +1,4 @@
-name: Cinematic HTTPS preview verification
+name: Real website HTTPS preview verification
 on:
   pull_request:
     paths: ['.github/workflows/cinematic-live.yml', 'scripts/capture-cinematic.mjs']
@@ -8,7 +8,7 @@ permissions:
 jobs:
   live:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       QA_BASE_URL: https://jagau-cinematic-preview.pages.dev
     steps:
@@ -19,6 +19,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium webkit
+      - name: Wait for exact review commit
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          for attempt in $(seq 1 40); do
+            SHA=$(curl -fsS "$QA_BASE_URL/review-revision.json?attempt=$attempt" | jq -r .commit) || true
+            if [ "$SHA" = "$EXPECTED_SHA" ]; then echo "Verified preview commit $SHA"; exit 0; fi
+            sleep 15
+          done
+          echo "Preview has not deployed the expected commit"; exit 1
       - name: Read public HTTPS response
         run: |
           curl --fail --show-error --location --dump-header /tmp/preview-headers.txt "$QA_BASE_URL" --output /tmp/preview.html
@@ -26,7 +36,7 @@ jobs:
           head -c 600 /tmp/preview.html
       - name: Live desktop mobile keyboard and reduced motion
         run: npx playwright test tests/browser/cinematic.spec.ts tests/browser/premium.spec.ts tests/browser/navigation.spec.ts
-      - name: Record live playback and loading
+      - name: Record actual website interactions and loading
         run: node scripts/capture-cinematic.mjs
       - name: Runtime dependency audit
         if: always()

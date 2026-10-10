@@ -1,7 +1,6 @@
 name: Cinematic render and review
 on:
-  pull_request:
-    paths: ['motion/**', 'scripts/render-cinematic.mjs', '.github/workflows/cinematic-render.yml', 'package.json', 'components/cinematic/**', 'components/workspace/WorkspaceHome.tsx', 'components/WorkspacePrototype.tsx', 'tests/browser/cinematic.spec.ts', 'scripts/capture-cinematic.mjs']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:

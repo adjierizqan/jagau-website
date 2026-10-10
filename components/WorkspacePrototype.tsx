@@ -7,7 +7,9 @@ import Link from "next/link";
 import dimensions from "@/data/media-dimensions.json";
 import dynamic from "next/dynamic";
 import { ProjectOpener, requestProjectIntro, markProjectHistoryNavigation } from "@/components/workspace/ProjectOpener";
-import { CinemaStage, type FilmId } from "@/components/cinematic/CinemaStage";
+import { useWorkspaceMotion } from "@/components/workspace/useWorkspaceMotion";
+import "@/components/workspace/art-direction.css";
+import { EvidenceStage, type ShowcaseId } from "@/components/showcase/EvidenceStage";
 import { WorkspaceHome, StudioAbout, StudioPresentation } from "@/components/workspace/WorkspaceHome";
 const LabStockCaseStudy = dynamic(() => import("@/components/labstock/LabStockCaseStudy").then(m => m.LabStockCaseStudy));
 const SuhuLogStudy = dynamic(() => import("@/components/studies/SuhuLogStudy"));
@@ -305,7 +307,7 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
   const media = {src: project.thumb ?? project.image ?? "", alt: project.title};
   return (
     <button type="button" className={"aw-work-case" + (lead ? " is-lead" : "")} onClick={() => selectProject(project)}>
-      <figure>{media.src ? <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-cover object-top" priority={lead} /> : <figcaption>{project.title} · Source-reviewed record · screenshots pending</figcaption>}</figure>
+      <figure>{media.src ? <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-contain object-center" priority={lead} /> : <figcaption>{project.title} · Source-reviewed record · screenshots pending</figcaption>}</figure>
       <section>
         <span>{project.eyebrow} · {project.year}{project.status ? " · " + project.status : ""}</span>
         <h2>{project.title}</h2>
@@ -319,8 +321,8 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
 function StudioWorkspace({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
   return <main className="aw-center workspace-home workspace-studio aw-enter">
     <WorkspaceHeader eyebrow="JAGAU Workspace" title={tk("Studio")} copy={L("Independent software studio · Indonesia", "Studio perangkat lunak independen · Indonesia")} />
-    <StudioAbout />
     <StudioPresentation selectProject={selectProject} />
+    <StudioAbout />
   </main>;
 }
 
@@ -328,8 +330,8 @@ function WorkWorkspace({ selectProject }: { selectProject: (project: WorkspacePr
   const [lead, ...rest] = featuredProjects();
   return (
     <main className="aw-center aw-work aw-enter">
-      <WorkspaceHeader eyebrow={tk("Selected systems")} title={tk("Work")} copy={tk("Founder operational software work, organized around inspectable project evidence.")} meta={"3 founder case studies"} />
-      <CinemaStage compact/>
+      <WorkspaceHeader eyebrow={tk("Selected systems")} title={tk("Work")} copy="Software for the records people depend on. Explore the interface, then follow the engineering decisions." meta={"3 founder case studies"} />
+
       <div className="aw-work-cases">
         <WorkCase project={lead} selectProject={selectProject} lead />
         {rest.map((project) => <WorkCase key={project.slug} project={project} selectProject={selectProject} />)}
@@ -356,7 +358,6 @@ function ProjectWorkspace({project, openImage, back, ask}: ProjectViewProps) {
  return <main className={"aw-center aw-project-detail aw-labstock-v2 aw-enter"}>
   <button type="button" className="aw-project-back" onClick={back}>← Projects</button>
   <ProjectOpener project={project}>
-  {["labstock","suhulog","bdrs"].includes(project.slug) && <CinemaStage compact initial={project.slug as FilmId} onAsk={ask}/>}
   {project.slug === "labstock" ? <LabStockCaseStudy {...props}/> : project.slug === "suhulog" ? <SuhuLogStudy {...props}/> : project.slug === "bdrs" ? <BdrsStudy {...props}/> : project.slug === "elab" ? <ElabStudy project={project}/> : null}
   <footer className="ls-ask"><span>Want to go deeper?</span><button type="button" onClick={()=>ask(project.askSuggestion)}>Explore {project.title} ↗</button></footer>
   </ProjectOpener>
@@ -468,7 +469,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
                   {turn.live
                     ? (answer !== null || active || error) && <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
                     : <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
-                  {turn === rows[rows.length - 1] && (turn.projectIds ?? explore(turn.question).projectIds).some(id => ["labstock","suhulog","bdrs"].includes(id)) && <CinemaStage key={turn.question} compact initial={(turn.projectIds ?? explore(turn.question).projectIds).find(id => ["labstock","suhulog","bdrs"].includes(id)) as FilmId}/>}
+                  {turn === rows[rows.length - 1] && (turn.projectIds ?? explore(turn.question).projectIds).some(id => ["labstock","suhulog","bdrs"].includes(id)) && <EvidenceStage key={turn.question} compact initial={(turn.projectIds ?? explore(turn.question).projectIds).find(id => ["labstock","suhulog","bdrs"].includes(id)) as ShowcaseId}/>}
                   <div className="aw-guided-evidence">{turn.mode === "ai" && turn.studioReference && <Link href="/" onClick={openStudio}>{L("JAGAU · public studio record ↗","JAGAU · catatan studio publik ↗")}</Link>}{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
                 </div>
               ))}
@@ -656,6 +657,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
   const urlProjectValid = allProjects().some((project) => project.slug === urlProject);
   const view: WorkspaceView = urlProjectValid ? "project" : baseView;
   const selectedSlug = urlProjectValid && urlProject ? urlProject : "labstock";
+  const stageMotion = useWorkspaceMotion(`${view}:${selectedSlug}`);
   const setView = useCallback((next: WorkspaceView) => {
     if (next === "project") return;
     playUISound("tap");
@@ -915,7 +917,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
         <div className="aw-body">
           <Sidebar view={view} selected={selected} setView={setView} newSession={newSession} selectProject={selectProject} openPalette={openPalette} open={sidebarOpen} close={() => setSidebarOpen(false)} />
 
-          <section className="aw-stage">
+          <section className="aw-stage" ref={stageMotion} data-site-motion>
             <header className="aw-mobile-header">
               <button type="button" onClick={() => setSidebarOpen(true)} aria-label={t("Open navigation")}><Glyph name="menu" /></button>
               <strong>{t("JAGAU Workspace")}</strong>

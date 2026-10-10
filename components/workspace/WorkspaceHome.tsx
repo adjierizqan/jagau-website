@@ -1,6 +1,6 @@
 "use client";
 import type { ReactNode } from "react";
-import { CinemaStage } from "@/components/cinematic/CinemaStage";
+import { EvidenceStage } from "@/components/showcase/EvidenceStage";
 import Image from "next/image";
 import { featuredWork, allWorkspaceProjects, type WorkspaceProject } from "@/data/workspace";
 import { identity, education } from "@/data/profile";
@@ -31,8 +31,8 @@ export function WorkspaceHome({
         </div>
         <section className="home-start" aria-label="Explore JAGAU">
           <div className="home-conversation">
-          <h2>Ask about the work. See how it moves.</h2>
-          <p className="home-positioning">Inventory, monitoring and blood-bank workflows. Explore the founder’s software, then ask how it was built. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
+          <h2>Software with a memory.</h2>
+          <p className="home-positioning">From a stock movement to a corrected reading, the record matters. Explore the software and the decisions behind it. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
           <div className="home-guide">
             {composer}
           <div className="home-starters" aria-label="Suggested questions">
@@ -44,7 +44,7 @@ export function WorkspaceHome({
           </div>
           </div>
           </div>
-          <CinemaStage onAsk={askQuestion}/>
+          <EvidenceStage onAsk={askQuestion} onOpen={selectProject}/>
           <nav className="home-intro-actions" aria-label="Introduction actions">
             <a href="#home-work" onClick={navigateToSection}>Explore the work ↓</a>
 
@@ -70,8 +70,8 @@ export function WorkspaceHome({
             >
               <figure>
                 <Image
-                  src={p.slug === "elab" ? p.thumb! : `/motion/${p.slug}.jpg`}
-                  alt={p.title + " illustrative motion scene · open public case study"}
+                  src={p.thumb ?? p.image ?? ""}
+                  alt={p.title + " · approved public project screenshot"}
                   width={1600}
                   height={1000}
                   sizes="(max-width:760px) 100vw, 700px"
@@ -137,13 +137,13 @@ export function StudioAbout() {
 
 export function StudioPresentation({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
   return <>
-    <CinemaStage compact/>
+
     <section className="studio-approach" aria-labelledby="studio-approach-title">
-      <h2 id="studio-approach-title">How the work is built</h2>
+      <div className="studio-principle"><span>01 / The practice</span><h2 id="studio-approach-title">Interfaces are the visible part.<br/><em>The record is the foundation.</em></h2><p>Three systems. Three ways of preserving what happened.</p></div>
       <ol>
-        <li><h3>Keep stock connected to its source.</h3><p>LabStock carries workbook, sheet and row identity into the ledger, reports and Excel exports.</p></li>
-        <li><h3>Correct a reading without erasing it.</h3><p>SuhuLog keeps the previous value when a correction becomes effective. Monitoring and exports use those same records.</p></li>
-        <li><h3>Give each event its own meaning.</h3><p>BDRS separates request, crossmatch, issue and physical outcome. A single status does not stand in for the entire case.</p></li>
+        <li><span>01 / LabStock</span><h3>Keep stock connected to its source.</h3><p>LabStock carries workbook, sheet and row identity into the ledger, reports and Excel exports.</p></li>
+        <li><span>02 / SuhuLog</span><h3>Correct a reading without erasing it.</h3><p>SuhuLog keeps the previous value when a correction becomes effective. Monitoring and exports use those same records.</p></li>
+        <li><span>03 / BDRS</span><h3>Give each event its own meaning.</h3><p>BDRS separates request, crossmatch, issue and physical outcome. A single status does not stand in for the entire case.</p></li>
       </ol>
     </section>
     <section className="studio-systems" aria-labelledby="studio-systems-title">
