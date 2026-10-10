@@ -17,7 +17,7 @@ for (const [width, height] of [[1440,900],[768,1024],[390,844]]) for (const them
     expect(layout.previewWidth).toBeGreaterThan(width===390?300:width===1440?450:400);
     if(width>=1000) expect(layout.composerRight).toBeLessThan(layout.previewLeft);
     else expect(layout.composerBottom).toBeLessThan(layout.previewTop);
-    await expect(page.locator('.evidence-context')).toContainText('Real application screens · synthetic demo data');
+    await expect(page.locator('.evidence-context')).toContainText('Authentic application screens');
     await expect(page.locator('.home-positioning')).toContainText('Curated answers · no live AI');
     if(width<760) await page.getByRole('button',{name:'Open navigation',exact:true}).click();
     await page.locator('.aw-primary-nav').getByRole('button',{name:'Studio',exact:true}).click();
