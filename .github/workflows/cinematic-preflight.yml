@@ -1,7 +1,6 @@
 name: Cinematic preparation
 on:
-  push:
-    branches: [experiment/cinematic-ui]
+  pull_request:
     paths: [.github/workflows/cinematic-preflight.yml]
 permissions:
   contents: read
