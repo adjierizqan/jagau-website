@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      QA_BASE_URL: https://experiment-cinematic-ui.jagau-cinematic-preview.pages.dev
+      QA_BASE_URL: https://jagau-cinematic-preview.pages.dev
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
