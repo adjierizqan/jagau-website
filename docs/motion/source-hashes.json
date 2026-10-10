@@ -1,0 +1,12 @@
+{
+  "components/workspace/SpatialMotion.tsx": "4a58da36482a5fd910aec26a3f62d1466b19d7d530a66815b687697b054f071b",
+  "components/workspace/spatial.css": "85bf4ef19aee4a0f9dd10d57ce06a2f91ed7a68f269914b797b7b51354ac9ed5",
+  "components/workspace/MotionStudy.tsx": "a58d54f736835371205ea7be78581a860d8f081416c466e4e6676f7141a1a6d3",
+  "components/WorkspacePrototype.tsx": "c6b09d4e76211fde15d2269d4c88d0de4c7028de56d881fb3d18d75b0e54cd00",
+  "app/motion-study/page.tsx": "564cd70540215e833fa994017d9fbd57528b5b6207765ef4065d4900fb597bbc",
+  "scripts/capture-motion.mjs": "7a544acad0a953845e0eaea953ecd4b5b5d3535b241adde9a302ca76c940c17d",
+  "scripts/measure-motion.mjs": "b01dbdeec408c8f0f2ca34fd0c771d4e05e3233a48d247de0281dd01f797d33e",
+  "tests/browser/motion.spec.ts": "267ddec6ed3187b0fe9c33c0f0971ac830ed37cdd011aa14c8ff96fbc62b3cf3",
+  ".github/workflows/motion-qa.yml": "0c30ef03d4ec8b89ae9472a0bd669f571fe2d1d886dcbd7f3d09d4fa618f0ea1",
+  "scripts/capture-workspace-parity.mjs": "d5d295b5f42ed29a1d37101d3a5bbadf9d01325ae7711e4ea41e8271bbe54e30"
+}

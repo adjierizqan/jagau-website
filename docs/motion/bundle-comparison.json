@@ -1,0 +1,14 @@
+[
+  {
+    "build": "baseline",
+    "allExportJsBytes": 998941,
+    "allExportJsGzipBytes": 307875,
+    "chunks": 28
+  },
+  {
+    "build": "motion",
+    "allExportJsBytes": 1003045,
+    "allExportJsGzipBytes": 310202,
+    "chunks": 29
+  }
+]
