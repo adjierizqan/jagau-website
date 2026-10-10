@@ -1,6 +1,6 @@
 'use client';
 import {useEffect, useRef, useState} from 'react';
-import {AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring} from 'motion/react';
+import {motion, useMotionValue, useReducedMotion, useSpring} from 'motion/react';
 import {featuredWork} from '@/data/workspace';
 import './cinema.css';
 export type FilmId='labstock'|'suhulog'|'bdrs';
@@ -28,14 +28,15 @@ export function CinemaStage({initial='labstock',onAsk,compact=false}:{initial?:F
  {!compact&&<div className="cine-heading"><span>SOFTWARE, IN MOTION</span><span>01—03 / FOUNDER WORK</span></div>}
  <div className="cine-perspective" ref={ref} onPointerMove={e=>{if(reduced||e.pointerType!=='mouse')return;const r=e.currentTarget.getBoundingClientRect();x.set(-(e.clientY-r.top-r.height/2)/r.height*5);y.set((e.clientX-r.left-r.width/2)/r.width*7);}} onPointerLeave={()=>{x.set(0);y.set(0);}}>
  <motion.div className="cine-device" style={{rotateX:reduced?0:rx,rotateY:reduced?0:ry}}>
- <AnimatePresence mode="wait" initial={false}><motion.div key={selected} className="cine-film" initial={{opacity:reduced?1:0}} animate={{opacity:1}} exit={{opacity:reduced?1:0}} transition={{duration:.2}}>
- <video ref={video} src={visible||started?`/motion/${selected}.mp4`:undefined} poster={`/motion/${selected}.png`} preload="none" muted playsInline aria-label={`${film.name}: ${film.line} Illustrative reconstructed interface, synthetic data.`} onPlay={()=>{setPlaying(true);setStarted(true);}} onPause={()=>setPlaying(false)} onEnded={()=>setPlaying(false)} onError={()=>{setFailed(true);setPlaying(false);}} />
+ <motion.div key={selected} className="cine-film" initial={{opacity:reduced?1:0}} animate={{opacity:1}} exit={{opacity:reduced?1:0}} transition={{duration:.2}}>
+ <video ref={video} src={visible||started?`/motion/${selected}.mp4`:undefined} poster={`/motion/${selected}.jpg`} preload="none" muted playsInline aria-label={`${film.name}: ${film.line} Illustrative reconstructed interface, synthetic data.`} onPlay={()=>{setPlaying(true);setStarted(true);}} onPause={()=>setPlaying(false)} onEnded={()=>setPlaying(false)} onError={()=>{setFailed(true);setPlaying(false);}} />
  {failed&&<div className="cine-fallback"><strong>{film.name}</strong><p>{film.line}</p><p>Film unavailable. The original public case study remains available below.</p></div>}
- </motion.div></AnimatePresence>
- <div className="cine-transport"><button type="button" onClick={toggle} disabled={failed} aria-label={`${playing?'Pause':'Play'} ${film.name} film`}>{playing?'Ⅱ':'▶'} <span>{playing?'Pause':'Play film'}</span></button><span>16 SEC <i/> ILLUSTRATIVE DEMO</span><a href={`/projects/${selected}/`}>Public case study ↗</a></div>
+ </motion.div>
+ <div className="cine-transport"><button type="button" onClick={toggle} disabled={failed} aria-label={`${playing?'Pause':'Play'} ${film.name} film`}>{playing?'Ⅱ':'▶'} <span>{playing?'Pause':'Play film'}</span></button><span>16 SEC <i/> ILLUSTRATIVE DEMO</span><a href={`/motion/${selected}.mp4`} target="_blank" rel="noopener noreferrer" aria-label={`Open ${film.name} film full size`}>Full size ↗</a><a href={`/projects/${selected}/`}>Case study ↗</a></div>
  </motion.div>
  </div>
  <div className="cine-selector" role="group" aria-label="Choose a software presentation">{(Object.keys(films) as FilmId[]).map((id,i)=><button type="button" key={id} aria-pressed={id===selected} onClick={()=>select(id)}><span>0{i+1}</span><strong>{films[id].name}</strong>{selected===id&&<motion.i layoutId={compact?undefined:'film-marker'} style={{background:film.accent}} transition={{duration:.3}}/>}</button>)}</div>
  <div className="cine-caption"><div><strong>{film.line}</strong><span>{film.route}</span></div>{onAsk&&<button type="button" onClick={()=>onAsk(project.askSuggestion??`Tell me about ${film.name}`)}>Ask about {film.name} ↗</button>}</div>
+ <details className="cine-transcript"><summary>About this scene</summary><p>{selected==='labstock'?'Illustrative stock rows assemble, quantities count up, and a workbook–sheet–row callout connects the ledger to the report.':selected==='suhulog'?'An illustrative reading changes from 4.8 to 4.6 °C. The chart draws progressively and the previous value remains in correction history.':'An illustrative case separates request, per-bag crossmatch, issue and physical outcome. Issue is recorded while the outcome remains unrecorded.'} Reconstructed presentation with synthetic values; original public screenshots are in the case study.</p></details>
  </section>;
 }

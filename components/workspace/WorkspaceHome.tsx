@@ -30,6 +30,7 @@ export function WorkspaceHome({
 
         </div>
         <section className="home-start" aria-label="Explore JAGAU">
+          <div className="home-conversation">
           <h2>Ask about the work. See how it moves.</h2>
           <p className="home-positioning">Inventory, monitoring and blood-bank workflows. Explore the founder’s software, then ask how it was built. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
           <div className="home-guide">
@@ -40,6 +41,7 @@ export function WorkspaceHome({
               ["How we build", "How do you build reliable operational software?"],
               ["About JAGAU", "What does JAGAU mean?"],
             ].map(([label, question]) => <button key={label} type="button" disabled={busy} onClick={() => askQuestion(question)}>{label} <span aria-hidden="true">↗</span></button>)}
+          </div>
           </div>
           </div>
           <CinemaStage onAsk={askQuestion}/>
@@ -68,7 +70,7 @@ export function WorkspaceHome({
             >
               <figure>
                 <Image
-                  src={p.slug === "elab" ? p.thumb! : `/motion/${p.slug}.png`}
+                  src={p.slug === "elab" ? p.thumb! : `/motion/${p.slug}.jpg`}
                   alt={p.title + " illustrative motion scene · open public case study"}
                   width={1600}
                   height={1000}
