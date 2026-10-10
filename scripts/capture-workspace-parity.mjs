@@ -171,7 +171,21 @@ try {
           if (productionOnly || polish) await page.locator(".project-intro-answer").waitFor({ state: "visible" });
           await capture(`case-${slug}`);
           if (process.env.QA_PREMIUM === "true" && slug !== "labstock") {
-            await page.locator(".study").evaluate(element=>element.scrollIntoView({block:"start",behavior:"instant"}));
+            await page.locator(".study").evaluate(element=>{
+              element.scrollIntoView({block:"start",behavior:"instant"});
+              const main=element.closest("main");
+              const toolbar=document.querySelector(".aw-mobile-header");
+              const toolbarBottom=toolbar && getComputedStyle(toolbar).display!=="none" ? toolbar.getBoundingClientRect().bottom : main.getBoundingClientRect().top;
+              const clearance=Math.max(0,toolbarBottom-element.getBoundingClientRect().top)+16;
+              if (["auto","scroll"].includes(getComputedStyle(main).overflowY)) main.scrollBy({top:-clearance,behavior:"instant"});
+              else window.scrollBy({top:-clearance,behavior:"instant"});
+            });
+            await page.waitForFunction(()=>{
+              const study=document.querySelector(".study"),heading=study.querySelector("h1");
+              const mobile=document.querySelector(".aw-mobile-header");
+              const top=mobile && getComputedStyle(mobile).display!=="none" ? mobile.getBoundingClientRect().bottom : study.closest("main").getBoundingClientRect().top;
+              return heading.getBoundingClientRect().top>=top;
+            });
             await capture(`case-${slug}-study`);
           }
           if (polish && process.env.QA_STUDIO === "true" && ["suhulog", "bdrs"].includes(slug)) {

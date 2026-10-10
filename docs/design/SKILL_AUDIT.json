@@ -27,5 +27,37 @@
     "Optional anti-ai-slop-ui 1.0.0 MIT: installer defaults to all agents globally and removes existing destination trees. Not executed or installed; no material value over SOP and existing guidance.",
     "Root .agents mkdir failed Operation not permitted. No escalation or security change attempted. Guidance stored in docs/design/skills, read manually this session, not automatically registered. Current Codex skills catalog does not advertise these new references; no reload/discovery success claimed."
   ],
-  "invocation": "skill-installer read; Impeccable text-only polish/craft-floor and Vercel guidelines applied manually. Formal critique command/engine not run."
+  "invocation": "skill-installer read; Impeccable text-only polish/craft-floor and Vercel guidelines applied manually. Formal critique command/engine not run.",
+  "localReferenceFiles": [
+    {
+      "path": "docs/design/skills/impeccable/LICENSE",
+      "sha256": "72bdc6c2866074f26236c6313f44acb6e26dd58e605aa7aa8158f4ab7ef9b069",
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/design/skills/impeccable/SKILL.md",
+      "sha256": "e89263ca671c1aacfd2595ddd8dfb2db333a1ad4c843fde278ffe9d1d4cf652b",
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/design/skills/web-design-guidelines/SKILL.md",
+      "sha256": "e605b27ffa6c73b012281d42b256f8c4ac09471fdd83ed6564350bedcd94ad02",
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/design/skills/web-design-guidelines/reference/command.md",
+      "sha256": "d93848dde33658e783912503d7a14cb7ae931b59045a3a5b8f9a453f4bbe7866",
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/design/skills/impeccable/reference/craft-floor.md",
+      "sha256": "8d9ef2afcfe23bb8cc0d7d5d07366fe96eede92ff10eb0a3350b6831c4c62cc7",
+      "mode": "0o644"
+    },
+    {
+      "path": "docs/design/skills/impeccable/reference/polish.md",
+      "sha256": "52e33c72cf1513943bf2a0fd0cf651186dd76f412e4e5a7897aceb8e32d34cdc",
+      "mode": "0o644"
+    }
+  ]
 }

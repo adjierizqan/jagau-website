@@ -1,10 +1,10 @@
 PROJECT: JAGAU Workspace
-VERSION: 2.0.0
-STATUS: OWNER_REVIEW_PENDING
-CURRENT MILESTONE: Visual/project presentation first, based on verified PR #11.
-BLOCKER: Final owner review of the offline Before/After dashboard; technical and agent visual checks PASS; owner acceptance is not inferred.
-NEXT ACTION: Inspect the final offline dashboard, record approval or requested changes, and review draft PR #12. No merge/deploy authorized.
-EXIT CRITERIA: Combined technical/visual QA passes and owner approves the actual visual candidate.
-EVIDENCE: docs/design/OWNER_VISUAL_REVIEW.md; prior foundation docs/projects/INTEGRATED_REVIEW.md.
-LAST DECISION: Curated Guide and 40 cleared original images remain; real AI is DEFERRED. Fourteen replacement captures are local-review-only; publication remains blocked and is not a UI-only release gate.
+VERSION: 2.0.0 review candidate
+STATUS: RELEASE CANDIDATE
+CURRENT MILESTONE: Workspace craft review, PR #13, based on unchanged PR #12 d84b396.
+BLOCKER: Owner review/approval of the offline Before/After dashboard. Native skill registration is unavailable; fourteen replacement image payloads still lack publication clearance.
+NEXT ACTION: Review actual evidence and record Approve / Revise / Reject. No merge/deployment authorized.
+EXIT CRITERIA: All relevant QA passes, actual captures are inspected, and owner accepts this candidate.
+EVIDENCE: docs/design/PREMIUM_REVIEW.md; docs/design/PREMIUM_AUDIT.md; docs/design/SKILL_AUDIT.json; draft PR #13.
+LAST DECISION: Existing cleared screenshots, canonical records, curated Guide and macOS shell preserved. Real AI DEFERRED. New synthetic pictures excluded from this candidate and dashboard.
 LAST UPDATED: 2026-10-10
