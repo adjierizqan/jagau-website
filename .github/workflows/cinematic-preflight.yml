@@ -25,17 +25,10 @@ jobs:
           mkdir /tmp/remotion-skills-review
           cd /tmp/remotion-skills-review
           git init -q
-          npx --yes skills add remotion-dev/skills --skill remotion-best-practices remotion-create remotion-markup remotion-render --agent codex --copy --yes
+          npx --yes skills@1.7.2 add remotion-dev/skills --skill remotion-best-practices remotion-create remotion-markup remotion-render --agent codex --copy --yes
           find . -type f | sort
           find . -type f -exec sha256sum {} \;
           git status --short
-      - name: Preview credential availability (presence only)
-        env:
-          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          node -e 'for(const k of ["CF_TOKEN","CF_ACCOUNT","VERCEL_TOKEN"]) console.log(k+"="+Boolean(process.env[k]))'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
