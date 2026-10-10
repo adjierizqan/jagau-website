@@ -7,7 +7,9 @@ import "./spatial.css";
 export function SpatialMotion({ navigationKey }: { navigationKey: string }) {
   useEffect(() => {
     const stage = document.querySelector<HTMLElement>(".aw-stage");
-    if (!stage || !Element.prototype.animate || !window.IntersectionObserver) return;
+    if (!stage) return;
+    stage.dataset.spatialReady = "true";
+    if (!Element.prototype.animate || !window.IntersectionObserver) return;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     const mobile = matchMedia("(max-width: 760px)");
     const animations = new Set<Animation>();

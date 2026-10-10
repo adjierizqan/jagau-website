@@ -46,6 +46,8 @@ try {
         if (productionOnly || polish) {
           // Use application state and computed animation state, not a fixed sleep.
           await page.waitForFunction(() => {
+            const spatial = document.querySelector("[data-spatial-motion]");
+            if (spatial && spatial.getAttribute("data-spatial-ready") !== "true") return false;
             const intro = document.querySelector(".project-intro");
             if (!intro) return true;
             if (intro.getAttribute("data-playing") !== "false") return false;
@@ -69,6 +71,17 @@ try {
             return before === JSON.stringify(rectangles()) && document.getAnimations().every(animation =>
               !Number.isFinite(Number(animation.effect?.getComputedTiming().endTime)) || !["running", "pending"].includes(animation.playState)
             );
+          });
+          // Observer/decode-driven entrances may start after an earlier idle frame.
+          // Require sustained quiescence; retain the original zero-animation assertion.
+          await page.evaluate(async () => {
+            let quietSince = performance.now();
+            const deadline = quietSince + 10000;
+            while (performance.now() - quietSince < 250) {
+              if (performance.now() > deadline) throw new Error("Motion did not settle");
+              await new Promise(requestAnimationFrame);
+              if (document.getAnimations().some(a => ["running", "pending"].includes(a.playState))) quietSince = performance.now();
+            }
           });
           stability = await page.evaluate(() => {
             const intro = document.querySelector(".project-intro");

@@ -912,7 +912,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
         <div className="aw-body">
           <Sidebar view={view} selected={selected} setView={setView} newSession={newSession} selectProject={selectProject} openPalette={openPalette} open={sidebarOpen} close={() => setSidebarOpen(false)} />
 
-          <section className="aw-stage">
+          <section className="aw-stage" data-spatial-motion="true">
             <SpatialMotion navigationKey={view + selected.slug + projectRevision} />
             <header className="aw-mobile-header">
               <button type="button" onClick={() => setSidebarOpen(true)} aria-label={t("Open navigation")}><Glyph name="menu" /></button>
