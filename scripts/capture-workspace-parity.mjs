@@ -57,7 +57,7 @@ try {
               Number.isFinite(Number(animation.effect?.getComputedTiming().endTime))
             ).map(animation => animation.finished));
           });
-          await page.waitForFunction(async () => {
+          const settled = await page.waitForFunction(async () => {
             // Scroll-triggered reveals can start after the first animation snapshot.
             // Require a quiet interval including scroll and content geometry; never
             // cancel animations or hide them to manufacture a settled capture.
@@ -75,11 +75,8 @@ try {
                 (animation.pending || animation.playState === "running")
               )) return false;
             }
-            return true;
-          });
-          stability = await page.evaluate(() => {
             const intro = document.querySelector(".project-intro");
-            return {
+            const state = {
               introPlaying: intro?.getAttribute("data-playing") || null,
               introCharacterCount: intro?.querySelectorAll("[data-character]").length || 0,
               introCharactersVisible: intro ? [...intro.querySelectorAll("[data-character]")].every(element => Number(getComputedStyle(element).opacity) >= 0.99) : null,
@@ -88,10 +85,13 @@ try {
               theme: document.documentElement.getAttribute("data-theme"),
               finiteAnimationsRunning: document.getAnimations().filter(animation => Number.isFinite(Number(animation.effect?.getComputedTiming().endTime)) && animation.playState === "running").length,
             };
+            return state.finiteAnimationsRunning === 0 ? state : false;
           });
+          stability = await settled.jsonValue();
+          await settled.dispose();
           assert.equal(stability.theme, theme, "Production appearance preference did not apply");
           assert.ok(stability.fontsReady && stability.imagesDecoded, "Production font/image readiness failed");
-          assert.equal(stability.finiteAnimationsRunning, 0, "Capture still has running finite animations");
+          assert.equal(stability.finiteAnimationsRunning, 0, `Capture still has running finite animations: ${site.name}/${screen}`);
           assert.equal(new URL(page.url()).origin, site.origin, "Capture is not from public production");
         }
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${site.name}/${screen} page overflow`);
