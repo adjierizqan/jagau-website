@@ -1,4 +1,5 @@
 "use client";
+import { MotionWords } from "@/components/workspace/MotionWords";
 import { ElabStudy } from "@/components/studies/ElabStudy";
 import { requestGuide, guideEndpoint } from "@/lib/guide-client";
 
@@ -295,7 +296,7 @@ function WorkspaceHeader({ eyebrow, title, copy, meta }: { eyebrow: string; titl
   eyebrow = t(eyebrow); title = t(title); copy = t(copy);
   return (
     <header className="aw-page-header">
-      <div><span>{eyebrow}</span><h1>{title}</h1><p>{copy}</p></div>
+      <div><span>{eyebrow}</span><h1><MotionWords>{title}</MotionWords></h1><p>{copy}</p></div>
       {meta && <small>{meta}</small>}
     </header>
   );
@@ -310,7 +311,7 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
       <figure>{media.src ? <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-contain object-center" priority={lead} /> : <figcaption>{project.title} · Source-reviewed record · screenshots pending</figcaption>}</figure>
       <section>
         <span>{project.eyebrow} · {project.year}{project.status ? " · " + project.status : ""}</span>
-        <h2>{project.title}</h2>
+        <h2><MotionWords>{project.title}</MotionWords></h2>
         <p>{project.summary}</p>
         <strong>{t("Open case")} <Glyph name="arrow" /></strong>
       </section>
@@ -337,7 +338,7 @@ function WorkWorkspace({ selectProject }: { selectProject: (project: WorkspacePr
         {rest.map((project) => <WorkCase key={project.slug} project={project} selectProject={selectProject} />)}
       </div>
       <section className="aw-work-lab" aria-labelledby="aw-work-lab-title">
-        <h2 id="aw-work-lab-title">{t("From the lab")}</h2>
+        <h2 id="aw-work-lab-title"><MotionWords>{t("From the lab")}</MotionWords></h2>
         <div>{labProjects().map((project) => <WorkCase key={project.slug} project={project} selectProject={selectProject} />)}</div>
       </section>
     </main>
@@ -377,7 +378,7 @@ function ProjectDirectory({ projects, title, copy, selectProject }: {
         {projects.map((project) => (
           <button type="button" key={project.slug} onClick={() => selectProject(project)}>
             {project.thumb ?? project.image ? <figure><Image src={project.thumb ?? project.image ?? ""} alt={project.title} fill sizes="(max-width: 760px) 100vw, 480px" className="object-cover object-center" /></figure> : <div className="aw-object-evidence">{project.evidence.slice(0, 2).map((item) => <dl key={item.label}><dt>{item.label}</dt><dd>{item.value}</dd></dl>)}</div>}
-            <section><span>{project.eyebrow}{project.status ? " · " + project.status : ""}</span><strong>{project.title}<Glyph name="arrow" /></strong><p>{project.summary}</p></section>
+            <section><span>{project.eyebrow}{project.status ? " · " + project.status : ""}</span><strong><MotionWords>{project.title}</MotionWords><Glyph name="arrow" /></strong><p><MotionWords delay={160}>{project.summary}</MotionWords></p></section>
           </button>
         ))}
       </div>
@@ -451,7 +452,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
       {!hasConversation ? (
         <section className="aw-ask-empty">
           <span>{t("Ask JAGAU Workspace")}</span>
-          <h1>{t("What would you like to understand?")}</h1>
+          <h1><MotionWords>{t("What would you like to understand?")}</MotionWords></h1>
           <p>{guideEndpoint ? L("AI answers are labeled per reply and may be wrong. Sources and curated fallback remain available.","Setiap jawaban AI diberi label dan bisa salah. Sumber dan jawaban terkurasi tetap tersedia.") : t("Curated answers · no live AI. Questions stay in your browser.")}</p>
           <AskContextBar context={context} setContext={setContext} busy={active} />
           <Composer query={query} setQuery={setQuery} submit={submit} stop={stop} busy={active} />

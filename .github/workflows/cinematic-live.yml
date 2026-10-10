@@ -35,7 +35,7 @@ jobs:
           cat /tmp/preview-headers.txt
           head -c 600 /tmp/preview.html
       - name: Live desktop mobile keyboard and reduced motion
-        run: npx playwright test tests/browser/cinematic.spec.ts tests/browser/premium.spec.ts tests/browser/navigation.spec.ts
+        run: npx playwright test tests/browser/cinematic.spec.ts tests/browser/premium.spec.ts tests/browser/navigation.spec.ts tests/browser/workspace-motion.spec.ts
       - name: Record actual website interactions and loading
         run: node scripts/capture-cinematic.mjs
       - name: Runtime dependency audit

@@ -19,8 +19,12 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]){
   }
  });
  await page.goto(process.env.QA_BASE_URL || 'http://127.0.0.1:4185/');
- await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(700);
+ await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(2000);
  await page.screenshot({path:`${root}/${label}-home.png`});
+ await page.getByRole("button",{name:"Replay motion ↻"}).click();
+ await page.waitForTimeout(280);await page.screenshot({path:`${root}/${label}-words-280ms.png`});
+ await page.waitForTimeout(420);await page.screenshot({path:`${root}/${label}-words-700ms.png`});
+ await page.waitForTimeout(1200);
  const homePerformance=await page.evaluate(()=>({sample:window.__reviewMetrics,navigation:performance.getEntriesByType('navigation').map(n=>({domContentLoaded:n.domContentLoadedEventEnd,load:n.loadEventEnd})),resourceBytes:performance.getEntriesByType('resource').reduce((sum,r)=>sum+r.transferSize,0),videoRequests:performance.getEntriesByType('resource').filter(r=>/\.(mp4|webm)/.test(r.name)).length}));
  const stage=page.getByRole('region',{name:'Explore real project screens'});await stage.scrollIntoViewIfNeeded();
  const box=await stage.locator('.evidence-space').boundingBox();

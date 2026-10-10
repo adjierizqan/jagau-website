@@ -114,3 +114,24 @@
 @media(max-width:760px){.aw-desktop .aw-project-objects>button:first-child,.aw-desktop .aw-project-objects>button:last-child{display:block}.aw-desktop .aw-project-objects{gap:28px}.aw-desktop .aw-project-objects>button section>strong{font-size:26px}}
 
 @media(max-width:760px){.aw-desktop .home-starters button{margin-right:0;font-size:11px}.aw-desktop .home-starters{gap:10px}}
+
+/* Readable supporting type and less framing around the actual application. */
+.aw-desktop .home-identity p{font-size:13px}
+.aw-desktop .home-conversation .home-positioning{font-size:15px;line-height:1.7;max-width:42ch}
+.aw-desktop .home-conversation h2{max-width:13ch}
+.aw-desktop .home-starters button{font-size:13px;min-height:44px}
+.aw-desktop .evidence-heading{font-size:13px;letter-spacing:0}
+.aw-desktop .evidence-space{padding:0;border:0;border-radius:0;background:transparent}
+.aw-desktop .evidence-screen{box-shadow:none;border:1px solid var(--ui-line);border-radius:3px}
+.aw-desktop .evidence-pagination p{font-size:13px}
+.aw-desktop .evidence-projects small{font-size:12px}
+.aw-desktop .evidence-projects strong{font-size:16px}
+.aw-desktop .evidence-context p,.aw-desktop .evidence-context>div{font-size:13px}
+.aw-desktop .evidence-pagination button:disabled{opacity:1;color:var(--ui-muted);background:transparent}
+.aw-desktop .home-intro-actions{font-size:13px}
+@media(max-width:760px){.aw-desktop .home-starters{display:grid;grid-template-columns:1fr;gap:0}.aw-desktop .home-starters button{text-align:left;display:flex;justify-content:space-between;font-size:14px}.aw-desktop .evidence-projects strong{font-size:14px}.aw-desktop .evidence-projects small{font-size:12px}.aw-desktop .home-conversation .home-positioning{font-size:15px}.aw-desktop .evidence-context>div{font-size:14px}}
+.aw-desktop .aw-profile{grid-template-columns:auto minmax(0,1fr);gap:10px}
+.aw-desktop .aw-profile small{white-space:normal;overflow:visible;text-overflow:clip;font-size:12px;line-height:1.5}
+.aw-desktop .aw-owner small,.aw-desktop .aw-title-actions{font-size:12px;letter-spacing:0}
+.aw-desktop .aw-avatar{font-size:12px}
+@media(max-width:760px){.aw-desktop .aw-profile{grid-template-columns:auto minmax(0,1fr) auto}}

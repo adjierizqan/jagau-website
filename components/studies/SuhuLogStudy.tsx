@@ -1,4 +1,5 @@
 "use client";
+import { MotionWords } from "@/components/workspace/MotionWords";
 import { useState } from "react";
 import { navigateToSection } from "@/lib/section-navigation";
 import {
@@ -19,12 +20,12 @@ export default function SuhuLogStudy(props: StudyProps) {
       <header className="suhu-opener">
         <div>
           <p className="study-label">Operational software / {p.year}</p>
-          <h1>SuhuLog</h1>
-          <h2>
+          <h1><MotionWords>SuhuLog</MotionWords></h1>
+          <h2><MotionWords>
             At the point of work.
             <br />
             <em>In the monthly record.</em>
-          </h2>
+          </MotionWords></h2>
           <p>{p.summary}</p>
           <a href="#suhu-loop" onClick={navigateToSection}>Follow a reading ↓</a>
         </div>
@@ -35,11 +36,11 @@ export default function SuhuLogStudy(props: StudyProps) {
       <section id="suhu-loop" className="study-section">
         <header className="study-heading">
           <span className="study-label">01 / From capture to review</span>
-          <h2>
+          <h2><MotionWords>
             One reading.
             <br />
             <em>Two working scales.</em>
-          </h2>
+          </MotionWords></h2>
           <p>
             The phone captures the reading. The larger screen makes the month
             inspectable.
@@ -52,7 +53,7 @@ export default function SuhuLogStudy(props: StudyProps) {
         />
         <div className="suhu-inspector">
           <div>
-            <h3>
+            <h3><MotionWords>
               {
                 [
                   "The right point, already resolved.",
@@ -61,7 +62,7 @@ export default function SuhuLogStudy(props: StudyProps) {
                   "The same records, ready to hand over.",
                 ][step]
               }
-            </h3>
+            </MotionWords></h3>
             <p>{p.howItWorks[[0, 1, 2, 4][step]]}</p>
             <p className="study-note">
               Select a stage to inspect the workflow.
@@ -101,11 +102,11 @@ export default function SuhuLogStudy(props: StudyProps) {
       <section className="study-section">
         <header className="study-heading">
           <span className="study-label">02 / Desktop monitoring</span>
-          <h2>
+          <h2><MotionWords>
             Read the month.
             <br />
             <em>Keep the exceptions.</em>
-          </h2>
+          </MotionWords></h2>
           <p>
             Configured limits provide context. An out-of-range measurement
             remains a measurement; it is never clamped into a reassuring number.
@@ -115,11 +116,11 @@ export default function SuhuLogStudy(props: StudyProps) {
       </section>
       <section className="suhu-correction study-section">
         <span className="study-label">03 / Engineering decision</span>
-        <h2>
+        <h2><MotionWords>
           Correct the record.
           <br />
           <em>Keep its history.</em>
-        </h2>
+        </MotionWords></h2>
         <div className="correction-line">
           <span>Original reading</span>
           <b aria-hidden="true">→</b>
@@ -132,7 +133,7 @@ export default function SuhuLogStudy(props: StudyProps) {
       <section className="study-section">
         <header className="study-heading">
           <span className="study-label">04 / Reporting</span>
-          <h2>A report people can use.</h2>
+          <h2><MotionWords>A report people can use.</MotionWords></h2>
           <p>{p.howItWorks[4]}</p>
         </header>
         <Media {...props} index={3} />

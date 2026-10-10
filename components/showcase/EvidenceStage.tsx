@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { MotionWords } from "@/components/workspace/MotionWords";
 import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { featuredWork, type WorkspaceProject } from "@/data/workspace";
 import "./showcase.css";
@@ -24,7 +25,7 @@ export function EvidenceStage({ initial = "labstock", onAsk, onOpen, compact = f
   const screen = screens[page] ?? screens[0];
   const reset = () => { x.set(0); y.set(0); };
   return <section className={`evidence-stage${compact ? " is-compact" : ""}`} aria-label="Explore real project screens" data-project={selected}>
-    <header className="evidence-heading"><span>From the working software</span><span>0{featuredWork.findIndex(p => p.slug === selected) + 1} / 03</span></header>
+    <header className="evidence-heading"><span>Inside the projects</span><span>0{featuredWork.findIndex(p => p.slug === selected) + 1} / 03</span></header>
     <div className="evidence-space" onPointerMove={event => {
       if (reduced || event.pointerType !== "mouse" || !matchMedia("(hover:hover) and (min-width:761px)").matches) return;
       const rect = event.currentTarget.getBoundingClientRect();
@@ -41,8 +42,8 @@ export function EvidenceStage({ initial = "labstock", onAsk, onOpen, compact = f
         </AnimatePresence>
       </motion.figure>
     </div>
-    <div className="evidence-pagination"><p aria-live="polite">{String(page + 1).padStart(2, "0")} — {screen.caption}</p><div><button type="button" aria-label="Previous screenshot" disabled={page === 0} onClick={() => { setPage(page - 1); reset(); }}>←</button><button type="button" aria-label="Next screenshot" disabled={page === screens.length - 1} onClick={() => { setPage(page + 1); reset(); }}>→</button></div></div>
-    <div className="evidence-projects" role="group" aria-label="Choose a project to inspect">{featuredWork.map((item, index) => <button type="button" key={item.slug} aria-pressed={selected === item.slug} onClick={() => { setSelected(item.slug as ShowcaseId); setPage(0); reset(); }}><small>0{index + 1}</small><strong>{item.title}</strong><span aria-hidden="true">↗</span></button>)}</div>
+    <div className="evidence-pagination"><p aria-live="polite">{String(page + 1).padStart(2, "0")} / <MotionWords key={screen.src}>{screen.caption}</MotionWords></p><div><button type="button" aria-label="Previous screenshot" disabled={page === 0} onClick={() => { setPage(page - 1); reset(); }}>←</button><button type="button" aria-label="Next screenshot" disabled={page === screens.length - 1} onClick={() => { setPage(page + 1); reset(); }}>→</button></div></div>
+    <div className="evidence-projects" role="group" aria-label="Choose a project to inspect">{featuredWork.map((item, index) => <button type="button" key={item.slug} aria-pressed={selected === item.slug} onClick={() => { setSelected(item.slug as ShowcaseId); setPage(0); reset(); }}><small>0{index + 1}</small><strong><MotionWords>{item.title}</MotionWords></strong><span aria-hidden="true">↗</span></button>)}</div>
     <div className="evidence-context"><p>Authentic application screens</p><div>{onAsk && <button type="button" onClick={() => onAsk(project.askSuggestion)}>Ask about {project.title} ↗</button>}<a href={`/projects/${project.slug}/`} onClick={event => { if (!onOpen || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); onOpen(project); }}>Read the case ↗</a></div></div>
   </section>;
 }

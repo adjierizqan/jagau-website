@@ -6,3 +6,12 @@
 .home-project:hover figure img{transform:none}
 .aw-primary-nav button{position:relative;transition:background-color 180ms ease,color 180ms ease}
 @media(prefers-reduced-motion:reduce){.home-project h3 b,.studio-systems h3 span,.home-project figure,.aw-primary-nav button{transition:none!important;transform:none!important}}
+
+/* Each mask contains one real word. No duplicate text or hidden fallback copy. */
+.aw-desktop .motion-copy{display:inline;margin:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit;text-transform:inherit}
+.aw-desktop .motion-word-mask{display:inline-block;vertical-align:baseline;overflow:clip;padding:.12em .025em .2em;margin:-.12em -.025em -.2em;perspective:600px;font:inherit;color:inherit;letter-spacing:inherit}
+.aw-desktop .motion-word{display:inline-block;margin:0;padding:0;transform-origin:50% 100%;font:inherit;color:inherit;letter-spacing:inherit}
+.aw-desktop .motion-replay{font-size:13px;min-height:44px;padding:8px 0;color:var(--ui-muted);margin-left:auto}
+.aw-desktop .motion-replay:hover{color:var(--ui-ink)}
+.aw-desktop .motion-replay:focus-visible{outline:2px solid var(--ui-focus);outline-offset:4px}
+@media(prefers-reduced-motion:reduce){.aw-desktop .motion-word{transform:none!important;opacity:1!important}.aw-desktop .motion-replay{display:none}}
