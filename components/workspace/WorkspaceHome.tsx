@@ -31,7 +31,7 @@ export function WorkspaceHome({
         </div>
         <section className="home-start" aria-label="Explore JAGAU">
           <div className="home-conversation">
-          <h2>Software with a memory.</h2>
+          <h2>Software with<br/><em>a memory.</em></h2>
           <p className="home-positioning">From a stock movement to a corrected reading, the record matters. Explore the software and the decisions behind it. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
           <div className="home-guide">
             {composer}

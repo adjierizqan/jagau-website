@@ -19,11 +19,17 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]){
  await page.screenshot({path:`${root}/${label}-suhulog.png`});
  await stage.getByRole('button',{name:'Ask about SuhuLog ↗'}).click();await page.waitForTimeout(900);
  await page.screenshot({path:`${root}/${label}-chat.png`});
- for(const route of ['work','studio','projects/labstock','projects/suhulog','projects/bdrs','projects/elab','projects','labs','knowledge']){
-  await page.goto(`${process.env.QA_BASE_URL || 'http://127.0.0.1:4185'}/${route}/`);await page.waitForTimeout(700);
-  const skip=page.getByRole('button',{name:/Skip animation/});if(await skip.count())await skip.click();
-  await page.screenshot({path:`${root}/${label}-${route.replaceAll('/','-')}.png`});
-  await page.mouse.wheel(0,580);await page.waitForTimeout(700);
+ for(const label of ['Projects','Studio','Ask']){
+  if(viewport.width<760)await page.getByRole('button',{name:'Open navigation',exact:true}).click();
+  await page.locator('.aw-primary-nav').getByRole('button',{name:label,exact:true}).click();await page.waitForTimeout(650);
+  await page.screenshot({path:`${root}/${viewport.width}-${label.toLowerCase()}.png`});
+  await page.mouse.wheel(0,580);await page.waitForTimeout(600);
+ }
+ for(const slug of ['labstock','suhulog','bdrs','elab']){
+  await page.goto(`${process.env.QA_BASE_URL || 'http://127.0.0.1:4185'}/projects/${slug}/`);await page.waitForTimeout(1500);
+  await page.screenshot({path:`${root}/${label}-${slug}.png`});
+  await page.mouse.wheel(0,650);await page.waitForTimeout(650);
+  await page.screenshot({path:`${root}/${label}-${slug}-body.png`});
  }
  const perf=await page.evaluate(()=>({navigation:performance.getEntriesByType('navigation').map(n=>({domContentLoaded:n.domContentLoadedEventEnd,load:n.loadEventEnd})),overflow:document.documentElement.scrollWidth>innerWidth}));
  writeFileSync(`${root}/${label}-performance.json`,JSON.stringify({errors,...perf},null,2));console.log('PERFORMANCE_REPORT '+JSON.stringify({label,errors,...perf}));
