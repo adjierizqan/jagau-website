@@ -112,3 +112,5 @@
 .aw-desktop .aw-project-objects>button section p{max-width:55ch;line-height:1.75;display:block;-webkit-line-clamp:unset}
 .aw-desktop .aw-project-objects>button:last-child{grid-column:1/-1;display:grid;grid-template-columns:1fr 1.3fr;gap:32px;align-items:center}
 @media(max-width:760px){.aw-desktop .aw-project-objects>button:first-child,.aw-desktop .aw-project-objects>button:last-child{display:block}.aw-desktop .aw-project-objects{gap:28px}.aw-desktop .aw-project-objects>button section>strong{font-size:26px}}
+
+@media(max-width:760px){.aw-desktop .home-starters button{margin-right:0;font-size:11px}.aw-desktop .home-starters{gap:10px}}

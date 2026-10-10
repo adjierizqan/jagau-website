@@ -58,17 +58,24 @@ try {
             ).map(animation => animation.finished));
           });
           await page.waitForFunction(async () => {
-            const elements = [...document.querySelectorAll("main, .aw-composer, .project-intro, .project-intro-answer")];
-            const rectangles = () => elements.map(element => {
+            // Scroll-triggered reveals can start after the first animation snapshot.
+            // Require a quiet interval including scroll and content geometry; never
+            // cancel animations or hide them to manufacture a settled capture.
+            const rectangles = () => [...document.querySelectorAll("main, main h2, main figure, .aw-composer, .project-intro")].map(element => {
               const { x, y, width, height } = element.getBoundingClientRect();
-              return [x,y,width,height];
+              return [x, y, width, height, element.scrollTop, window.scrollY];
             });
             const before = JSON.stringify(rectangles());
-            await new Promise(requestAnimationFrame);
-            await new Promise(requestAnimationFrame);
-            return before === JSON.stringify(rectangles()) && document.getAnimations().every(animation =>
-              !Number.isFinite(Number(animation.effect?.getComputedTiming().endTime)) || !["running", "pending"].includes(animation.playState)
-            );
+            const start = performance.now();
+            while (performance.now() - start < 300) {
+              await new Promise(requestAnimationFrame);
+              if (before !== JSON.stringify(rectangles())) return false;
+              if (document.getAnimations().some(animation =>
+                Number.isFinite(Number(animation.effect?.getComputedTiming().endTime)) &&
+                (animation.pending || animation.playState === "running")
+              )) return false;
+            }
+            return true;
           });
           stability = await page.evaluate(() => {
             const intro = document.querySelector(".project-intro");

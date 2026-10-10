@@ -40,7 +40,9 @@ jobs:
         run: node scripts/capture-cinematic.mjs
       - name: Runtime dependency audit
         if: always()
-        run: npm audit --omit=dev --json > artifacts/runtime-audit.json || true
+        run: |
+          npm audit --omit=dev --json > artifacts/runtime-audit.json || true
+          cat artifacts/runtime-audit.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -8,9 +8,20 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]){
  const label=viewport.width===1440?'desktop':'mobile';
  const context=await browser.newContext({viewport,recordVideo:{dir:root,size:viewport}});const page=await context.newPage();
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{
+  window.__reviewMetrics={lcp:0,cls:0,longTasks:0,longTaskMs:0};
+  for(const type of ['largest-contentful-paint','layout-shift','longtask']){
+   try{new PerformanceObserver(list=>{for(const entry of list.getEntries()){
+    if(type==='largest-contentful-paint')window.__reviewMetrics.lcp=entry.startTime;
+    if(type==='layout-shift'&&!entry.hadRecentInput)window.__reviewMetrics.cls+=entry.value;
+    if(type==='longtask'){window.__reviewMetrics.longTasks++;window.__reviewMetrics.longTaskMs+=entry.duration;}
+   }}).observe({type,buffered:true});}catch{}
+  }
+ });
  await page.goto(process.env.QA_BASE_URL || 'http://127.0.0.1:4185/');
  await page.evaluate(()=>document.fonts.ready);await page.waitForTimeout(700);
  await page.screenshot({path:`${root}/${label}-home.png`});
+ const homePerformance=await page.evaluate(()=>({sample:window.__reviewMetrics,navigation:performance.getEntriesByType('navigation').map(n=>({domContentLoaded:n.domContentLoadedEventEnd,load:n.loadEventEnd})),resourceBytes:performance.getEntriesByType('resource').reduce((sum,r)=>sum+r.transferSize,0),videoRequests:performance.getEntriesByType('resource').filter(r=>/\.(mp4|webm)/.test(r.name)).length}));
  const stage=page.getByRole('region',{name:'Explore real project screens'});await stage.scrollIntoViewIfNeeded();
  const box=await stage.locator('.evidence-space').boundingBox();
  if(box&&label==='desktop'){await page.mouse.move(box.x+box.width*.2,box.y+box.height*.3);await page.waitForTimeout(600);await page.mouse.move(box.x+box.width*.8,box.y+box.height*.7);await page.waitForTimeout(600);}
@@ -32,7 +43,7 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]){
   await page.screenshot({path:`${root}/${label}-${slug}-body.png`});
  }
  const perf=await page.evaluate(()=>({navigation:performance.getEntriesByType('navigation').map(n=>({domContentLoaded:n.domContentLoadedEventEnd,load:n.loadEventEnd})),overflow:document.documentElement.scrollWidth>innerWidth}));
- writeFileSync(`${root}/${label}-performance.json`,JSON.stringify({errors,...perf},null,2));console.log('PERFORMANCE_REPORT '+JSON.stringify({label,errors,...perf}));
+ writeFileSync(`${root}/${label}-performance.json`,JSON.stringify({errors,homePerformance,...perf},null,2));console.log('PERFORMANCE_REPORT '+JSON.stringify({label,errors,homePerformance,...perf}));
  const video=page.video();await context.close();await video.saveAs(`${root}/${label}-interactions.webm`);
 }
 await browser.close();

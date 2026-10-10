@@ -1,7 +1,8 @@
-name: Cinematic preparation
+name: Dependency security audit
 on:
   pull_request:
-    paths: [.github/workflows/cinematic-preflight.yml]
+    paths: ['package.json', 'package-lock.json', '.github/workflows/cinematic-preflight.yml']
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -12,28 +13,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: |
-          npm audit --json > audit-before.json || true
-          cat audit-before.json
-          npm view remotion version license peerDependencies --json
-          npm view @remotion/cli version license --json
-          npm view motion version license peerDependencies --json
-          npm view next version --json
-          npm view skills version license scripts --json
-      - name: Install official text skills in temporary sandbox
+      - name: Record full and runtime audit without automatic dependency rewrites
         run: |
-          mkdir /tmp/remotion-skills-review
-          cd /tmp/remotion-skills-review
-          git init -q
-          npx --yes skills@1.7.2 add remotion-dev/skills --skill remotion-best-practices remotion-create remotion-markup remotion-render --agent codex --copy --yes
-          find . -type f | sort
-          find . -type f -exec sha256sum {} \;
-          git status --short
+          npm audit --json > audit-full.json || true
+          npm audit --omit=dev --json > audit-runtime.json || true
+          cat audit-full.json
+          cat audit-runtime.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cinematic-preflight
+          name: dependency-security-audit
           path: |
-            audit-before.json
-            /tmp/remotion-skills-review/.agents
-            /tmp/remotion-skills-review/skills-lock.json
+            audit-full.json
+            audit-runtime.json
