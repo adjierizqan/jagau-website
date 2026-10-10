@@ -24,7 +24,7 @@ for (const viewport of [{width:1440,height:900},{width:768,height:1024},{width:3
  for(const theme of ['light','dark']) {
   for(const [label,port] of [['before',4186],['after',4185]]) {
    const ctx=await browser.newContext({viewport,colorScheme:theme,...(label==='after' && viewport.width===1440 && theme==='light'?{recordVideo:{dir,size:viewport}}:{})});
-   const p=await ctx.newPage();
+   const p=await ctx.newPage(); p.setDefaultTimeout(15000); p.setDefaultNavigationTimeout(30000);
    const errors=[];p.on('pageerror',e=>errors.push(e.message));
    await p.addInitScript(theme=>{
     localStorage.setItem('aw-theme',theme);
@@ -58,7 +58,8 @@ for (const viewport of [{width:1440,height:900},{width:768,height:1024},{width:3
     }
    }
    await p.goto(`http://127.0.0.1:${port}/`);
-   await p.locator('.aw-dock').getByRole('button', {name:'Studio',exact:true}).click();
+   if(viewport.width<760) await p.getByRole('button',{name:'Open navigation',exact:true}).click();
+   await p.locator('.aw-primary-nav').getByRole('button', {name:'Studio',exact:true}).click();
    await p.locator('.workspace-studio').waitFor();
    await p.waitForTimeout(1800);
    await shot(p,`${prefix}-studio`);
