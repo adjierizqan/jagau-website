@@ -57,7 +57,9 @@ try {
               Number.isFinite(Number(animation.effect?.getComputedTiming().endTime))
             ).map(animation => animation.finished));
           });
-          const settled = await page.waitForFunction(async () => {
+          const settleDeadline = Date.now() + 30000;
+          while (Date.now() < settleDeadline) {
+          stability = await page.evaluate(async () => {
             // Scroll-triggered reveals can start after the first animation snapshot.
             // Require a quiet interval including scroll and content geometry; never
             // cancel animations or hide them to manufacture a settled capture.
@@ -87,8 +89,9 @@ try {
             };
             return state.finiteAnimationsRunning === 0 ? state : false;
           });
-          stability = await settled.jsonValue();
-          await settled.dispose();
+          if (stability) break;
+          }
+          assert.ok(stability, `Capture did not settle: ${site.name}/${screen}`);
           assert.equal(stability.theme, theme, "Production appearance preference did not apply");
           assert.ok(stability.fontsReady && stability.imagesDecoded, "Production font/image readiness failed");
           assert.equal(stability.finiteAnimationsRunning, 0, `Capture still has running finite animations: ${site.name}/${screen}`);
