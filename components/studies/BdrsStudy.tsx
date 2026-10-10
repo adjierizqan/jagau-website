@@ -1,4 +1,5 @@
 "use client";
+import { MotionWords } from "@/components/workspace/MotionWords";
 import { useState } from "react";
 import {
   Boundary,
@@ -17,12 +18,12 @@ export default function BdrsStudy(props: StudyProps) {
       <header className="bdrs-opener">
         <p className="study-label">Blood-bank operations / {p.year}</p>
         <div>
-          <h1>BDRS</h1>
-          <h2>
+          <h1><MotionWords>BDRS</MotionWords></h1>
+          <h2><MotionWords>
             A case is more
             <br />
             than its status.
-          </h2>
+          </MotionWords></h2>
         </div>
         <p>{p.summary}</p>
       </header>
@@ -37,11 +38,11 @@ export default function BdrsStudy(props: StudyProps) {
       <section className="study-section">
         <header className="study-heading">
           <span className="study-label">01 / Domain model</span>
-          <h2>
+          <h2><MotionWords>
             Connected events.
             <br />
             <em>Independent meaning.</em>
-          </h2>
+          </MotionWords></h2>
         </header>
         <div className="bdrs-lifecycle">
           <div>
@@ -78,18 +79,18 @@ export default function BdrsStudy(props: StudyProps) {
       <section className="study-section bdrs-decisions">
         <header>
           <span className="study-label">02 / Engineering decisions</span>
-          <h2>
+          <h2><MotionWords>
             Make the rules
             <br />
             <em>impossible to miss.</em>
-          </h2>
+          </MotionWords></h2>
         </header>
         <ol>
           {p.decisions?.map((d, i) => (
             <li key={d.title}>
               <span>0{i + 1}</span>
               <div>
-                <h3>{d.title}</h3>
+                <h3><MotionWords>{d.title}</MotionWords></h3>
                 <p>{d.detail}</p>
               </div>
             </li>
@@ -99,11 +100,11 @@ export default function BdrsStudy(props: StudyProps) {
       <section className="study-section bdrs-readiness">
         <div>
           <span className="study-label">03 / Refusal as a useful state</span>
-          <h2>
+          <h2><MotionWords>
             Explain what
             <br />
             <em>still needs work.</em>
-          </h2>
+          </MotionWords></h2>
           <p>
             The readiness surface names the unresolved checks and provides the
             resolving action. The capture shows a synthetic case, including its
@@ -116,7 +117,7 @@ export default function BdrsStudy(props: StudyProps) {
       <section className="study-section">
         <header className="study-heading">
           <span className="study-label">04 / Inventory</span>
-          <h2>Available is not always usable.</h2>
+          <h2><MotionWords>Available is not always usable.</MotionWords></h2>
           <p>
             Stock is derived by the domain service. The interface keeps
             availability and expiry visible together.
@@ -128,11 +129,11 @@ export default function BdrsStudy(props: StudyProps) {
         <Media {...props} index={2} />
         <div>
           <span className="study-label">05 / A smaller surface</span>
-          <h2>
+          <h2><MotionWords>
             The same case.
             <br />
             <em>A different layout.</em>
-          </h2>
+          </MotionWords></h2>
           <p>
             At phone width, the case keeps its actions and context. The public
             fixture makes the boundary explicit: DEMO patients, DEMO bags and

@@ -12,12 +12,16 @@
     "test:static": "node scripts/static-check.mjs",
     "test:browser": "playwright test",
     "verify": "node scripts/check-release-candidate.mjs && npm test && npm run lint && npm run build && npm run typecheck && npm run test:static && npm run test:browser",
-    "test:parity": "node scripts/capture-workspace-parity.mjs"
+    "test:parity": "node scripts/capture-workspace-parity.mjs",
+    "motion:studio": "remotion studio motion/index.tsx",
+    "motion:render": "node scripts/render-cinematic.mjs",
+    "prebuild": "node scripts/review-revision.mjs"
   },
   "dependencies": {
-    "next": "16.2.10",
+    "next": "16.4.0",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "motion": "14.1.0"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1",
@@ -27,8 +31,10 @@
     "@types/react-dom": "^19",
     "axe-core": "^4.13.0",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "16.4.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "remotion": "4.0.534",
+    "@remotion/cli": "4.0.534"
   }
 }

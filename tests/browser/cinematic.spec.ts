@@ -1,0 +1,41 @@
+import { test, expect } from '@playwright/test';
+test('authentic evidence selection connects to the curated Guide', async ({ page }) => {
+  await page.goto('/');
+  const stage = page.getByRole('region', { name: 'Explore real project screens' });
+  await expect(stage).toHaveAttribute('data-project', 'labstock');
+  await expect(stage.locator('img')).toHaveAttribute('src', '/projects/labstock/stok.webp');
+  await stage.getByRole('button', { name: 'Next screenshot' }).click();
+  await expect(stage.locator('img')).toHaveAttribute('src', /\/projects\/labstock\//);
+  await stage.getByRole('button', { name: /02 SuhuLog/ }).click();
+  await expect(stage).toHaveAttribute('data-project', 'suhulog');
+  await expect(stage.locator('img')).toHaveAttribute('src', /\/projects\/suhulog\//);
+  await stage.getByRole('button', { name: 'Ask about SuhuLog ↗' }).click();
+  await expect(page.getByText('JAGAU Guide · curated', { exact: true })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Explore real project screens' })).toHaveAttribute('data-project', 'suhulog');
+  await expect(page.locator('video')).toHaveCount(0);
+});
+test('reduced motion and keyboard keep the evidence viewer usable', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  const stage = page.getByRole('region', { name: 'Explore real project screens' });
+  await stage.getByRole('button', { name: /03 BDRS/ }).focus();
+  await page.keyboard.press('Enter');
+  await expect(stage).toHaveAttribute('data-project', 'bdrs');
+  await expect(stage.locator('img')).toHaveAttribute('src', /\/projects\/bdrs\//);
+  await expect(stage.locator('.evidence-screen')).toHaveCSS('transform', 'none');
+  await stage.getByRole('link', { name: 'Read the case ↗' }).click();
+  await expect(page).toHaveURL(/\/projects\/bdrs\//);
+  await expect(page.getByRole('heading', { name: 'About the evidence' })).toBeAttached();
+});
+test('mobile presents authentic screens without overflow or media downloads', async ({ page }) => {
+  const films: string[] = [];
+  page.on('request', request => { if (/\.(mp4|webm)/.test(request.url())) films.push(request.url()); });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  const stage = page.getByRole('region', { name: 'Explore real project screens' });
+  await stage.scrollIntoViewIfNeeded();
+  await expect(stage.getByRole('group', { name: 'Choose a project to inspect' })).toBeVisible();
+  await stage.getByRole('button', { name: 'Next screenshot' }).click();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  expect(films).toEqual([]);
+});

@@ -1,4 +1,5 @@
 "use client";
+import { MotionWords } from "@/components/workspace/MotionWords";
 import { ElabStudy } from "@/components/studies/ElabStudy";
 import { requestGuide, guideEndpoint } from "@/lib/guide-client";
 
@@ -7,6 +8,9 @@ import Link from "next/link";
 import dimensions from "@/data/media-dimensions.json";
 import dynamic from "next/dynamic";
 import { ProjectOpener, requestProjectIntro, markProjectHistoryNavigation } from "@/components/workspace/ProjectOpener";
+import { useWorkspaceMotion } from "@/components/workspace/useWorkspaceMotion";
+import "@/components/workspace/art-direction.css";
+import { EvidenceStage, type ShowcaseId } from "@/components/showcase/EvidenceStage";
 import { WorkspaceHome, StudioAbout, StudioPresentation } from "@/components/workspace/WorkspaceHome";
 const LabStockCaseStudy = dynamic(() => import("@/components/labstock/LabStockCaseStudy").then(m => m.LabStockCaseStudy));
 const SuhuLogStudy = dynamic(() => import("@/components/studies/SuhuLogStudy"));
@@ -292,7 +296,7 @@ function WorkspaceHeader({ eyebrow, title, copy, meta }: { eyebrow: string; titl
   eyebrow = t(eyebrow); title = t(title); copy = t(copy);
   return (
     <header className="aw-page-header">
-      <div><span>{eyebrow}</span><h1>{title}</h1><p>{copy}</p></div>
+      <div><span>{eyebrow}</span><h1><MotionWords>{title}</MotionWords></h1><p>{copy}</p></div>
       {meta && <small>{meta}</small>}
     </header>
   );
@@ -304,10 +308,10 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
   const media = {src: project.thumb ?? project.image ?? "", alt: project.title};
   return (
     <button type="button" className={"aw-work-case" + (lead ? " is-lead" : "")} onClick={() => selectProject(project)}>
-      <figure>{media.src ? <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-cover object-top" priority={lead} /> : <figcaption>{project.title} · Source-reviewed record · screenshots pending</figcaption>}</figure>
+      <figure>{media.src ? <Image src={media.src} alt={t(media.alt)} fill sizes={lead ? "(max-width: 1000px) 100vw, 900px" : "(max-width: 1000px) 100vw, 620px"} className="object-contain object-center" priority={lead} /> : <figcaption>{project.title} · Source-reviewed record · screenshots pending</figcaption>}</figure>
       <section>
         <span>{project.eyebrow} · {project.year}{project.status ? " · " + project.status : ""}</span>
-        <h2>{project.title}</h2>
+        <h2><MotionWords>{project.title}</MotionWords></h2>
         <p>{project.summary}</p>
         <strong>{t("Open case")} <Glyph name="arrow" /></strong>
       </section>
@@ -318,8 +322,8 @@ function WorkCase({ project, selectProject, lead = false }: { project: Workspace
 function StudioWorkspace({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
   return <main className="aw-center workspace-home workspace-studio aw-enter">
     <WorkspaceHeader eyebrow="JAGAU Workspace" title={tk("Studio")} copy={L("Independent software studio · Indonesia", "Studio perangkat lunak independen · Indonesia")} />
-    <StudioAbout />
     <StudioPresentation selectProject={selectProject} />
+    <StudioAbout />
   </main>;
 }
 
@@ -327,13 +331,14 @@ function WorkWorkspace({ selectProject }: { selectProject: (project: WorkspacePr
   const [lead, ...rest] = featuredProjects();
   return (
     <main className="aw-center aw-work aw-enter">
-      <WorkspaceHeader eyebrow={tk("Selected systems")} title={tk("Work")} copy={tk("Founder operational software work, organized around inspectable project evidence.")} meta={"3 founder case studies"} />
+      <WorkspaceHeader eyebrow={tk("Selected systems")} title={tk("Work")} copy="Software for the records people depend on. Explore the interface, then follow the engineering decisions." meta={"3 founder case studies"} />
+
       <div className="aw-work-cases">
         <WorkCase project={lead} selectProject={selectProject} lead />
         {rest.map((project) => <WorkCase key={project.slug} project={project} selectProject={selectProject} />)}
       </div>
       <section className="aw-work-lab" aria-labelledby="aw-work-lab-title">
-        <h2 id="aw-work-lab-title">{t("From the lab")}</h2>
+        <h2 id="aw-work-lab-title"><MotionWords>{t("From the lab")}</MotionWords></h2>
         <div>{labProjects().map((project) => <WorkCase key={project.slug} project={project} selectProject={selectProject} />)}</div>
       </section>
     </main>
@@ -373,7 +378,7 @@ function ProjectDirectory({ projects, title, copy, selectProject }: {
         {projects.map((project) => (
           <button type="button" key={project.slug} onClick={() => selectProject(project)}>
             {project.thumb ?? project.image ? <figure><Image src={project.thumb ?? project.image ?? ""} alt={project.title} fill sizes="(max-width: 760px) 100vw, 480px" className="object-cover object-center" /></figure> : <div className="aw-object-evidence">{project.evidence.slice(0, 2).map((item) => <dl key={item.label}><dt>{item.label}</dt><dd>{item.value}</dd></dl>)}</div>}
-            <section><span>{project.eyebrow}{project.status ? " · " + project.status : ""}</span><strong>{project.title}<Glyph name="arrow" /></strong><p>{project.summary}</p></section>
+            <section><span>{project.eyebrow}{project.status ? " · " + project.status : ""}</span><strong><MotionWords>{project.title}</MotionWords><Glyph name="arrow" /></strong><p><MotionWords delay={160}>{project.summary}</MotionWords></p></section>
           </button>
         ))}
       </div>
@@ -447,7 +452,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
       {!hasConversation ? (
         <section className="aw-ask-empty">
           <span>{t("Ask JAGAU Workspace")}</span>
-          <h1>{t("What would you like to understand?")}</h1>
+          <h1><MotionWords>{t("What would you like to understand?")}</MotionWords></h1>
           <p>{guideEndpoint ? L("AI answers are labeled per reply and may be wrong. Sources and curated fallback remain available.","Setiap jawaban AI diberi label dan bisa salah. Sumber dan jawaban terkurasi tetap tersedia.") : t("Curated answers · no live AI. Questions stay in your browser.")}</p>
           <AskContextBar context={context} setContext={setContext} busy={active} />
           <Composer query={query} setQuery={setQuery} submit={submit} stop={stop} busy={active} />
@@ -465,6 +470,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
                   {turn.live
                     ? (answer !== null || active || error) && <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
                     : <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
+                  {turn === rows[rows.length - 1] && (turn.projectIds ?? explore(turn.question).projectIds).some(id => ["labstock","suhulog","bdrs"].includes(id)) && <EvidenceStage key={turn.question} compact initial={(turn.projectIds ?? explore(turn.question).projectIds).find(id => ["labstock","suhulog","bdrs"].includes(id)) as ShowcaseId}/>}
                   <div className="aw-guided-evidence">{turn.mode === "ai" && turn.studioReference && <Link href="/" onClick={openStudio}>{L("JAGAU · public studio record ↗","JAGAU · catatan studio publik ↗")}</Link>}{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
                 </div>
               ))}
@@ -652,6 +658,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
   const urlProjectValid = allProjects().some((project) => project.slug === urlProject);
   const view: WorkspaceView = urlProjectValid ? "project" : baseView;
   const selectedSlug = urlProjectValid && urlProject ? urlProject : "labstock";
+  const stageMotion = useWorkspaceMotion(`${view}:${selectedSlug}`);
   const setView = useCallback((next: WorkspaceView) => {
     if (next === "project") return;
     playUISound("tap");
@@ -911,7 +918,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
         <div className="aw-body">
           <Sidebar view={view} selected={selected} setView={setView} newSession={newSession} selectProject={selectProject} openPalette={openPalette} open={sidebarOpen} close={() => setSidebarOpen(false)} />
 
-          <section className="aw-stage">
+          <section className="aw-stage" ref={stageMotion} data-site-motion>
             <header className="aw-mobile-header">
               <button type="button" onClick={() => setSidebarOpen(true)} aria-label={t("Open navigation")}><Glyph name="menu" /></button>
               <strong>{t("JAGAU Workspace")}</strong>
@@ -922,7 +929,7 @@ export function WorkspacePrototype({ initialProject = null }: { initialProject?:
             {view === "home" ? <WorkspaceHome guideConfigured={Boolean(guideEndpoint)} selectProject={selectProject} openAsk={() => setView("ask")} busy={askStatus === "sending" || askStatus === "streaming"} askQuestion={(question) => void runAsk(question, null)} composer={<Composer suggestions={false} query={query} setQuery={setQuery} submit={() => void runAsk(query, null)} busy={askStatus === "sending" || askStatus === "streaming"} stop={stopAsk} />} />
               : view === "studio" ? <StudioWorkspace selectProject={selectProject} />
               : view === "work" ? <WorkWorkspace selectProject={selectProject} />
-                : view === "projects" ? <ProjectDirectory projects={allProjects()} title={tk("Projects")} copy={tk("A single workspace index for featured systems and focused experiments.")} selectProject={selectProject} />
+                : view === "projects" ? <ProjectDirectory projects={allProjects()} title={tk("Projects")} copy="Inventory. Monitoring. Blood-bank records. Software built around the details that matter." selectProject={selectProject} />
                   : view === "labs" ? <ProjectDirectory projects={labProjects()} title={tk("Labs")} copy={tk("Additional studio experiments will appear here when public evidence is ready.")} selectProject={selectProject} />
                     : view === "knowledge" ? <KnowledgeWorkspace selectProject={selectProject} />
                       : view === "project" ? <ProjectWorkspace key={selected.slug + "-" + projectRevision} project={selected} query={query} setQuery={setQuery} ask={(question) => void runAsk(question ?? query, selected.slug)} back={() => setView("projects")} openImage={openQuickLook} />

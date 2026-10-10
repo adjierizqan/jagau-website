@@ -6,16 +6,18 @@ for (const [width, height] of [[1440,900],[768,1024],[390,844]]) for (const them
     await page.emulateMedia({colorScheme:theme,reducedMotion:'reduce'});
     await page.addInitScript(value=>localStorage.setItem('aw-theme',value),theme);
     await page.goto('/');
-    const previews=page.locator('.home-proof img');
-    await expect(previews).toHaveCount(3);
+    // Real product evidence and the curated conversation share the homepage.
+    const preview=page.locator('.home-start .evidence-space');
+    await expect(preview).toHaveCount(1);
     const layout=await page.evaluate(()=>{
-      const preview=document.querySelector('.home-proof img')!.getBoundingClientRect();
+      const preview=document.querySelector('.home-start .evidence-space')!.getBoundingClientRect();
       const composer=document.querySelector('.home-guide')!.getBoundingClientRect();
-      return {previewWidth:preview.width,previewBottom:preview.bottom,composerTop:composer.top};
+      return {previewWidth:preview.width,previewTop:preview.top,previewLeft:preview.left,composerRight:composer.right,composerBottom:composer.bottom};
     });
-    expect(layout.previewWidth).toBeGreaterThan(width===390?320:width===1440?290:400);
-    expect(layout.previewBottom).toBeLessThan(layout.composerTop);
-    await expect(page.locator('.home-proof')).toContainText('Inventory · source to report');
+    expect(layout.previewWidth).toBeGreaterThan(width===390?300:width===1440?450:400);
+    if(width>=1000) expect(layout.composerRight).toBeLessThan(layout.previewLeft);
+    else expect(layout.composerBottom).toBeLessThan(layout.previewTop);
+    await expect(page.locator('.evidence-context')).toContainText('Authentic application screens');
     await expect(page.locator('.home-positioning')).toContainText('Curated answers · no live AI');
     if(width<760) await page.getByRole('button',{name:'Open navigation',exact:true}).click();
     await page.locator('.aw-primary-nav').getByRole('button',{name:'Studio',exact:true}).click();

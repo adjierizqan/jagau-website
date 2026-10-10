@@ -1,5 +1,7 @@
 "use client";
+import { MotionWords } from "@/components/workspace/MotionWords";
 import type { ReactNode } from "react";
+import { EvidenceStage } from "@/components/showcase/EvidenceStage";
 import Image from "next/image";
 import { featuredWork, allWorkspaceProjects, type WorkspaceProject } from "@/data/workspace";
 import { identity, education } from "@/data/profile";
@@ -25,18 +27,13 @@ export function WorkspaceHome({
     <main className="aw-center workspace-home aw-enter">
       <header className="home-intro">
         <div className="home-identity">
-          <div><h1>{identity.name}</h1><p>Independent software studio · Indonesia</p></div>
+          <div><h1><MotionWords>{identity.name}</MotionWords></h1><p>Independent software studio · Indonesia</p></div>
 
         </div>
         <section className="home-start" aria-label="Explore JAGAU">
-          <h2>Software for the work behind the screen.</h2>
-          <p className="home-positioning">Inventory, monitoring and blood-bank workflows. Explore the founder’s software, then ask how it was built. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
-          <nav className="home-proof" aria-label="Open a project">
-            {featuredWork.slice(0,3).map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); selectProject(project); }}>
-              <Image src={project.thumb!} alt={project.title + " product preview"} width={1600} height={1000} sizes="(max-width:760px) 90vw, 310px" />
-              <span>{project.title}<small>{({labstock:"Inventory · source to report",suhulog:"Temperature · reading to record",bdrs:"Blood bank · case to outcome"} as Record<string,string>)[project.slug]}</small></span>
-            </a>)}
-          </nav>
+          <div className="home-conversation">
+          <h2><MotionWords>Software for<br/><em>the working day.</em></MotionWords></h2>
+          <p className="home-positioning"><MotionWords delay={240}>Inventory, temperature monitoring and blood-bank workflows. Built by Adjie Rizqan. Explore the actual screens and the engineering behind them. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</MotionWords></p>
           <div className="home-guide">
             {composer}
           <div className="home-starters" aria-label="Suggested questions">
@@ -47,15 +44,18 @@ export function WorkspaceHome({
             ].map(([label, question]) => <button key={label} type="button" disabled={busy} onClick={() => askQuestion(question)}>{label} <span aria-hidden="true">↗</span></button>)}
           </div>
           </div>
+          </div>
+          <EvidenceStage onAsk={askQuestion} onOpen={selectProject}/>
           <nav className="home-intro-actions" aria-label="Introduction actions">
             <a href="#home-work" onClick={navigateToSection}>Explore the work ↓</a>
+            <button type="button" className="motion-replay" onClick={event => event.currentTarget.dispatchEvent(new CustomEvent("jagau:replay-motion", {bubbles:true}))}>Replay motion ↻</button>
 
           </nav>
         </section>
       </header>
       <section className="home-selected" aria-labelledby="home-work">
         <header>
-          <h2 id="home-work" tabIndex={-1}>Selected work</h2>
+          <h2 id="home-work" tabIndex={-1}><MotionWords>Selected work</MotionWords></h2>
           <span>From the source record to the working interface</span>
         </header>
         <div className="home-work-list">
@@ -72,8 +72,8 @@ export function WorkspaceHome({
             >
               <figure>
                 <Image
-                  src={p.thumb!}
-                  alt={p.title + " public project evidence"}
+                  src={p.thumb ?? p.image ?? ""}
+                  alt={p.title + " · approved public project screenshot"}
                   width={1600}
                   height={1000}
                   sizes="(max-width:760px) 100vw, 700px"
@@ -84,10 +84,10 @@ export function WorkspaceHome({
                 <span>
                   0{i + 1} / {p.eyebrow}
                 </span>
-                <h3>
+                <h3><MotionWords>
                   {p.title}
                   <b aria-hidden="true">↗</b>
-                </h3>
+                </MotionWords></h3>
                 <p>{p.summary}</p>
               </div>
             </a>
@@ -96,7 +96,7 @@ export function WorkspaceHome({
       </section>
       <section className="home-ask">
         <div>
-          <h2>Inspect the decisions behind the screen.</h2>
+          <h2><MotionWords>Inspect the decisions behind the screen.</MotionWords></h2>
           <p>Ask about the architecture, decisions or evidence.</p>
         </div>
         <button type="button" onClick={openAsk}>
@@ -112,7 +112,7 @@ export function StudioAbout() {
   return (
       <section className="home-about">
         <div>
-          <h2>Built around the working record.</h2>
+          <h2><MotionWords>Built around the working record.</MotionWords></h2>
           <p>
             JAGAU is an independent software practice rooted in Banjar. The projects
             shown here are founder Adjie Rizqan’s work: laboratory inventory, temperature
@@ -139,19 +139,20 @@ export function StudioAbout() {
 
 export function StudioPresentation({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
   return <>
+
     <section className="studio-approach" aria-labelledby="studio-approach-title">
-      <h2 id="studio-approach-title">How the work is built</h2>
+      <div className="studio-principle"><span>01 / The practice</span><h2 id="studio-approach-title"><MotionWords>Interfaces are the visible part.<br/><em>The record is the foundation.</em></MotionWords></h2><p>Three systems. Three ways of preserving what happened.</p></div>
       <ol>
-        <li><h3>Keep stock connected to its source.</h3><p>LabStock carries workbook, sheet and row identity into the ledger, reports and Excel exports.</p></li>
-        <li><h3>Correct a reading without erasing it.</h3><p>SuhuLog keeps the previous value when a correction becomes effective. Monitoring and exports use those same records.</p></li>
-        <li><h3>Give each event its own meaning.</h3><p>BDRS separates request, crossmatch, issue and physical outcome. A single status does not stand in for the entire case.</p></li>
+        <li><span>01 / LabStock</span><h3><MotionWords>Keep stock connected to its source.</MotionWords></h3><p>LabStock carries workbook, sheet and row identity into the ledger, reports and Excel exports.</p></li>
+        <li><span>02 / SuhuLog</span><h3><MotionWords>Correct a reading without erasing it.</MotionWords></h3><p>SuhuLog keeps the previous value when a correction becomes effective. Monitoring and exports use those same records.</p></li>
+        <li><span>03 / BDRS</span><h3><MotionWords>Give each event its own meaning.</MotionWords></h3><p>BDRS separates request, crossmatch, issue and physical outcome. A single status does not stand in for the entire case.</p></li>
       </ol>
     </section>
     <section className="studio-systems" aria-labelledby="studio-systems-title">
-      <h2 id="studio-systems-title">See the approach in the work</h2>
+      <h2 id="studio-systems-title"><MotionWords>See the approach in the work</MotionWords></h2>
       <p>Founder projects, with their current status and public evidence.</p>
       <div>{allWorkspaceProjects.map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); selectProject(project); }}>
-        <div><h3>{project.title}<span aria-hidden="true">↗</span></h3><p>{project.summary}</p></div>
+        <div><h3><MotionWords>{project.title}<span aria-hidden="true">↗</span></MotionWords></h3><p>{project.summary}</p></div>
         <small>{project.status}</small>
       </a>)}</div>
     </section>

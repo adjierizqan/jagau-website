@@ -57,22 +57,28 @@ try {
               Number.isFinite(Number(animation.effect?.getComputedTiming().endTime))
             ).map(animation => animation.finished));
           });
-          await page.waitForFunction(async () => {
-            const elements = [...document.querySelectorAll("main, .aw-composer, .project-intro, .project-intro-answer")];
-            const rectangles = () => elements.map(element => {
+          const settleDeadline = Date.now() + 30000;
+          while (Date.now() < settleDeadline) {
+          stability = await page.evaluate(async () => {
+            // Scroll-triggered reveals can start after the first animation snapshot.
+            // Require a quiet interval including scroll and content geometry; never
+            // cancel animations or hide them to manufacture a settled capture.
+            const rectangles = () => [...document.querySelectorAll("main, main h2, main figure, .aw-composer, .project-intro")].map(element => {
               const { x, y, width, height } = element.getBoundingClientRect();
-              return [x,y,width,height];
+              return [x, y, width, height, element.scrollTop, window.scrollY];
             });
             const before = JSON.stringify(rectangles());
-            await new Promise(requestAnimationFrame);
-            await new Promise(requestAnimationFrame);
-            return before === JSON.stringify(rectangles()) && document.getAnimations().every(animation =>
-              !Number.isFinite(Number(animation.effect?.getComputedTiming().endTime)) || !["running", "pending"].includes(animation.playState)
-            );
-          });
-          stability = await page.evaluate(() => {
+            const start = performance.now();
+            while (performance.now() - start < 300) {
+              await new Promise(requestAnimationFrame);
+              if (before !== JSON.stringify(rectangles())) return false;
+              if (document.getAnimations().some(animation =>
+                Number.isFinite(Number(animation.effect?.getComputedTiming().endTime)) &&
+                (animation.pending || animation.playState === "running")
+              )) return false;
+            }
             const intro = document.querySelector(".project-intro");
-            return {
+            const state = {
               introPlaying: intro?.getAttribute("data-playing") || null,
               introCharacterCount: intro?.querySelectorAll("[data-character]").length || 0,
               introCharactersVisible: intro ? [...intro.querySelectorAll("[data-character]")].every(element => Number(getComputedStyle(element).opacity) >= 0.99) : null,
@@ -81,10 +87,14 @@ try {
               theme: document.documentElement.getAttribute("data-theme"),
               finiteAnimationsRunning: document.getAnimations().filter(animation => Number.isFinite(Number(animation.effect?.getComputedTiming().endTime)) && animation.playState === "running").length,
             };
+            return state.finiteAnimationsRunning === 0 ? state : false;
           });
+          if (stability) break;
+          }
+          assert.ok(stability, `Capture did not settle: ${site.name}/${screen}`);
           assert.equal(stability.theme, theme, "Production appearance preference did not apply");
           assert.ok(stability.fontsReady && stability.imagesDecoded, "Production font/image readiness failed");
-          assert.equal(stability.finiteAnimationsRunning, 0, "Capture still has running finite animations");
+          assert.equal(stability.finiteAnimationsRunning, 0, `Capture still has running finite animations: ${site.name}/${screen}`);
           assert.equal(new URL(page.url()).origin, site.origin, "Capture is not from public production");
         }
         assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${site.name}/${screen} page overflow`);

@@ -18,7 +18,7 @@ jobs:
           path: after
       - uses: actions/checkout@v4
         with:
-          ref: d84b396ccd70142ca5c9231e3d406ebf89a576c3
+          ref: 6e9eda4e1e525542df334e7d0cbb9c776458d5b1
           path: before
           persist-credentials: false
       - uses: actions/setup-node@v4
