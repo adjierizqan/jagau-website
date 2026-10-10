@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import "./spatial.css";
 export function MotionStudy() {
   const root = useRef<HTMLDivElement>(null);
@@ -23,5 +24,5 @@ export function MotionStudy() {
     preference.addEventListener("change", stop);
     return () => { stop(); preference.removeEventListener("change", stop); };
   }, []);
-  return <div ref={root} className="motion-study"><header><a href="/">← Workspace</a><h1>LabStock / motion studies</h1><p>Two presentations of the same cleared screenshot. These are images, not a simulated product interface.</p><button onClick={play}>Play both treatments</button></header><div className="motion-study-grid">{["01 / Desk lift", "02 / Camera settle"].map((label, index) => <section key={label}><h2>{label}</h2><div className="motion-study-stage"><Image className="motion-study-screen" src="/projects/labstock/today-detail.webp" width={1136} height={888} alt={`LabStock public screenshot — ${label}`} priority /></div><p>{index === 0 ? "A single, restrained approach toward the reader." : "A lateral camera approach with a longer settling phase."}</p></section>)}</div></div>;
+  return <div ref={root} className="motion-study"><header><Link href="/">← Workspace</Link><h1>LabStock / motion studies</h1><p>Two presentations of the same cleared screenshot. These are images, not a simulated product interface.</p><button onClick={play}>Play both treatments</button></header><div className="motion-study-grid">{["01 / Desk lift", "02 / Camera settle"].map((label, index) => <section key={label}><h2>{label}</h2><div className="motion-study-stage"><Image className="motion-study-screen" src="/projects/labstock/today-detail.webp" width={1136} height={888} alt={`LabStock public screenshot — ${label}`} priority /></div><p>{index === 0 ? "A single, restrained approach toward the reader." : "A lateral camera approach with a longer settling phase."}</p></section>)}</div></div>;
 }

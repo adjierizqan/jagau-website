@@ -1,5 +1,5 @@
 import { chromium } from '@playwright/test';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile, readdir } from 'node:fs/promises';
 const dir = 'artifacts/motion-review';
 await mkdir(dir, {recursive:true});
 const browser = await chromium.launch();
@@ -15,3 +15,9 @@ if(new Set(samples.map(s=>JSON.stringify(s))).size<3) throw Error('Motion did no
 await writeFile(`${dir}/samples.json`,JSON.stringify(samples,null,2));
 await context.close();
 await browser.close();
+
+for (const file of await readdir(dir)) {
+ if (!file.endsWith('.png')) continue;
+ const bytes = await readFile(`${dir}/${file}`);
+ console.log(`MOTION_FILE ${file} ${bytes.toString('base64')}`);
+}
