@@ -1,5 +1,6 @@
 "use client";
 import type { ReactNode } from "react";
+import { CinemaStage } from "@/components/cinematic/CinemaStage";
 import Image from "next/image";
 import { featuredWork, allWorkspaceProjects, type WorkspaceProject } from "@/data/workspace";
 import { identity, education } from "@/data/profile";
@@ -29,14 +30,8 @@ export function WorkspaceHome({
 
         </div>
         <section className="home-start" aria-label="Explore JAGAU">
-          <h2>Software for the work behind the screen.</h2>
+          <h2>Ask about the work. See how it moves.</h2>
           <p className="home-positioning">Inventory, monitoring and blood-bank workflows. Explore the founder’s software, then ask how it was built. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
-          <nav className="home-proof" aria-label="Open a project">
-            {featuredWork.slice(0,3).map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); selectProject(project); }}>
-              <Image src={project.thumb!} alt={project.title + " product preview"} width={1600} height={1000} sizes="(max-width:760px) 90vw, 310px" />
-              <span>{project.title}<small>{({labstock:"Inventory · source to report",suhulog:"Temperature · reading to record",bdrs:"Blood bank · case to outcome"} as Record<string,string>)[project.slug]}</small></span>
-            </a>)}
-          </nav>
           <div className="home-guide">
             {composer}
           <div className="home-starters" aria-label="Suggested questions">
@@ -47,6 +42,7 @@ export function WorkspaceHome({
             ].map(([label, question]) => <button key={label} type="button" disabled={busy} onClick={() => askQuestion(question)}>{label} <span aria-hidden="true">↗</span></button>)}
           </div>
           </div>
+          <CinemaStage onAsk={askQuestion}/>
           <nav className="home-intro-actions" aria-label="Introduction actions">
             <a href="#home-work" onClick={navigateToSection}>Explore the work ↓</a>
 
@@ -72,8 +68,8 @@ export function WorkspaceHome({
             >
               <figure>
                 <Image
-                  src={p.thumb!}
-                  alt={p.title + " public project evidence"}
+                  src={p.slug === "elab" ? p.thumb! : `/motion/${p.slug}.png`}
+                  alt={p.title + " illustrative motion scene · open public case study"}
                   width={1600}
                   height={1000}
                   sizes="(max-width:760px) 100vw, 700px"
@@ -139,6 +135,7 @@ export function StudioAbout() {
 
 export function StudioPresentation({ selectProject }: { selectProject: (project: WorkspaceProject) => void }) {
   return <>
+    <CinemaStage compact/>
     <section className="studio-approach" aria-labelledby="studio-approach-title">
       <h2 id="studio-approach-title">How the work is built</h2>
       <ol>

@@ -37,7 +37,7 @@ const panel:React.CSSProperties={background:'white',border:`1px solid ${line}`,b
 export function LabStockFilm(){
  const f=useCurrentFrame();const {fps}=useVideoConfig();const report=f>=10*fps;
  const pointerX=interpolate(f,[155,187,274,298],[920,98,98,94],{extrapolateLeft:'clamp',extrapolateRight:'clamp',easing:ease});
- const pointerY=interpolate(f,[155,187,274,298],[410,195,195,295],{extrapolateLeft:'clamp',extrapolateRight:'clamp',easing:ease});
+ const pointerY=interpolate(f,[155,187,274,298],[410,249,249,350],{extrapolateLeft:'clamp',extrapolateRight:'clamp',easing:ease});
  return <Stage name="01 / LABSTOCK" kicker="Inventory / source → ledger → report" title="Every movement keeps its origin." subtitle="One record. From workbook to report.">
  <Frame title="LabStock" accent="#00845e" nav={['Hari ini','Stok','Mutasi','Amprah','Laporan']} active={report?4:f>188?2:1}>
  <Reveal start={48}><div style={{display:'flex',alignItems:'end',justifyContent:'space-between'}}><div><Label>{report?'Laporan / sumber yang sama':'Operasional / stok'}</Label><h2 style={{fontSize:34,fontWeight:550,letterSpacing:-1,margin:'13px 0 10px'}}>{report?'Laporan bulanan':'Persediaan laboratorium'}</h2></div><span style={{fontSize:14,color:'#00845e',padding:'11px 16px',border:'1px solid #b8dfce',borderRadius:6}}>{report?'Excel ↗':'Workbook demo.xlsx'}</span></div></Reveal>

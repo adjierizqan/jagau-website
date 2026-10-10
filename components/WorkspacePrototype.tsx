@@ -7,6 +7,7 @@ import Link from "next/link";
 import dimensions from "@/data/media-dimensions.json";
 import dynamic from "next/dynamic";
 import { ProjectOpener, requestProjectIntro, markProjectHistoryNavigation } from "@/components/workspace/ProjectOpener";
+import { CinemaStage, type FilmId } from "@/components/cinematic/CinemaStage";
 import { WorkspaceHome, StudioAbout, StudioPresentation } from "@/components/workspace/WorkspaceHome";
 const LabStockCaseStudy = dynamic(() => import("@/components/labstock/LabStockCaseStudy").then(m => m.LabStockCaseStudy));
 const SuhuLogStudy = dynamic(() => import("@/components/studies/SuhuLogStudy"));
@@ -328,6 +329,7 @@ function WorkWorkspace({ selectProject }: { selectProject: (project: WorkspacePr
   return (
     <main className="aw-center aw-work aw-enter">
       <WorkspaceHeader eyebrow={tk("Selected systems")} title={tk("Work")} copy={tk("Founder operational software work, organized around inspectable project evidence.")} meta={"3 founder case studies"} />
+      <CinemaStage compact/>
       <div className="aw-work-cases">
         <WorkCase project={lead} selectProject={selectProject} lead />
         {rest.map((project) => <WorkCase key={project.slug} project={project} selectProject={selectProject} />)}
@@ -354,6 +356,7 @@ function ProjectWorkspace({project, openImage, back, ask}: ProjectViewProps) {
  return <main className={"aw-center aw-project-detail aw-labstock-v2 aw-enter"}>
   <button type="button" className="aw-project-back" onClick={back}>← Projects</button>
   <ProjectOpener project={project}>
+  {["labstock","suhulog","bdrs"].includes(project.slug) && <CinemaStage compact initial={project.slug as FilmId} onAsk={ask}/>}
   {project.slug === "labstock" ? <LabStockCaseStudy {...props}/> : project.slug === "suhulog" ? <SuhuLogStudy {...props}/> : project.slug === "bdrs" ? <BdrsStudy {...props}/> : project.slug === "elab" ? <ElabStudy project={project}/> : null}
   <footer className="ls-ask"><span>Want to go deeper?</span><button type="button" onClick={()=>ask(project.askSuggestion)}>Explore {project.title} ↗</button></footer>
   </ProjectOpener>
@@ -465,6 +468,7 @@ function AskWorkspace({ query, setQuery, turns, current, answer, status, error, 
                   {turn.live
                     ? (answer !== null || active || error) && <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}{active ? " · " + t("responding") : ""}</span><p aria-live="polite">{answer || (active ? t("Opening reviewed topic…") : error)}</p></div>
                     : <div className="aw-message"><span>{turn.mode === "ai" ? "JAGAU Guide · AI-generated · check sources" : t("JAGAU Guide · curated")}</span><p>{turn.answer}</p></div>}
+                  {turn === rows[rows.length - 1] && (turn.projectIds ?? explore(turn.question).projectIds).some(id => ["labstock","suhulog","bdrs"].includes(id)) && <CinemaStage key={turn.question} compact initial={(turn.projectIds ?? explore(turn.question).projectIds).find(id => ["labstock","suhulog","bdrs"].includes(id)) as FilmId}/>}
                   <div className="aw-guided-evidence">{turn.mode === "ai" && turn.studioReference && <Link href="/" onClick={openStudio}>{L("JAGAU · public studio record ↗","JAGAU · catatan studio publik ↗")}</Link>}{(turn.projectIds ?? explore(turn.question).projectIds).map(id => <a key={id} href={`/projects/${id}/`}>{rawAll.find(p => p.slug === id)?.title} · View case study ↗</a>)}</div>
                 </div>
               ))}

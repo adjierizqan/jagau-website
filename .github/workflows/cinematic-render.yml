@@ -1,7 +1,7 @@
 name: Cinematic render and review
 on:
   pull_request:
-    paths: ['motion/**', 'scripts/render-cinematic.mjs', '.github/workflows/cinematic-render.yml', 'package.json']
+    paths: ['motion/**', 'scripts/render-cinematic.mjs', '.github/workflows/cinematic-render.yml', 'package.json', 'components/cinematic/**', 'components/workspace/WorkspaceHome.tsx', 'components/WorkspacePrototype.tsx', 'tests/browser/cinematic.spec.ts', 'scripts/capture-cinematic.mjs']
 permissions:
   contents: read
 jobs:
@@ -21,9 +21,20 @@ jobs:
           node -e 'const fs=require("fs"),c=require("crypto"),b=fs.readFileSync("package-lock.json");console.log("CINE_FILE package-lock.json "+c.createHash("sha256").update(b).digest("hex")+" "+b.length);const s=b.toString("base64");for(let i=0;i<s.length;i+=4096)console.log("CINE_PART package-lock.json "+i/4096+" "+s.slice(i,i+4096))'
       - run: npm run lint && npm run typecheck
       - run: npm run motion:render
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm test && npm run build && npm run typecheck && npm run test:static
+      - run: npx playwright test tests/browser/cinematic.spec.ts
+      - name: Playback and loading evidence
+        run: |
+          node scripts/serve.mjs &
+          node scripts/capture-cinematic.mjs
       - name: Poster review copies
         run: |
-          node --input-type=module -e 'import sharp from "sharp";import fs from "node:fs";import crypto from "node:crypto";for(const n of ["labstock","suhulog","bdrs"]){const b=await sharp("public/motion/"+n+".png").resize(1280).jpeg({quality:85}).toBuffer();const s=b.toString("base64");console.log("CINE_FILE "+n+".jpg "+crypto.createHash("sha256").update(b).digest("hex")+" "+b.length);for(let i=0;i<s.length;i+=4096)console.log("CINE_PART "+n+".jpg "+i/4096+" "+s.slice(i,i+4096))}'
+          node --input-type=module -e 'import sharp from "sharp";import fs from "node:fs";import crypto from "node:crypto";for(const n of ["labstock","suhulog","bdrs","labstock-focus"]){const b=await sharp("public/motion/"+n+".png").resize(1280).jpeg({quality:85}).toBuffer();const s=b.toString("base64");console.log("CINE_FILE "+n+".jpg "+crypto.createHash("sha256").update(b).digest("hex")+" "+b.length);for(let i=0;i<s.length;i+=4096)console.log("CINE_PART "+n+".jpg "+i/4096+" "+s.slice(i,i+4096))}'
+      - name: Recover playable clips
+        if: always()
+        run: |
+          node --input-type=module -e 'import fs from "node:fs";import c from "node:crypto";for(const n of fs.readdirSync("public/motion").filter(n=>n.endsWith(".mp4"))){const b=fs.readFileSync("public/motion/"+n),s=b.toString("base64");console.log("CINE_FILE "+n+" "+c.createHash("sha256").update(b).digest("hex")+" "+b.length);for(let i=0;i<s.length;i+=4096)console.log("CINE_PART "+n+" "+i/4096+" "+s.slice(i,i+4096))}'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -32,3 +43,5 @@ jobs:
             public/motion/
             package-lock.json
             audit-after.json
+            artifacts/cinematic-qa/
+            out/

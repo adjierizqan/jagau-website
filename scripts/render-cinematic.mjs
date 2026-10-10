@@ -3,7 +3,7 @@ import {mkdirSync, readFileSync, writeFileSync, statSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 mkdirSync('public/motion',{recursive:true});
 const media=[];
-for(const [id,slug] of [['LabStock','labstock'],['SuhuLog','suhulog'],['BDRS','bdrs']]){
+for(const [id,slug] of [['LabStock','labstock'],['SuhuLog','suhulog'],['BDRS','bdrs'],['LabStockFocus','labstock-focus']]){
  for(const args of [ ['render','motion/index.tsx',id,`public/motion/${slug}.mp4`,'--codec=h264','--crf=22','--concurrency=2'], ['still','motion/index.tsx',id,`public/motion/${slug}.png`,'--frame=330'] ]){
   const r=spawnSync('npx',['--no-install','remotion',...args],{stdio:'inherit'});if(r.status!==0)process.exit(r.status??1);
  }
