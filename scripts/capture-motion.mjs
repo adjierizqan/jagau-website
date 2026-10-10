@@ -37,7 +37,8 @@ for (const viewport of [{width:1440,height:900},{width:768,height:1024},{width:3
     await p.goto(`http://127.0.0.1:${port}${path}`);
     await p.locator('main').first().waitFor();
     await p.waitForTimeout(1900);
-    await p.locator('main img').evaluateAll(images=>Promise.all(images.filter(i=>i.getBoundingClientRect().top<innerHeight).map(i=>i.decode().catch(()=>{}))));
+    await p.locator('main img').evaluateAll(images=>Promise.all(images.filter(i=>{const r=i.getBoundingClientRect();return r.width>0 && r.height>0 && r.bottom>0 && r.top<innerHeight;}).map(async i=>{i.loading='eager';await Promise.race([i.decode(),new Promise((_,reject)=>setTimeout(()=>reject(Error('Visible image decode timeout')),10000))]);})));
+    console.log(`CAPTURE ${prefix}-${name}`);
     await shot(p,`${prefix}-${name}`);
     if(name!=='home') {
      const hero=p.locator(name==='labstock'?'.ls-hero':name==='suhulog'?'.suhu-phone':viewport.width<761?'.bdrs-hero-mobile .study-media':'.bdrs-hero-desktop .study-media').first();
