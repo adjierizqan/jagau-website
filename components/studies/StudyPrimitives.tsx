@@ -28,6 +28,7 @@ export function Media({
       <a
         href={item.src}
         onClick={(e) => {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
           e.preventDefault();
           openImage(index, e.currentTarget);
         }}
@@ -42,7 +43,7 @@ export function Media({
           style={{ width: "100%", height: "auto" }}
           preload={priority || undefined}
         />
-        <span aria-hidden="true">Quick Look ↗</span>
+        <span aria-hidden="true">Open full-size · Quick Look ↗</span>
       </a>
       <figcaption>{item.caption}</figcaption>
     </figure>

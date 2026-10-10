@@ -95,7 +95,7 @@ try {
         if (productionOnly || polish) assert.deepEqual(pngSize, viewport, "Screenshot dimensions differ from required CSS viewport");
         const geometry = await page.evaluate(() => {
           const result = {};
-          for (const selector of [".aw-window", ".aw-titlebar", ".aw-sidebar", ".aw-dock", ".aw-mobile-header", "main", ".home-intro", ".aw-composer"]) {
+          for (const selector of [".aw-window", ".aw-titlebar", ".aw-sidebar", ".aw-dock", ".aw-mobile-header", "main", ".home-intro", ".aw-composer", ".home-proof img", ".home-guide"]) {
             const element = document.querySelector(selector);
             if (!element) continue;
             const {x,y,width,height} = element.getBoundingClientRect();
@@ -126,6 +126,10 @@ try {
         if (polish) {
           await page.locator(".home-selected").evaluate(element => element.scrollIntoView({block:"start", behavior:"instant"}));
           await capture("selected-work");
+          if (process.env.QA_PREMIUM === "true") {
+            await page.locator(".home-about").evaluate(element=>element.scrollIntoView({block:"start",behavior:"instant"}));
+            await capture("home-footer");
+          }
           await home();
         }
         if (viewport.width < 760) await page.getByRole("button", {name:"Open navigation",exact:true}).click();
@@ -151,7 +155,12 @@ try {
           if (viewport.width < 760) await page.getByRole("button", {name:"Open navigation",exact:true}).click();
           await page.locator(".aw-primary-nav").getByRole("button", {name:"Studio",exact:true}).click();
           await capture("studio");
-          if (site.name === "after") {
+          if (process.env.QA_PREMIUM === "true" && site.name === "after") {
+            await page.locator(".studio-language summary").click();
+            await capture("studio-indonesian");
+            await page.locator(".studio-language summary").click();
+          }
+          if (site.name === "after" || process.env.QA_REFERENCE_STUDIO_SYSTEMS === "true") {
             await page.locator(".studio-systems").evaluate(element => element.scrollIntoView({block:"start",behavior:"instant"}));
             await capture("studio-systems");
           }
@@ -161,6 +170,24 @@ try {
           await page.locator(".project-intro").waitFor();
           if (productionOnly || polish) await page.locator(".project-intro-answer").waitFor({ state: "visible" });
           await capture(`case-${slug}`);
+          if (process.env.QA_PREMIUM === "true" && slug !== "labstock") {
+            await page.locator(".study").evaluate(element=>{
+              element.scrollIntoView({block:"start",behavior:"instant"});
+              const main=element.closest("main");
+              const toolbar=document.querySelector(".aw-mobile-header");
+              const toolbarBottom=toolbar && getComputedStyle(toolbar).display!=="none" ? toolbar.getBoundingClientRect().bottom : main.getBoundingClientRect().top;
+              const clearance=Math.max(0,toolbarBottom-element.getBoundingClientRect().top)+16;
+              if (["auto","scroll"].includes(getComputedStyle(main).overflowY)) main.scrollBy({top:-clearance,behavior:"instant"});
+              else window.scrollBy({top:-clearance,behavior:"instant"});
+            });
+            await page.waitForFunction(()=>{
+              const study=document.querySelector(".study"),heading=study.querySelector("h1");
+              const mobile=document.querySelector(".aw-mobile-header");
+              const top=mobile && getComputedStyle(mobile).display!=="none" ? mobile.getBoundingClientRect().bottom : study.closest("main").getBoundingClientRect().top;
+              return heading.getBoundingClientRect().top>=top;
+            });
+            await capture(`case-${slug}-study`);
+          }
           if (polish && process.env.QA_STUDIO === "true" && ["suhulog", "bdrs"].includes(slug)) {
             const media = page.locator(".study-media").last();
             await media.evaluate(element => element.scrollIntoView({block:"end",behavior:"instant"}));
@@ -190,7 +217,7 @@ try {
     }
   }
   }
-  if (polish) assert.equal(rows.length, 132 + (process.env.QA_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_REFERENCE_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_STUDIO === "true" ? 42 : 0), "Before/after screenshot matrix incomplete");
+  if (polish) assert.equal(rows.length, 132 + (process.env.QA_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_REFERENCE_EXTRA_PROJECT === "elab" ? 12 : 0) + (process.env.QA_STUDIO === "true" ? 42 + (process.env.QA_REFERENCE_STUDIO_SYSTEMS === "true" ? 6 : 0) : 0) + (process.env.QA_PREMIUM === "true" ? 54 : 0), "Before/after screenshot matrix incomplete");
   if (productionOnly) {
     assert.equal(rows.length, 54, "Required production screenshot inventory incomplete");
     assert.equal(new Set(rows.map(row => row.file)).size, 54, "Production capture filenames are not unique");

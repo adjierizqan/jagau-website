@@ -29,9 +29,16 @@ export function WorkspaceHome({
 
         </div>
         <section className="home-start" aria-label="Explore JAGAU">
-          <h2>What would you like to know?</h2>
-          <p className="home-positioning">Ask about the studio, or open founder work to see how it was built. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
-          {composer}
+          <h2>Software for the work behind the screen.</h2>
+          <p className="home-positioning">Inventory, monitoring and blood-bank workflows. Explore the founder’s software, then ask how it was built. {guideConfigured ? "Optional AI with reviewed sources; curated fallback available." : "Curated answers · no live AI."}</p>
+          <nav className="home-proof" aria-label="Open a project">
+            {featuredWork.slice(0,3).map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); selectProject(project); }}>
+              <Image src={project.thumb!} alt={project.title + " product preview"} width={1600} height={1000} sizes="(max-width:760px) 90vw, 310px" />
+              <span>{project.title}<small>{({labstock:"Inventory · source to report",suhulog:"Temperature · reading to record",bdrs:"Blood bank · case to outcome"} as Record<string,string>)[project.slug]}</small></span>
+            </a>)}
+          </nav>
+          <div className="home-guide">
+            {composer}
           <div className="home-starters" aria-label="Suggested questions">
             {[
               ["Start with the work", "What has JAGAU built?"],
@@ -39,12 +46,7 @@ export function WorkspaceHome({
               ["About JAGAU", "What does JAGAU mean?"],
             ].map(([label, question]) => <button key={label} type="button" disabled={busy} onClick={() => askQuestion(question)}>{label} <span aria-hidden="true">↗</span></button>)}
           </div>
-          <nav className="home-proof" aria-label="Open a project">
-            {featuredWork.slice(0,3).map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { event.preventDefault(); selectProject(project); }}>
-              <Image src={project.thumb!} alt={project.title + " product preview"} width={1600} height={1000} sizes="(max-width:760px) 30vw, 230px" />
-              <span>{project.title}<small>{project.eyebrow}</small></span>
-            </a>)}
-          </nav>
+          </div>
           <nav className="home-intro-actions" aria-label="Introduction actions">
             <a href="#home-work" onClick={navigateToSection}>Explore the work ↓</a>
 
@@ -54,7 +56,7 @@ export function WorkspaceHome({
       <section className="home-selected" aria-labelledby="home-work">
         <header>
           <h2 id="home-work" tabIndex={-1}>Selected work</h2>
-          <span>The work behind the answer</span>
+          <span>From the source record to the working interface</span>
         </header>
         <div className="home-work-list">
           {featuredWork.map((p, i) => (
@@ -62,6 +64,7 @@ export function WorkspaceHome({
               href={`/projects/${p.slug}/`}
               key={p.slug}
               onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
                 e.preventDefault();
                 selectProject(p);
               }}
@@ -93,11 +96,11 @@ export function WorkspaceHome({
       </section>
       <section className="home-ask">
         <div>
-          <h2>There’s more behind each screen.</h2>
+          <h2>Inspect the decisions behind the screen.</h2>
           <p>Ask about the architecture, decisions or evidence.</p>
         </div>
         <button type="button" onClick={openAsk}>
-          Explore ↗
+          Open JAGAU Guide ↗
         </button>
       </section>
       <StudioAbout />
@@ -109,12 +112,13 @@ export function StudioAbout() {
   return (
       <section className="home-about">
         <div>
-          <h2>Engineering, with context.</h2>
+          <h2>Built around the working record.</h2>
           <p>
             JAGAU is an independent software practice rooted in Banjar. The projects
-            shown here are founder Adjie Rizqan’s work: product workflows, data
-            correctness and the interfaces people use.
+            shown here are founder Adjie Rizqan’s work: laboratory inventory, temperature
+            monitoring, blood-bank workflows and document management.
           </p>
+          <details className="studio-language"><summary lang="id">Ringkasan Bahasa Indonesia</summary><p lang="id">JAGAU adalah studio perangkat lunak independen yang berakar pada budaya Banjar. Proyek di sini merupakan karya pendirinya, Adjie Rizqan: inventaris laboratorium, pemantauan suhu, alur kerja bank darah dan pengelolaan dokumen. Setiap studi kasus menjelaskan bukti implementasi serta batas verifikasinya.</p></details>
           <nav aria-label="Contact">
             <a href={`mailto:${site.email}`}>Email ↗</a>
             <a href={site.github}>GitHub ↗</a>
@@ -138,15 +142,15 @@ export function StudioPresentation({ selectProject }: { selectProject: (project:
     <section className="studio-approach" aria-labelledby="studio-approach-title">
       <h2 id="studio-approach-title">How the work is built</h2>
       <ol>
-        <li><span>01 / Understand</span><h3>Start with the workflow.</h3><p>Understand the actual process and what each record means before choosing an interface.</p></li>
-        <li><span>02 / Preserve</span><h3>Keep the source inspectable.</h3><p>Make permissions, corrections and revision history explicit. Keep reports connected to their records.</p></li>
-        <li><span>03 / Verify</span><h3>Check the output people use.</h3><p>Verify the workflow and its outputs, and plan recovery before release. Case studies separate implementation evidence from release status.</p></li>
+        <li><h3>Keep stock connected to its source.</h3><p>LabStock carries workbook, sheet and row identity into the ledger, reports and Excel exports.</p></li>
+        <li><h3>Correct a reading without erasing it.</h3><p>SuhuLog keeps the previous value when a correction becomes effective. Monitoring and exports use those same records.</p></li>
+        <li><h3>Give each event its own meaning.</h3><p>BDRS separates request, crossmatch, issue and physical outcome. A single status does not stand in for the entire case.</p></li>
       </ol>
     </section>
     <section className="studio-systems" aria-labelledby="studio-systems-title">
       <h2 id="studio-systems-title">See the approach in the work</h2>
       <p>Founder projects, with their current status and public evidence.</p>
-      <div>{allWorkspaceProjects.map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { event.preventDefault(); selectProject(project); }}>
+      <div>{allWorkspaceProjects.map(project => <a key={project.slug} href={`/projects/${project.slug}/`} onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); selectProject(project); }}>
         <div><h3>{project.title}<span aria-hidden="true">↗</span></h3><p>{project.summary}</p></div>
         <small>{project.status}</small>
       </a>)}</div>
